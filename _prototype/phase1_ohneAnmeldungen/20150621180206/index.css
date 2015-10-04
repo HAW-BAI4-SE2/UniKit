@@ -1,0 +1,38 @@
+/* ::::: https://stisys.haw-hamburg.de/css/fh.css ::::: */
+
+/* ::::: https://stisys.haw-hamburg.de/css/button.css ::::: */
+
+.button { padding: 2px; margin: 2px; font-family: "Arial Black",Gadget,sans-serif; }
+.button_logout { padding: 0px; float: right; }
+.button_active { color: rgb(168, 170, 177); font-family: "Arial Black",Gadget,sans-serif; font-size: 14px; overflow: hidden; }
+.button_a_left { float: left; background-image: url('button_a_left.gif'); background-position: center center; height: 22px; }
+.button_a_center { float: left; background-image: url('button_a_center.gif'); background-repeat: repeat-x; vertical-align: middle; line-height: 22px; }
+.button_a_right { float: left; background-image: url('button_a_right.gif'); background-position: center center; height: 22px; }
+a.navlink { padding-left: 5px; padding-right: 5px; }
+.button_active a:link { font-weight: bold; color: rgb(0, 0, 102); text-decoration: none; }
+.button_active a:visited { font-weight: bold; color: rgb(0, 0, 102); text-decoration: none; }
+.button_active a:focus { font-weight: bold; color: rgb(204, 204, 204); text-decoration: underline; }
+.button_active a:hover { font-weight: bold; color: rgb(253, 208, 23); text-decoration: none; }
+.button_active a:active { font-weight: bold; color: rgb(159, 186, 218); text-decoration: underline; }
+/* ::::: https://stisys.haw-hamburg.de/css/navigation.css ::::: */
+
+div#languageSelector { padding: 0px 0px 0px 10px; margin: auto; float: left; overflow: auto; }
+div#navi { padding-right: 30px; }
+div#headline { float: left; margin: 2px; }
+div.navitem { float: left; padding-left: 2px; }
+div.navbgleft { float: left; background-image: url('nav_bg_left.gif'); background-position: center center; height: 22px; }
+div.navbgcen { float: left; background-image: url('nav_bg_center.gif'); background-repeat: repeat-x; vertical-align: middle; line-height: 22px; color: rgb(170, 170, 170); padding-left: 5px; padding-right: 5px; font-weight: bold; }
+div.navbgright { float: left; background-image: url('nav_bg_right.gif'); background-position: center center; height: 22px; }
+div.autoLogMessage { float: right; padding: 0px 30px 0px 0px; width: 200px; margin-right: 0px; font-weight: normal; color: rgb(0, 0, 0); text-decoration: none; font-family: Arial; font-size: 10px; }
+div.posRight { padding: 40px 0px 0px; width: 200px; margin-right: 30px; font-weight: normal; color: rgb(0, 0, 0); text-decoration: none; font-family: Arial; font-size: 10px; }
+div.navitem a:link { font-weight: bold; color: rgb(0, 0, 102); text-decoration: none; }
+div.navitem a:visited { font-weight: bold; color: rgb(0, 0, 102); text-decoration: none; }
+div.navitem a:focus { font-weight: bold; color: rgb(204, 204, 204); text-decoration: underline; }
+div.navitem a:hover { font-weight: bold; color: rgb(159, 186, 218); text-decoration: underline; }
+div.navitem a:active { font-weight: bold; color: rgb(159, 186, 218); text-decoration: underline; }
+#navihr { clear: both; border-top: 2px solid rgb(187, 187, 187); padding-bottom: 5px; }
+.data { padding: 0px 0px 0px 15px; width: 1000px; }
+#navigationsheader { background: white none repeat scroll 0% 0%; min-width: 1000px; width: 1000px; z-index: 1; }
+a { font-family: Arial; font-size: 12px; color: rgb(0, 0, 102); }
+body { font-family: Arial; background: rgb(255, 255, 255) none repeat scroll 0% 0%; font-size: 12px; color: rgb(0, 0, 102); }
+font.h_1 { color: rgb(0, 0, 102); font-family: Arial; font-size: 16px; font-weight: bold; overflow: auto; }

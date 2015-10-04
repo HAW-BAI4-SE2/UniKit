@@ -1,0 +1,28 @@
+/* ::::: https://stisys.haw-hamburg.de/css/fh.css ::::: */
+
+/* ::::: https://stisys.haw-hamburg.de/css/button.css ::::: */
+
+.button { padding: 2px; margin: 2px; font-family: "Arial Black",Gadget,sans-serif; }
+.button_right { float: right; }
+.button_active { color: rgb(168, 170, 177); font-family: "Arial Black",Gadget,sans-serif; font-size: 14px; overflow: hidden; }
+.button_a_left { float: left; background-image: url('button_a_left.gif'); background-position: center center; height: 22px; }
+.button_a_center { float: left; background-image: url('button_a_center.gif'); background-repeat: repeat-x; vertical-align: middle; line-height: 22px; }
+.button_a_right { float: left; background-image: url('button_a_right.gif'); background-position: center center; height: 22px; }
+.button_active a:link { font-weight: bold; color: rgb(0, 0, 102); text-decoration: none; }
+.button_active a:visited { font-weight: bold; color: rgb(0, 0, 102); text-decoration: none; }
+.button_active a:focus { font-weight: bold; color: rgb(204, 204, 204); text-decoration: underline; }
+.button_active a:hover { font-weight: bold; color: rgb(253, 208, 23); text-decoration: none; }
+.button_active a:active { font-weight: bold; color: rgb(159, 186, 218); text-decoration: underline; }
+/* ::::: https://stisys.haw-hamburg.de/css/navigation.css ::::: */
+
+a { font-family: Arial; font-size: 12px; color: rgb(0, 0, 102); }
+.input_text { border-width: 1px; border-color: rgb(0, 0, 0); border-style: solid; font-family: Arial; color: rgb(0, 0, 102); }
+body { font-family: Arial; background: rgb(255, 255, 255) none repeat scroll 0% 0%; font-size: 12px; color: rgb(0, 0, 102); }
+h1 { color: rgb(0, 0, 102); font-family: Arial; font-size: 16px; }
+h2 { color: rgb(0, 0, 102); font-family: Arial; font-size: 14px; }
+table { font-family: Arial; border: 0px none; }
+td { font-family: Arial; font-size: 12px; color: rgb(10, 31, 99); }
+.tableframe { color: rgb(156, 188, 218); background-color: rgb(189, 189, 189); font-family: Arial; border-color: rgb(189, 189, 189); }
+.tablecontent { font-family: Arial; border-color: rgb(189, 189, 189); border-width: 2px; border-style: solid; padding: 2px; }
+.tablecontentbacklight { background: rgb(242, 242, 242) none repeat scroll 0% 0%; }
+.tablecontentbackdark { background: rgb(248, 248, 248) none repeat scroll 0% 0%; }

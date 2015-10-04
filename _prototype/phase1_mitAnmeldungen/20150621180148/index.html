@@ -1,0 +1,286 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+	<title>StudentInformationSystem (StISys) - Prüfungen Anmelden</title>
+	
+<link rel="shortcut icon" href="favicon.ico">
+<script type="text/javascript" language="JavaScript" src="swl-app-base.js"></script>
+
+
+
+
+	
+
+<link rel="stylesheet" type="text/css" href="index.css" media="all">
+</head>
+<body bgcolor="white">
+
+
+ 
+<logic:notpresent name="user" scope="session">
+	<logic:forward name="/login.jsp">
+</logic:forward></logic:notpresent>
+
+<!-- oli  -->
+
+
+
+
+
+
+
+
+<div id="navigationsheader">
+
+		<div id="headline">
+			<font class="h_1">
+					<span style="text-shadow: 0 0 9px black; color: transparent;">XXXXXXX XXXXX - XXXXXXXXXX</span>
+			</font>
+		</div>
+		<div>
+			<div class="autoLogMessage">&nbsp;Automatische Abmeldung um: 18:15 Uhr
+					<div class="button button_logout button_active">
+						<div class="button_a_left">&nbsp;</div>
+						<div class="button_a_center">
+							<a href="..\..\phase2\20150621180056\index.html" class="button_link">logout</a>
+						</div>
+					<div class="button_a_right">&nbsp;
+				</div>				
+			</div>	
+		</div>	
+	 <div id="languageSelector">
+			   
+		
+			   
+				   <img src="de_d.gif" alt="deutsch" border="0" align="right">
+			   	   
+		
+			   
+		
+			    	   
+		
+			   	   
+		
+			   
+		 	       <a href="https://stisys.haw-hamburg.de/lang.do?lang=en"><img src="en.gif" alt="englisch" border="0" align="right"></a>
+		 	   
+	</div>
+</div>
+<!-- div class="clear"></div> -->
+
+<div class="posRight"></div>
+
+<div id="navi">
+	
+		<div class="navitem">
+			<div class="navbgleft">&nbsp;</div>
+			<div class="navbgcen"><a href="..\20150621180110\index.html" title="Veranstaltungen, die ich angemeldet habe" class="navlink">Profil</a></div>
+			<div class="navbgright">&nbsp;</div>
+		</div>
+		<div class="navitem">
+			<div class="navbgleft">&nbsp;</div>
+			<div class="navbgcen"><a href="..\20150621180119\index.html" title="Veranstaltungen, die ich angemeldet habe" class="navlink">Anmeldungen</a></div>
+			<div class="navbgright">&nbsp;</div>
+		</div>
+		<div class="navitem">
+			<div class="navbgleft">&nbsp;</div>
+			<div class="navbgcen"><a href="..\20150621180126\index.html" title="Prüfungsleistungen, die ich bis jetzt abgelegt habe" class="navlink">Ergebnisse</a></div>
+			<div class="navbgright">&nbsp;</div>
+		</div>
+		<div class="navitem">
+			<div class="navbgleft">&nbsp;</div>
+			<div class="navbgcen"><a href="..\20150621180140\index.html" title="Hier kann ich mich für diverse Dinge anmelden" class="navlink">anmelden</a></div>
+			<div class="navbgright">&nbsp;</div>
+		</div>
+		<div class="navitem">
+			<div class="navbgleft">&nbsp;</div>
+			<div class="navbgcen">abmelden</div>
+			<div class="navbgright">&nbsp;</div>
+		</div>
+		<div class="navitem">
+			<div class="navbgleft">&nbsp;</div>
+			<div class="navbgcen"><a href="..\20150621180159\index.html" title="Eigene Mailinglisten" class="navlink">Mailinglisten</a></div>
+			<div class="navbgright">&nbsp;</div>
+		</div>
+		<div class="navitem">
+			<div class="navbgleft">&nbsp;</div>
+			<div class="navbgcen"><a href="..\20150621180206\index.html" title="Hier kann ich mein Druckkonto und mein Druckjobs einsehen." class="navlink">Druckquoten</a></div>
+			<div class="navbgright">&nbsp;</div>
+		</div>
+	<div id="navihr"></div>
+</div>	
+
+	
+
+
+
+
+
+<!--div style="position:absolute; top:145px; left:10px; width:700px;background:white; z-index:1;"-->
+<div class="data">
+
+
+
+
+<table cellpadding="0" cellspacing="0" width="605"><tbody><tr><td>Hier melden Sie sich ab. <span class="red">Achtung:</span> Veranstaltungen wie GW'S, Praktika, und WP's etc. können nicht wieder angemeldet werden.</td></tr></tbody></table>
+
+<br>
+<br>
+<form name="ChooserForm" method="post" action="../../phase1_ohneAnmeldungen/20150621180119/index.html">
+	<input name="command" value="abmelden" type="hidden">
+
+
+	<table class="tableframe" cellpadding="0" cellspacing="0" width="605">
+ 		<tbody><tr>
+		  <td>&nbsp;&nbsp;<b>Verbindliche</b> Abmeldung für</td>
+		</tr>
+	</tbody></table>
+
+
+	<table class="tablecontent" cellpadding="0" cellspacing="0" width="605">
+	  <tbody><tr><td>
+		<center>
+		<table cellpadding="0" cellspacing="0" width="595">
+			<tbody><tr>
+				<td>
+					<select name="typ" onchange=""><option value="VORL" selected="selected">Praktika</option><option value="VORL">Klausuren</option></select>
+               </td>
+			</tr>
+		</tbody></table>
+		</center>
+	  </td>
+	</tr></tbody></table>
+	
+
+</form>
+
+
+
+<form name="BookExamForm" method="post" action="../../phase1_ohneAnmeldungen/20150621180119/index.html">
+
+
+
+
+
+<br><br>
+
+
+
+
+<table class="tableframe" cellpadding="0" cellspacing="0" width="605">
+	<tbody><tr>
+		<td>&nbsp;&nbsp;
+		  Abmeldungen für das kommenden Semester 
+		</td>
+	</tr>
+</tbody></table>
+
+
+<table class="tablecontent" cellpadding="0" cellspacing="0" width="605">
+	<tbody><tr><td>
+	    
+		<center>
+		<table border="0" cellpadding="0" cellspacing="0" width="595">
+			<tbody><tr class="tableheadline">
+				
+				
+
+				
+				
+					<td width="1"><img src="images/sizer.gif" alt="" border="0" height="1" width="1"></td>
+					<td width="50%">Kursname&nbsp;</td>
+					<td class="thinline" width="1"><img src="images/sizer.gif" alt="" border="0" height="1" width="1"></td>
+					<td width="30%">Professor&nbsp;</td>
+					<td class="thinline" width="1"><img src="images/sizer.gif" alt="" border="0" height="1" width="1"></td>
+					<td width="10%"><span class="thick">Sem.</span></td>
+					<td class="thinline" width="1"><img src="images/sizer.gif" alt="" border="0" height="1" width="1"></td>
+					<td width="10%"><img src="images/sizer.gif" alt="" border="0" height="1" width="1"></td>
+				
+			</tr>
+			
+
+			
+			
+			
+				<tr class="tablecontentbacklight">
+			
+
+				
+				
+				
+				
+				
+					<td></td>
+	
+					<td><a href="../20150621180310/index.html">Praktikum Software Engineering 1&nbsp;<span class="thick">(SEP1)</a></span></td>
+					<td class="thinline"><img src="images/sizer.gif" alt="" border="0" height="1" width="1"></td>
+					<td>Zukunft&nbsp;<span class="thick">(ZKN)</span></td>
+					<td class="thinline"><img src="images/sizer.gif" alt="" border="0" height="1" width="1"></td>
+					<td align="center">B-AI2</td>
+					<td class="thinline"><img src="images/sizer.gif" alt="" border="0" height="1" width="1"></td>
+					<td align="center">	
+						<input name="abmeldenMultibox" value="35583" type="checkbox">
+					</td>
+				
+				
+			</tr>
+			
+			
+				<tr class="tablecontentbackdark">
+			
+			
+
+				
+				
+				
+				
+				
+					<td></td>
+	
+					<td><a href="../20150621180311/index.html">Praktikum Betriebssysteme &nbsp;<span class="thick">(BSP)</a></span></td>
+					<td class="thinline"><img src="images/sizer.gif" alt="" border="0" height="1" width="1"></td>
+					<td>Hübner&nbsp;<span class="thick">(HBN)</span></td>
+					<td class="thinline"><img src="images/sizer.gif" alt="" border="0" height="1" width="1"></td>
+					<td align="center">B-AI3</td>
+					<td class="thinline"><img src="images/sizer.gif" alt="" border="0" height="1" width="1"></td>
+					<td align="center">	
+						<input name="abmeldenMultibox" value="35111" type="checkbox">
+					</td>
+				
+				
+			</tr>
+			
+			
+			
+
+			<tr>
+				<td colspan="8" height="5"><img src="images/sizer.gif" alt="" border="0" height="1" width="1"></td>
+			</tr>
+			<tr>
+				<td colspan="10"><input src="button_unregister_de.gif" type="image" align="right"></td>
+			</tr>
+			</tbody></table>
+		</center>
+	</td>
+</tr></tbody></table>
+
+
+
+
+<br>
+</form>
+
+
+<br>
+
+
+
+
+	
+
+
+</div>
+
+</div></body>
+</html>
