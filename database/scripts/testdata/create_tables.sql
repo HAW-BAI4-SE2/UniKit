@@ -1,6 +1,6 @@
 DROP TABLE `haw_se2_testdata`.`STUDENT`;
 DROP TABLE `haw_se2_testdata`.`COURSE`;
-DROP TABLE `haw_se2_testdata`.`AVAILABLE_COURSES`;
+DROP TABLE `haw_se2_testdata`.`AVAILABLE_COURSE`;
 DROP TABLE `haw_se2_testdata`.`GROUP`;
 DROP TABLE `haw_se2_testdata`.`SPACE_OF_TIME`;
 
@@ -21,7 +21,7 @@ CREATE TABLE `haw_se2_testdata`.`COURSE` (
   PRIMARY KEY (`id`)  COMMENT '',
   UNIQUE INDEX `name_UNIQUE` (`name` ASC)  COMMENT '');
 
-CREATE TABLE `haw_se2_testdata`.`AVAILABLE_COURSES` (
+CREATE TABLE `haw_se2_testdata`.`AVAILABLE_COURSE` (
   `student_number` VARCHAR(31) NOT NULL COMMENT '',
   `course_id` INT NOT NULL COMMENT '',
   INDEX `student_number_idx` (`student_number` ASC)  COMMENT '',

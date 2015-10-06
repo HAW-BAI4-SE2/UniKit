@@ -4,7 +4,7 @@ DROP TABLE `haw_se2`.`COURSE_REGISTRATIONS`;
 
 CREATE TABLE `haw_se2`.`TEAM` (
   `id` INT NOT NULL COMMENT '',
-  `course_id` VARCHAR(45) NOT NULL COMMENT '',
+  `course_id` INT NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '');
 
 CREATE TABLE `haw_se2`.`STUDENT_TO_TEAM` (
