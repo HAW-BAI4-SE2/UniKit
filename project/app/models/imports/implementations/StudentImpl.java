@@ -5,7 +5,7 @@ import models.imports.interfaces.Student;
 
 import java.util.Collection;
 
-public class StudentImpl implements Student {
+class StudentImpl implements Student {
     @Override
     public String getStudentNumber() {
         return null;

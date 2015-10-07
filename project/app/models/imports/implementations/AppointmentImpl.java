@@ -4,7 +4,7 @@ import models.imports.interfaces.Appointment;
 
 import java.util.Date;
 
-public class AppointmentImpl implements Appointment {
+class AppointmentImpl implements Appointment {
     @Override
     public Date getStartDate() {
         return null;
