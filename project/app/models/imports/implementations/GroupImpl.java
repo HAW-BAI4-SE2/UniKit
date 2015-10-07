@@ -6,7 +6,7 @@ import models.imports.interfaces.Group;
 
 import java.util.Collection;
 
-public class GroupImpl implements Group {
+class GroupImpl implements Group {
     @Override
     public int getGroupNumber() {
         return 0;
