@@ -1,3 +1,5 @@
+package models.imports.interfaces;
+
 import java.util.Collection;
 
 public interface Group {

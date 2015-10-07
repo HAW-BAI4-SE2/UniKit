@@ -1,3 +1,5 @@
+package models.imports.interfaces;
+
 public interface Course {
     public int getId();
     public String getName();

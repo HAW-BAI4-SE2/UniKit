@@ -1,3 +1,9 @@
+package models.imports.implementations;
+
+import models.imports.interfaces.Appointment;
+import models.imports.interfaces.Course;
+import models.imports.interfaces.Group;
+
 import java.util.Collection;
 
 public class GroupImpl implements Group {

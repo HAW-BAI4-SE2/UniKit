@@ -1,3 +1,8 @@
+package models.imports.implementations;
+
+import models.imports.interfaces.Course;
+import models.imports.interfaces.Student;
+
 import java.util.Collection;
 
 public class StudentImpl implements Student {

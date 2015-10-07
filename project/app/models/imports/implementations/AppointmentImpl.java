@@ -1,3 +1,7 @@
+package models.imports.implementations;
+
+import models.imports.interfaces.Appointment;
+
 import java.util.Date;
 
 public class AppointmentImpl implements Appointment {

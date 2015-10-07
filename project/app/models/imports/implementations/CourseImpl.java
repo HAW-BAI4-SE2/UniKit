@@ -1,3 +1,7 @@
+package models.imports.implementations;
+
+import models.imports.interfaces.Course;
+
 public class CourseImpl implements Course {
     @Override
     public int getId() {
