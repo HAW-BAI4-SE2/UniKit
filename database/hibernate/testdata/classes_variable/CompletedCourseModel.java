@@ -1,10 +1,10 @@
-public class AvailableCourseModel {
+public class CompletedCourseModel {
     private String studentNumber;
     private int courseId;
 
-    public AvailableCourseModel() {}
+    public CompletedCourseModel() {}
 
-    public AvailableCourseModel(String studentNumber, int courseId) {
+    public CompletedCourseModel(String studentNumber, int courseId) {
         this.studentNumber = studentNumber;
         this.courseId = courseId;
     }
@@ -28,9 +28,9 @@ public class AvailableCourseModel {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof AvailableCourseModel)) return false;
+        if (!(o instanceof CompletedCourseModel)) return false;
 
-        AvailableCourseModel that = (AvailableCourseModel) o;
+        CompletedCourseModel that = (CompletedCourseModel) o;
 
         if (getCourseId() != that.getCourseId()) return false;
         return !(getStudentNumber() != null ? !getStudentNumber().equals(that.getStudentNumber()) : that.getStudentNumber() != null);
@@ -46,7 +46,7 @@ public class AvailableCourseModel {
 
     @Override
     public String toString() {
-        return "AvailableCourseModel{" +
+        return "CompletedCourseModel{" +
                 "studentNumber='" + studentNumber + '\'' +
                 ", courseId=" + courseId +
                 '}';
