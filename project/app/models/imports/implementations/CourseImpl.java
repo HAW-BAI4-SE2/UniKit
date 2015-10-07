@@ -12,6 +12,11 @@ class CourseImpl implements Course {
     public String getName() {
         return null;
     }
+	
+	@Override	
+	public String getShortcut() {
+        return null;
+    }
 
     @Override
     public int getMinTeamSize() {
