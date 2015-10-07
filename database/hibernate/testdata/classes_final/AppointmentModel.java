@@ -1,11 +1,11 @@
 import java.util.Date;
 
-public class SpaceOfTimeModel {
+public class AppointmentModel {
     private final int gruopId;
     private final Date start;
     private final Date end;
 
-    public SpaceOfTimeModel(int gruopId, Date start, Date end) {
+    public AppointmentModel(int gruopId, Date start, Date end) {
         this.gruopId = gruopId;
         this.start = start;
         this.end = end;
@@ -26,9 +26,9 @@ public class SpaceOfTimeModel {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof SpaceOfTimeModel)) return false;
+        if (!(o instanceof AppointmentModel)) return false;
 
-        SpaceOfTimeModel that = (SpaceOfTimeModel) o;
+        AppointmentModel that = (AppointmentModel) o;
 
         if (getGruopId() != that.getGruopId()) return false;
         if (getStart() != null ? !getStart().equals(that.getStart()) : that.getStart() != null) return false;
@@ -46,7 +46,7 @@ public class SpaceOfTimeModel {
 
     @Override
     public String toString() {
-        return "SpaceOfTimeModel{" +
+        return "AppointmentModel{" +
                 "gruopId=" + gruopId +
                 ", start=" + start +
                 ", end=" + end +

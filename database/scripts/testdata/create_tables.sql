@@ -1,4 +1,4 @@
-DROP TABLE `haw_se2_testdata`.`SPACE_OF_TIME`;
+DROP TABLE `haw_se2_testdata`.`APPOINTMENT`;
 DROP TABLE `haw_se2_testdata`.`GROUP`;
 DROP TABLE `haw_se2_testdata`.`COMPLETED_COURSE`;
 DROP TABLE `haw_se2_testdata`.`COURSE`;
@@ -45,7 +45,7 @@ CREATE TABLE `haw_se2_testdata`.`GROUP` (
   PRIMARY KEY (`id`)  COMMENT '',
   UNIQUE INDEX `course_id_UNIQUE` (`group_number` ASC, `course_id` ASC)  COMMENT '');
 
-CREATE TABLE `haw_se2_testdata`.`SPACE_OF_TIME` (
+CREATE TABLE `haw_se2_testdata`.`APPOINTMENT` (
   `group_id` INT NOT NULL COMMENT '',
   `start` DATETIME NOT NULL COMMENT '',
   `end` DATETIME NOT NULL COMMENT '',
