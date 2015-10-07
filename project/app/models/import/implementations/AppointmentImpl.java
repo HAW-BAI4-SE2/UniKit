@@ -2,12 +2,12 @@ import java.util.Date;
 
 public class AppointmentImpl implements Appointment {
     @Override
-    public Date getStart() {
+    public Date getStartDate() {
         return null;
     }
 
     @Override
-    public Date getEnd() {
+    public Date getEndDate() {
         return null;
     }
 }
