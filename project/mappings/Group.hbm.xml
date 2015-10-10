@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+ "-//Hibernate/Hibernate Mapping DTD//EN"
+ "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping>
+   <class name="GroupModel" table="`haw_se2_testdata`.`GROUP`">
+      <meta attribute="class-description">
+         This class contains the group detail. 
+      </meta>
+      <id name="id" type="int" column="id">
+         <generator class="native"/>
+      </id>
+      <property name="groupNumber" column="group_number" type="int" not-null="true"/>
+      <property name="courseID" column="course_id" type="int" not-null="true"/>
+      <property name="maxSize" column="max_size" type="int" not-null="true"/>
+   </class>
+</hibernate-mapping>

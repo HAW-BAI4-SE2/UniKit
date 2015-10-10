@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+ "-//Hibernate/Hibernate Mapping DTD//EN"
+ "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping>
+   <class name="appointmentModel" table="`haw_se2_testdata`.`APPOINTMENT`">
+      <meta attribute="class-description">
+         This class contains the appointment detail. 
+      </meta>
+      <id name="id" type="int" column="id">
+         <generator class="native"/>
+      </id>
+      <property name="groupID" column="group_id" type="in" not-null="true"/>
+      <property name="start" column="start" type="date" not-null="true"/>
+      <property name="end" column="end" type="date" not-null="true"/>
+   </class>	
+</hibernate-mapping>
