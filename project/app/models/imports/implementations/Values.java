@@ -17,8 +17,16 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * An utility class for basic database functions.
+ * Author: Jonas Johannsen, 10.10.2015
+ */
 public class Values {
 
+    /**
+     * Returns a factory for sessions.
+     * @return a factory for sessions.
+     */
     public static SessionFactory createSessionFactory() {
         SessionFactory sessionFactory;
         ServiceRegistry serviceRegistry;
@@ -30,6 +38,11 @@ public class Values {
         return sessionFactory;
     }
 
+    /**
+     * Returns the currently logged in user.
+     * @return The currently logged in user.
+     * WARNING! This Method is just a prototype right now and doesn't return the real logged in user.
+     */
     public static Student getCurrentUser() {
         SessionFactory factory = createSessionFactory();
         Session session = null;
@@ -49,6 +62,10 @@ public class Values {
         return student;
     }
 
+    /**
+     * A Collection of every matriculated student in the system.
+     * @return A Collection of every matriculated student in the system.
+     */
     public static Collection<Student> getStudents() {
         SessionFactory factory = createSessionFactory();
         Session session = null;
@@ -73,6 +90,10 @@ public class Values {
         return students;
     }
 
+    /**
+     * A Collection of every course in the system.
+     * @return A Collection of every course in the system.
+     */
     public static Collection<Course> getCourses() {
         SessionFactory factory = createSessionFactory();
         Session session = null;
