@@ -1,0 +1,27 @@
+@import helper._
+
+@(currentuser: models.imports.interfaces.Student)
+
+<h1>Register courses:</h1>
+<body>
+    @form(routes.courseRegistration.signUpCourses()){
+        <table border = "1">
+            <tr>
+                <td> Course name</td>
+                <td> Abbreviation</td>
+                <td> Course ID</td>
+                <td> Sign Up</td>
+            </tr>
+            @for(course <- currentuser.getAvailableCourses()){
+                <tr>
+                    <td>@course.getName</td>
+                    <td>@course.getAbbreviation</td>
+                    <td>@course.getId</td>
+                    <td><input type="checkbox" name="registeredCourses" value=@course.getId.toString></td>
+                </tr>
+            }
+        }
+        </table>
+
+        <input type="submit" name="signUpSubmitButton" value="Sign up">
+</body>

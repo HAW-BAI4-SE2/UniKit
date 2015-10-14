@@ -3,14 +3,14 @@ package models.imports.implementations.hibernate;
 public class CourseModel {
     private final int id;
     private final String name;
-    private final String shortcut;
+    private final String abbreviation;
     private final int minTeamSize;
     private final int maxTeamSize;
 
-    public CourseModel(int id, String name, String shortcut, int minTeamSize, int maxTeamSize) {
+    public CourseModel(int id, String name, String abbreviation, int minTeamSize, int maxTeamSize) {
         this.id = id;
         this.name = name;
-        this.shortcut = shortcut;
+        this.abbreviation = abbreviation;
         this.minTeamSize = minTeamSize;
         this.maxTeamSize = maxTeamSize;
     }
@@ -23,8 +23,8 @@ public class CourseModel {
         return name;
     }
 
-    public String getShortcut() {
-        return shortcut;
+    public String getAbbreviation() {
+        return abbreviation;
     }
 
     public int getMinTeamSize() {
@@ -46,7 +46,7 @@ public class CourseModel {
         if (getMinTeamSize() != that.getMinTeamSize()) return false;
         if (getMaxTeamSize() != that.getMaxTeamSize()) return false;
         if (getName() != null ? !getName().equals(that.getName()) : that.getName() != null) return false;
-        return !(getShortcut() != null ? !getShortcut().equals(that.getShortcut()) : that.getShortcut() != null);
+        return !(getAbbreviation() != null ? !getAbbreviation().equals(that.getAbbreviation()) : that.getAbbreviation() != null);
 
     }
 
@@ -54,7 +54,7 @@ public class CourseModel {
     public int hashCode() {
         int result = getId();
         result = 31 * result + (getName() != null ? getName().hashCode() : 0);
-        result = 31 * result + (getShortcut() != null ? getShortcut().hashCode() : 0);
+        result = 31 * result + (getAbbreviation() != null ? getAbbreviation().hashCode() : 0);
         result = 31 * result + getMinTeamSize();
         result = 31 * result + getMaxTeamSize();
         return result;
@@ -65,7 +65,7 @@ public class CourseModel {
         return "CourseModel{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", shortcut='" + shortcut + '\'' +
+                ", abbreviation='" + abbreviation + '\'' +
                 ", minTeamSize=" + minTeamSize +
                 ", maxTeamSize=" + maxTeamSize +
                 '}';

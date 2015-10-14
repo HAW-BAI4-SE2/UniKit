@@ -48,7 +48,7 @@ public class CourseRegistrationModel {
 
     @Override
     public String toString() {
-        return "CourseRegistrationModel{" +
+        return "CourseRegistrationFormModel{" +
                 "studentNumber='" + studentNumber + '\'' +
                 ", courseId=" + courseId +
                 '}';

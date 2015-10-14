@@ -3,7 +3,7 @@ package models.dummies;
 import models.imports.interfaces.Course;
 
 /**
- * Created by tbu on 10/8/2015.
+ * Created by Thomas Bednorz on 10/8/2015.
  */
 public class DummyCourse implements Course {
 
@@ -32,7 +32,7 @@ public class DummyCourse implements Course {
     }
 
     @Override
-    public String getShortcut() {
+    public String getAbbreviation() {
         return shortcut;
     }
 

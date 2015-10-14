@@ -14,7 +14,7 @@ class CourseImpl implements Course {
     }
 	
 	@Override	
-	public String getShortcut() {
+	public String getAbbreviation() {
         return null;
     }
 

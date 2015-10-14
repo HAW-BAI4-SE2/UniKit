@@ -13,6 +13,9 @@ public class DummyStudent implements Student {
 
     Collection<Course> availableCourses = new ArrayList<Course>();
 
+    /*
+    All information is hardcoded
+     */
     public DummyStudent() {
         Course rn = new DummyCourse(42,"Rechnernetze","RN",2,3);
         Course se2 = new DummyCourse(23,"Software Engineering 2","SE2",2,3);

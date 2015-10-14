@@ -1,7 +1,7 @@
 @(currentUser: models.imports.interfaces.Student)
 
 <h1>Hello @(currentUser.getFirstName + " " + currentUser.getLastName)</h1>
-    <body>What do you want to do? <br>
-        <a href=@routes.courseEnrollment.showOverview>Already enrolled courses</a> <br>
-        <a href=@routes.courseEnrollment.showAvailableCourses>Enroll into new course</a>
+    <body>
+        <a href=@routes.courseRegistration.showOverview>Registered courses</a> <br>
+        <a href=@routes.courseRegistration.showCourseRegistration>Register for course</a>
     </body>
