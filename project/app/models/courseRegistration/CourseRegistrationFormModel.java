@@ -1,5 +1,8 @@
 package models.courseRegistration;
 
+import models.imports.interfaces.Course;
+
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -9,4 +12,12 @@ import java.util.List;
 public class CourseRegistrationFormModel {
     public String studentNumber;
     public List<String> registeredCourses;
+    public Collection<Course> availableCourse;
+
+    public CourseRegistrationFormModel(){}
+
+    public CourseRegistrationFormModel(String studentNumber, Collection<Course> availableCourses){
+        this.studentNumber = studentNumber;
+        this.availableCourse = availableCourses;
+    }
 }

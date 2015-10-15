@@ -1,6 +1,6 @@
 @import helper._
 
-@(currentuser: models.imports.interfaces.Student)
+@(courseRegistrationForm: Form[models.courseRegistration.CourseRegistrationFormModel])
 
 <h1>Register courses:</h1>
 <body>
@@ -11,17 +11,17 @@
                 <td> Abbreviation</td>
                 <td> Course ID</td>
                 <td> Sign Up</td>
+                <td> <input type = hidden name="studentNumber" value=@courseRegistrationForm("studentNumber").value> </td>
             </tr>
-            @for(course <- currentuser.getAvailableCourses()){
+            @for(course <- courseRegistrationForm.get().availableCourse){
                 <tr>
-                    <td>@course.getName</td>
-                    <td>@course.getAbbreviation</td>
-                    <td>@course.getId</td>
-                    <td><input type="checkbox" name="registeredCourses" value=@course.getId.toString></td>
+                    <td>@course.getName()</td>
+                    <td>@course.getAbbreviation()</td>
+                    <td>@course.getId()</td>
+                    <td><input type = "checkbox" name="registeredCourses[]" value=@course.getId></td>
                 </tr>
             }
-        }
         </table>
-
         <input type="submit" name="signUpSubmitButton" value="Sign up">
+        }
 </body>

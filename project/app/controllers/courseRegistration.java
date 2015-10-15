@@ -38,7 +38,11 @@ public class courseRegistration extends Controller {
     @param courseRegistrationForm The Form object used to bind the registration choices
      */
     public static Result showCourseRegistration() {
-        return ok(showCourseRegistration.render(currentUser));
+        Form<CourseRegistrationFormModel> courseRegistration =
+                Form.form(CourseRegistrationFormModel.class)
+                        .fill(new CourseRegistrationFormModel(currentUser.getStudentNumber(), currentUser.getAvailableCourses()));
+
+        return ok(showCourseRegistration.render(courseRegistration));
     }
 
     /*
@@ -52,14 +56,12 @@ public class courseRegistration extends Controller {
     Receives the signup choices by the current user, persists them to the databank and displays the results
      */
     public static Result signUpCourses(){
-        Form<CourseRegistrationFormModel> courseRegistrationForm = Form.form(CourseRegistrationFormModel.class);
-        courseRegistrationForm.bindFromRequest();
-        List<String> registeredCourses = new ArrayList<>();
+        Form<CourseRegistrationFormModel> courseRegistrationForm =
+                Form.form(CourseRegistrationFormModel.class)
+                        .bindFromRequest();
 
-        for(String course : courseRegistrationForm.get().registeredCourses){
-            registeredCourses.add(course);
-        }
-//
-        return ok(showOverview.render(registeredCourses.toString()));
+        CourseRegistrationFormModel crm = courseRegistrationForm.get();
+
+        return ok(showOverview.render(crm.studentNumber));
     }
 }
