@@ -19,6 +19,7 @@ CREATE TABLE `haw_se2_testdata`.`COURSE` (
   `abbreviation` VARCHAR(31) NOT NULL COMMENT '',
   `min_team_size` INT NULL COMMENT '',
   `max_team_size` INT NULL COMMENT '',
+  `max_participants` INT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '',
   UNIQUE INDEX `name_UNIQUE` (`name` ASC)  COMMENT '',
   UNIQUE INDEX `abbreviation_UNIQUE` (`abbreviation` ASC)  COMMENT '');
