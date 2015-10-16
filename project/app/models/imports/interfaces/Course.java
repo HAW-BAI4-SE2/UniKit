@@ -6,4 +6,5 @@ public interface Course {
 	public String getShortcut();
     public int getMinTeamSize();
     public int getMaxTeamSize();
+	public FieldOfStudy getFieldOfStudy();
 }

@@ -30,6 +30,11 @@ class StudentImpl implements Student {
     public int getSemester() {
         return 0;
     }
+	
+	@Override
+	public FieldOfStudy getFieldOfStudy() {
+        return null;
+    }
 
     @Override
     public Collection<Course> getAvailableCourses() {

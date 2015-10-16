@@ -27,4 +27,9 @@ class CourseImpl implements Course {
     public int getMaxTeamSize() {
         return 0;
     }
+	
+	@Override
+	public FieldOfStudy getFieldOfStudy() {
+        return null;
+    }
 }

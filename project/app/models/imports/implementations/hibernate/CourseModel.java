@@ -6,6 +6,7 @@ public class CourseModel {
     private final String shortcut;
     private final int minTeamSize;
     private final int maxTeamSize;
+	private final int fieldOfStudyId;
 
     public CourseModel(int id, String name, String shortcut, int minTeamSize, int maxTeamSize) {
         this.id = id;
@@ -34,6 +35,10 @@ public class CourseModel {
     public int getMaxTeamSize() {
         return maxTeamSize;
     }
+	
+	public int getFieldOfStudyId() {
+        return fieldOfStudyId;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -45,6 +50,7 @@ public class CourseModel {
         if (getId() != that.getId()) return false;
         if (getMinTeamSize() != that.getMinTeamSize()) return false;
         if (getMaxTeamSize() != that.getMaxTeamSize()) return false;
+		if (getFieldOfStudyId() != that.getFieldOfStudyId()) return false;
         if (getName() != null ? !getName().equals(that.getName()) : that.getName() != null) return false;
         return !(getShortcut() != null ? !getShortcut().equals(that.getShortcut()) : that.getShortcut() != null);
 
@@ -57,6 +63,7 @@ public class CourseModel {
         result = 31 * result + (getShortcut() != null ? getShortcut().hashCode() : 0);
         result = 31 * result + getMinTeamSize();
         result = 31 * result + getMaxTeamSize();
+		result = 31 * result + getFieldOfStudyId();
         return result;
     }
 
@@ -68,6 +75,7 @@ public class CourseModel {
                 ", shortcut='" + shortcut + '\'' +
                 ", minTeamSize=" + minTeamSize +
                 ", maxTeamSize=" + maxTeamSize +
+				", fieldOfStudyId=" + fieldOfStudyId +
                 '}';
     }
 }

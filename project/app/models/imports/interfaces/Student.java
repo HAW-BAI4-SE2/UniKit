@@ -8,5 +8,6 @@ public interface Student {
     public String getLastName();
     public String getEmail();
     public int getSemester();
+	public FieldOfStudy getFieldOfStudy();
     public Collection<Course> getAvailableCourses();
 }

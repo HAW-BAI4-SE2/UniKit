@@ -6,6 +6,7 @@ public class StudentModel {
     private final String lastName;
     private final String email;
     private final int semester;
+	private final int fieldOfStudyId;
 
     public StudentModel(String studentNumber, String firstName, String lastName, String email, int semester) {
         this.studentNumber = studentNumber;
@@ -34,6 +35,10 @@ public class StudentModel {
     public int getSemester() {
         return semester;
     }
+	
+	public int getFieldOfStudyId() {
+        return fieldOfStudyId;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -43,6 +48,7 @@ public class StudentModel {
         StudentModel that = (StudentModel) o;
 
         if (getSemester() != that.getSemester()) return false;
+		if (getFieldOfStudyId() != that.getFieldOfStudyId()) return false;
         if (getStudentNumber() != null ? !getStudentNumber().equals(that.getStudentNumber()) : that.getStudentNumber() != null)
             return false;
         if (getFirstName() != null ? !getFirstName().equals(that.getFirstName()) : that.getFirstName() != null)
@@ -60,6 +66,7 @@ public class StudentModel {
         result = 31 * result + (getLastName() != null ? getLastName().hashCode() : 0);
         result = 31 * result + (getEmail() != null ? getEmail().hashCode() : 0);
         result = 31 * result + getSemester();
+		result = 31 * result + getFieldOfStudyId();
         return result;
     }
 
@@ -71,6 +78,7 @@ public class StudentModel {
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", semester=" + semester +
+				", fieldOfStudyId=" + fieldOfStudyId +
                 '}';
     }
 }
