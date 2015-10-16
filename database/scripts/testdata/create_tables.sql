@@ -16,12 +16,12 @@ CREATE TABLE `haw_se2_testdata`.`STUDENT` (
 CREATE TABLE `haw_se2_testdata`.`COURSE` (
   `id` INT NOT NULL COMMENT '',
   `name` VARCHAR(127) NOT NULL COMMENT '',
-  `shortcut` VARCHAR(31) NOT NULL COMMENT '',
+  `abbreviation` VARCHAR(31) NOT NULL COMMENT '',
   `min_team_size` INT NULL COMMENT '',
   `max_team_size` INT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '',
   UNIQUE INDEX `name_UNIQUE` (`name` ASC)  COMMENT '',
-  UNIQUE INDEX `shortcut_UNIQUE` (`shortcut` ASC)  COMMENT '');
+  UNIQUE INDEX `abbreviation_UNIQUE` (`abbreviation` ASC)  COMMENT '');
 
 CREATE TABLE `haw_se2_testdata`.`COMPLETED_COURSE` (
   `student_number` VARCHAR(31) NOT NULL COMMENT '',
