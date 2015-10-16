@@ -10,10 +10,12 @@ import java.util.List;
  * Created by Thomas Bednorz on 10/14/2015.
  */
 public class CourseRegistrationFormModel {
+    //Accoridng to sources the fields of a data models to wrapped by a Form have to be public
     public String studentNumber;
-    public List<String> registeredCourses;
+    public List<Integer> registeredCourses;
     public Collection<Course> availableCourse;
 
+    //Default constructor needed, even if unused
     public CourseRegistrationFormModel(){}
 
     public CourseRegistrationFormModel(String studentNumber, Collection<Course> availableCourses){

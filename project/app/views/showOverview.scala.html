@@ -1,2 +1,18 @@
-@(message: String)
-<h1>@message</h1>
+@import models.hibernate.CourseRegistrationModel
+@(courseRegistrations: Collection[models.hibernate.CourseRegistrationModel])
+
+<h1>Course registrations for @courseRegistrations.get(0).getStudentNumber</h1>
+<body>
+    <table border = "1">
+        <tr>
+            <td> Student number</td>
+            <td> Course ID</td>
+        </tr>
+        @for(course <- @courseRegistrations){
+            <tr>
+                <td>@course.getStudentNumber()</td>
+                <td>@course.getId()</td>
+            </tr>
+    }
+    </table>
+</body>
