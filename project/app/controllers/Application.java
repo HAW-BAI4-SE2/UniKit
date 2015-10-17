@@ -1,19 +1,27 @@
 package controllers;
 
+import export.interfaces.DatabaseConfiguration;
 import haw_hamburg.database.implementations.DatabaseManager;
 import haw_hamburg.database.interfaces.Student;
+import models.implementations.DatabaseConfigurationImpl;
+import play.Play;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.index;
 
+import java.io.InputStream;
 import java.util.Collection;
 
 public class Application extends Controller {
     static {
-        haw_hamburg.database.implementations.DatabaseManager.init();
+        InputStream inputStreamImport = Play.application().resourceAsStream("hibernate_import.properties");
+        DatabaseConfiguration databaseConfigurationImport = DatabaseConfigurationImpl.create(inputStreamImport);
+        haw_hamburg.database.implementations.DatabaseManager.init(databaseConfigurationImport);
         haw_hamburg.database.implementations.DatabaseManager.cacheData();
 
-        unikit.database.implementations.DatabaseManager.init();
+        InputStream inputStreamUnikit = Play.application().resourceAsStream("hibernate_unikit.properties");
+        DatabaseConfiguration databaseConfigurationUnikit = DatabaseConfigurationImpl.create(inputStreamUnikit);
+        unikit.database.implementations.DatabaseManager.init(databaseConfigurationUnikit);
         unikit.database.implementations.DatabaseManager.cacheData();
     }
 
