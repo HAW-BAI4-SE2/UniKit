@@ -77,7 +77,10 @@ public class courseRegistration extends Controller {
     @param getAllCourseRegistration: List of all course registrations. All? or all for the current user. No doc, no one knows.
      */
     public static Result index() {
-        return ok(showOverview.render(UnikitDatabaseManager.getAllCourseRegistrations()));
+        if(UnikitDatabaseManager.getAllCourseRegistrations() != null){
+            return ok(showOverview.render(UnikitDatabaseManager.getAllCourseRegistrations()));
+        }
+        return showCourseRegistration();
     }
 
     /*
