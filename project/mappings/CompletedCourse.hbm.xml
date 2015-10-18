@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+ "-//Hibernate/Hibernate Mapping DTD//EN"
+ "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping>
+   <class name="CompletedCourse" table="`haw_se2_testdata`.`COMPLETED_COURSE`">
+      <meta attribute="class-description">
+         This class contains the completed courses detail. 
+      </meta>
+      <property name="studentNumber" column="student_number" type="string"/>
+      <property name="courseID" column="course_id" type="int" not-null="true"/>
+   </class>
+</hibernate-mapping>

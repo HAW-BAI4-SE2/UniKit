@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+ "-//Hibernate/Hibernate Mapping DTD//EN"
+ "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping>
+   <class name="StudentModel" table="`haw_se2_testdata`.`STUDENT`">
+      <meta attribute="class-description">
+         This class contains the student detail. 
+      </meta>
+      <id name="studentNumber" type="string" column="id">
+         <generator class="native"/>
+      </id>
+      <property name="firstName" column="first_name" type="string" not-null="true"/>
+      <property name="lastName" column="last_name" type="string" not-null="true"/>
+      <property name="email" column="email" type="string" not-null="true"/>
+      <property name="semester" column="semester" type="int" not-null="true"/>
+   </class>
+    <set name="team" table="`haw_se2`.`STUDENT_TO_TEAM`" lazy="true">
+      <key column="studentNumber"/>
+      <many-to-many class="StudentModell" column="teamID"/>
+    </set>
+    <set name="team" table="`haw_se2_testdata`.`COMPLETED_COURSE`" lazy="true">
+      <key column="studentNumber"/>
+      <many-to-many class="StudentModell" column="courseNumber"/>
+    </set>
+    <set name="course" table="`haw_se2_testdata`.`COURSE_REGISTRATION`" lazy="true">
+      <key column="studentNumber"/>
+      <many-to-many class="StudentModell" column="courseNumber"/>
+    </set>
+</hibernate-mapping>
