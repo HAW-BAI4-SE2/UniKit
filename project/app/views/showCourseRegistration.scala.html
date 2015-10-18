@@ -6,12 +6,12 @@
 <body>
     @form(routes.courseRegistration.signUpCourses()){
         <table border = "1">
+            Your student number: @courseRegistrationForm("studentNumber").value
             <tr>
                 <td> Course name</td>
                 <td> Abbreviation</td>
                 <td> Course ID</td>
                 <td> Sign Up</td>
-                <td> <input type = hidden name="studentNumber" value=@courseRegistrationForm("studentNumber").value> </td>
             </tr>
             @for(course <- courseRegistrationForm.get().availableCourse){
                 <tr>

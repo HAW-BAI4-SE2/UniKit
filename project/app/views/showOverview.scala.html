@@ -1,5 +1,5 @@
 @import models.hibernate.CourseRegistrationModel
-@(courseRegistrations: Collection[models.hibernate.CourseRegistrationModel])
+@(courseRegistrations: List[database.unikit.interfaces.CourseRegistration])
 
 <h1>Course registrations for @courseRegistrations.get(0).getStudentNumber</h1>
 <body>
@@ -8,10 +8,9 @@
             <td> Student number</td>
             <td> Course ID</td>
         </tr>
-        @for(course <- @courseRegistrations){
+        @for(course <- courseRegistrations){
             <tr>
-                <td>@course.getStudentNumber()</td>
-                <td>@course.getId()</td>
+                <td>@course.getCourseId</td>
             </tr>
     }
     </table>

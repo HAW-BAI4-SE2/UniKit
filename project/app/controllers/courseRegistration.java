@@ -7,44 +7,56 @@ package controllers;
  * @author Thomas Bednorz on 10/8/2015.
  */
 
+import database.common.interfaces.DatabaseConfiguration;
+import database.haw_hamburg.implementations.ImportDatabaseManager;
+import database.haw_hamburg.interfaces.Student;
+import database.unikit.implementations.UnikitDatabaseManager;
+import database.unikit.interfaces.CourseRegistration;
+
 import models.courseRegistration.CourseRegistrationFormModel;
-import models.dummies.DummyStudent;
-import models.hibernate.CourseRegistrationModel;
-import models.hibernate.SessionFactoryGenerator;
-import models.imports.implementations.hibernate.CourseModel;
-import models.imports.interfaces.Course;
-import models.imports.interfaces.Student;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+
+import play.Play;
 import play.data.Form;
 import play.mvc.*;
 import views.html.*;
 
-import java.util.ArrayList;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
 
+
+import static database.common.implementations.DatabaseConfigurationUtils.createDatabaseConfiguration;
 import static play.data.Form.form;
 
 public class courseRegistration extends Controller {
-    /*
-    Dummy Student-Object. Used until import interfaces are operational.
-     */
-    private static Student currentUser = new DummyStudent();
 
-    /*
-    The SessionFactoryGenerator object used for Hibernate persistence actions.
-     */
-    private static SessionFactory sessionFactory = SessionFactoryGenerator.buildSessionFactory();
+    private static Student currentUser;
 
+    static {
+        /*
+        Init database connection
+         */
+        InputStream inputStreamImport = Play.application().resourceAsStream("hibernate_import.properties");
+        DatabaseConfiguration databaseConfigurationImport = createDatabaseConfiguration(inputStreamImport);
+        ImportDatabaseManager.init(databaseConfigurationImport);
+        ImportDatabaseManager.cacheData();
+
+        InputStream inputStreamUnikit = Play.application().resourceAsStream("hibernate_unikit.properties");
+        DatabaseConfiguration databaseConfigurationUnikit = createDatabaseConfiguration(inputStreamUnikit);
+        UnikitDatabaseManager.init(databaseConfigurationUnikit);
+        UnikitDatabaseManager.cacheData();
+
+        /*
+        The current user for the course registration.
+        */
+        currentUser = ImportDatabaseManager.getCurrentUser();
+    }
 
     /*
     Displays the registered courses for the student.
      */
     public static Result showOverview() {
-        return ok(showOverview.render("ToDo: Implemented dat shit!"));
+        return ok(showOverview.render(UnikitDatabaseManager.getAllCourseRegistrations()));
     }
 
     /*
@@ -61,14 +73,15 @@ public class courseRegistration extends Controller {
     }
 
     /*
-    Displays an index page in which the user can choose what to do
+    Redirects to the course registrations for the current user.
+    @param getAllCourseRegistration: List of all course registrations. All? or all for the current user. No doc, no one knows.
      */
     public static Result index() {
-        return ok(index.render(currentUser));
+        return ok(showOverview.render(UnikitDatabaseManager.getAllCourseRegistrations()));
     }
 
     /*
-    Receives the signup choices by the current user, persists them to the databank and displays the results
+    Receives the registration choices by the current user, persists them to the databank and displays the results.
     @param courseRegistrationForm: Method binds a Form object from the POST request and persists the data
     @return ShowOverview Page: Page displaying all persisted course choices
      */
@@ -79,54 +92,13 @@ public class courseRegistration extends Controller {
 
         CourseRegistrationFormModel crm = courseRegistrationForm.get();
 
-        for(Integer course : crm.registeredCourses){
-            persistCourseRegistration(new CourseRegistrationModel(crm.studentNumber,course));
+        for(String course : crm.registeredCourses){
+            CourseRegistration cr = UnikitDatabaseManager.createCourseRegistration();
+            cr.setStudentNumber(crm.studentNumber);
+            cr.setCourseId(Integer.getInteger(course));
+            UnikitDatabaseManager.addCourseRegistration(cr);
         }
 
-        Collection<CourseRegistrationModel> courseRegistrationsForCurrentUser = getCourseRegistrationsByStudentId(crm.studentNumber);
-
-
-        return ok(showOverview.render(courseRegistrationsForCurrentUser));
-    }
-
-    /*
-    Persists a course registration choice to the database
-    @param courseRegistration: A course registration tuple consisting of a student number and the registered course
-     */
-    private static void persistCourseRegistration(CourseRegistrationModel courseRegistration){
-        Session session = sessionFactory.openSession();
-        Transaction tx = null;
-        try{
-            tx = session.beginTransaction();
-            session.save(courseRegistration);
-            tx.commit();
-        }catch (HibernateException e) {
-            if (tx!=null) tx.rollback();
-            e.printStackTrace();
-        }finally {
-            session.close();
-        }
-    }
-
-    /*
-    Finds all persisted course registrations by the student number
-     */
-    private static Collection<CourseRegistrationModel> getCourseRegistrationsByStudentId(String studentNumber){
-        Collection<CourseRegistrationModel> courseRegistrations = new ArrayList<>();
-
-        Session session = sessionFactory.openSession();
-        Transaction tx = null;
-        try{
-            tx = session.beginTransaction();
-            courseRegistrations = session.createQuery("FROM COURSE_REGISTRATIONS WHERE student_id = " +studentNumber).list();
-            tx.commit();
-        }catch (HibernateException e) {
-            if (tx!=null) tx.rollback();
-            e.printStackTrace();
-        }finally {
-            session.close();
-        }
-
-        return courseRegistrations;
+        return ok(showOverview.render(UnikitDatabaseManager.getAllCourseRegistrations()));
     }
 }
