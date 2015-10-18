@@ -3,6 +3,13 @@ DROP TABLE `haw_se2_testdata`.`GROUP`;
 DROP TABLE `haw_se2_testdata`.`COMPLETED_COURSE`;
 DROP TABLE `haw_se2_testdata`.`COURSE`;
 DROP TABLE `haw_se2_testdata`.`STUDENT`;
+DROP TABLE `haw_se2_testdata`.`FIELD_OF_STUDY`;
+
+CREATE TABLE `haw_se2_testdata`.`FIELD_OF_STUDY` (
+  `id` INT NOT NULL COMMENT '',
+  `name` VARCHAR(127) NOT NULL COMMENT '',
+  PRIMARY KEY (`id`)  COMMENT '',
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC)  COMMENT '');
 
 CREATE TABLE `haw_se2_testdata`.`STUDENT` (
   `student_number` VARCHAR(31) NOT NULL COMMENT '',
@@ -10,18 +17,33 @@ CREATE TABLE `haw_se2_testdata`.`STUDENT` (
   `last_name` VARCHAR(63) NOT NULL COMMENT '',
   `email` VARCHAR(255) NOT NULL COMMENT '',
   `semester` INT NOT NULL COMMENT '',
+  `field_of_study_id` INT NOT NULL COMMENT '',
   PRIMARY KEY (`student_number`)  COMMENT '',
-  UNIQUE INDEX `email_UNIQUE` (`email` ASC)  COMMENT '');
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC)  COMMENT '',
+  INDEX `field_of_study_id_idx` (`field_of_study_id` ASC)  COMMENT '',
+  CONSTRAINT `field_of_study_id`
+    FOREIGN KEY (`field_of_study_id`)
+    REFERENCES `haw_se2_testdata`.`field_of_study` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
 
 CREATE TABLE `haw_se2_testdata`.`COURSE` (
   `id` INT NOT NULL COMMENT '',
   `name` VARCHAR(127) NOT NULL COMMENT '',
-  `shortcut` VARCHAR(31) NOT NULL COMMENT '',
+  `abbreviation` VARCHAR(31) NOT NULL COMMENT '',
   `min_team_size` INT NULL COMMENT '',
   `max_team_size` INT NULL COMMENT '',
+  `max_participants` INT NULL COMMENT '',
+  `field_of_study_id` INT NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '',
   UNIQUE INDEX `name_UNIQUE` (`name` ASC)  COMMENT '',
-  UNIQUE INDEX `shortcut_UNIQUE` (`shortcut` ASC)  COMMENT '');
+  UNIQUE INDEX `abbreviation_UNIQUE` (`abbreviation` ASC)  COMMENT '',
+  INDEX `field_of_study_id_idx` (`field_of_study_id` ASC)  COMMENT '',
+  CONSTRAINT `field_of_study_id`
+    FOREIGN KEY (`field_of_study_id`)
+    REFERENCES `haw_se2_testdata`.`field_of_study` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
 
 CREATE TABLE `haw_se2_testdata`.`COMPLETED_COURSE` (
   `student_number` VARCHAR(31) NOT NULL COMMENT '',
