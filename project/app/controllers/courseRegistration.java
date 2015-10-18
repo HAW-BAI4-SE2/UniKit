@@ -15,6 +15,7 @@ import database.unikit.interfaces.CourseRegistration;
 
 import models.courseRegistration.CourseRegistrationFormModel;
 
+import models.dummies.DummyStudent;
 import play.Play;
 import play.data.Form;
 import play.mvc.*;
@@ -49,7 +50,7 @@ public class courseRegistration extends Controller {
         /*
         The current user for the course registration.
         */
-        currentUser = ImportDatabaseManager.getCurrentUser();
+        currentUser = new DummyStudent();
     }
 
     /*
@@ -88,7 +89,7 @@ public class courseRegistration extends Controller {
     @param courseRegistrationForm: Method binds a Form object from the POST request and persists the data
     @return ShowOverview Page: Page displaying all persisted course choices
      */
-    public static Result signUpCourses(){
+    public static Result registerCourses(){
         Form<CourseRegistrationFormModel> courseRegistrationForm =
                 Form.form(CourseRegistrationFormModel.class)
                         .bindFromRequest();

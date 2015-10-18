@@ -1,17 +1,20 @@
 package models.dummies;
 
-import models.imports.interfaces.Course;
-import models.imports.interfaces.Student;
+import database.haw_hamburg.interfaces.FieldOfStudy;
+import database.haw_hamburg.interfaces.Course;
+//import models.imports.interfaces.Student;
+import database.haw_hamburg.interfaces.Student;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by Thomas Bednorz on 10/8/2015.
  */
 public class DummyStudent implements Student {
 
-    Collection<Course> availableCourses = new ArrayList<Course>();
+    List<Course> availableCourses = new ArrayList<Course>();
 
     /*
     All information is hardcoded
@@ -49,7 +52,22 @@ public class DummyStudent implements Student {
     }
 
     @Override
-    public Collection<Course> getAvailableCourses() {
+    public FieldOfStudy getFieldOfStudy() {
+        return new FieldOfStudy() {
+            @Override
+            public int getId() {
+                return 13;
+            }
+
+            @Override
+            public String getName() {
+                return null;
+            }
+        };
+    }
+
+    @Override
+    public List<Course> getAvailableCourses() {
         return availableCourses;
     }
 }

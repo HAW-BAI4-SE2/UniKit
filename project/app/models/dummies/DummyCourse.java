@@ -1,6 +1,10 @@
 package models.dummies;
 
-import models.imports.interfaces.Course;
+import database.haw_hamburg.interfaces.Course;
+import database.haw_hamburg.interfaces.FieldOfStudy;
+import database.haw_hamburg.interfaces.Group;
+
+import java.util.Set;
 
 /**
  * Created by Thomas Bednorz on 10/8/2015.
@@ -44,5 +48,20 @@ public class DummyCourse implements Course {
     @Override
     public int getMaxTeamSize() {
         return maxTeamSize;
+    }
+
+    @Override
+    public Integer getMaxParticipants() {
+        return 7;
+    }
+
+    @Override
+    public Set<FieldOfStudy> getFieldOfStudies() {
+        return null;
+    }
+
+    @Override
+    public Set<Group> getGroups() {
+        return null;
     }
 }
