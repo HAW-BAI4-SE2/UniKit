@@ -1,35 +1,37 @@
 package controllers;
 
-import export.interfaces.DatabaseConfiguration;
-import haw_hamburg.database.implementations.DatabaseManager;
-import haw_hamburg.database.interfaces.Student;
-import models.implementations.DatabaseConfigurationImpl;
+import database.common.interfaces.DatabaseConfiguration;
+import database.haw_hamburg.implementations.ImportDatabaseManager;
+import database.haw_hamburg.interfaces.Student;
+import database.unikit.implementations.UnikitDatabaseManager;
 import play.Play;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.index;
 
 import java.io.InputStream;
-import java.util.Collection;
+import java.util.List;
+
+import static database.common.implementations.DatabaseConfigurationUtils.createDatabaseConfiguration;
 
 public class Application extends Controller {
     static {
         InputStream inputStreamImport = Play.application().resourceAsStream("hibernate_import.properties");
-        DatabaseConfiguration databaseConfigurationImport = DatabaseConfigurationImpl.create(inputStreamImport);
-        haw_hamburg.database.implementations.DatabaseManager.init(databaseConfigurationImport);
-        haw_hamburg.database.implementations.DatabaseManager.cacheData();
+        DatabaseConfiguration databaseConfigurationImport = createDatabaseConfiguration(inputStreamImport);
+        ImportDatabaseManager.init(databaseConfigurationImport);
+        ImportDatabaseManager.cacheData();
 
         InputStream inputStreamUnikit = Play.application().resourceAsStream("hibernate_unikit.properties");
-        DatabaseConfiguration databaseConfigurationUnikit = DatabaseConfigurationImpl.create(inputStreamUnikit);
-        unikit.database.implementations.DatabaseManager.init(databaseConfigurationUnikit);
-        unikit.database.implementations.DatabaseManager.cacheData();
+        DatabaseConfiguration databaseConfigurationUnikit = createDatabaseConfiguration(inputStreamUnikit);
+        UnikitDatabaseManager.init(databaseConfigurationUnikit);
+        UnikitDatabaseManager.cacheData();
     }
 
     public static Result index() {
         //Student currentUser = DatabaseManager.getCurrentUser();
         //String message = currentUser.toString();
 
-        Collection<Student> students = DatabaseManager.getStudents();
+        List<Student> students = ImportDatabaseManager.getAllStudents();
         String message = students.toString();
         return ok(index.render(message));
     }
