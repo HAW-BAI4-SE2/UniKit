@@ -93,15 +93,15 @@ public class courseRegistration extends Controller {
                 Form.form(CourseRegistrationFormModel.class)
                         .bindFromRequest();
 
-        CourseRegistrationFormModel crm = courseRegistrationForm.get();
+        CourseRegistrationFormModel crfm = courseRegistrationForm.get();
 
-        for(String course : crm.registeredCourses){
-            CourseRegistration cr = UnikitDatabaseManager.createCourseRegistration();
-            cr.setStudentNumber(crm.studentNumber);
-            cr.setCourseId(Integer.getInteger(course));
-            UnikitDatabaseManager.addCourseRegistration(cr);
+        for(String course : crfm.registeredCourses){
+            CourseRegistration dbEntry = UnikitDatabaseManager.createCourseRegistration();
+            dbEntry.setStudentNumber(crfm.studentNumber);
+            dbEntry.setCourseId(Integer.getInteger(course));
+            UnikitDatabaseManager.addCourseRegistration(dbEntry);
         }
 
-        return ok(showOverview.render(UnikitDatabaseManager.getAllCourseRegistrations()));
+        return showOverview();
     }
 }
