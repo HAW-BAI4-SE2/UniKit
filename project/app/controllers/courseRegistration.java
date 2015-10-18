@@ -16,6 +16,8 @@ import database.unikit.interfaces.CourseRegistration;
 import models.courseRegistration.CourseRegistrationFormModel;
 
 import models.dummies.DummyStudent;
+import database.haw_hamburg.interfaces.Course;
+//import models.imports.interfaces.Course;
 import play.Play;
 import play.data.Form;
 import play.mvc.*;

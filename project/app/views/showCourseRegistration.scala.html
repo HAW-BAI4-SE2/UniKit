@@ -18,10 +18,10 @@
                     <td>@course.getName()</td>
                     <td>@course.getAbbreviation()</td>
                     <td>@course.getId()</td>
-                    <td><input type = "checkbox" name="registeredCourses[]" value=@course.getId></td>
+                    <td><input type = "checkbox" name="registeredCourses[]" value=@String.valueOf(course.getId())></td>
                 </tr>
             }
         </table>
-        <input type="submit" name="signUpSubmitButton" value="Sign up">
+        <input type="submit" name="submitRegistrationButton" value="Sign up">
         }
 </body>
