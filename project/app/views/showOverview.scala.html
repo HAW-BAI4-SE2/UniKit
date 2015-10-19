@@ -1,0 +1,17 @@
+@import models.hibernate.CourseRegistrationModel
+@(courseRegistrations: List[database.unikit.interfaces.CourseRegistration])
+
+<h1>Course registrations for @courseRegistrations.get(0).getStudentNumber</h1>
+<body>
+    <table border = "1">
+        <tr>
+            <td> Student number</td>
+            <td> Course ID</td>
+        </tr>
+        @for(course <- courseRegistrations){
+            <tr>
+                <td>@course.getCourseId</td>
+            </tr>
+    }
+    </table>
+</body>

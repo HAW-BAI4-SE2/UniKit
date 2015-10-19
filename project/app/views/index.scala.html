@@ -1,7 +1,6 @@
-@(message: String)
+@(currentUser: models.imports.interfaces.Student)
 
-@main("Welcome to Play") {
-
-    @play20.welcome(message, style = "Java")
-
-}
+<h1>Hello @(currentUser.getFirstName + " " + currentUser.getLastName)</h1>
+    <body>
+        <a href=@routes.courseRegistration.showCourseRegistration>Register for course</a>
+    </body>

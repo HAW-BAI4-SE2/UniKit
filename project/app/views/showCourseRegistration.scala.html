@@ -1,0 +1,27 @@
+@import helper._
+
+@(courseRegistrationForm: Form[models.courseRegistration.CourseRegistrationFormModel])
+
+<h1>Register courses:</h1>
+<body>
+    @form(routes.courseRegistration.registerCourses()){
+        <table border = "1">
+            Your student number: @courseRegistrationForm("studentNumber").value
+            <tr>
+                <td> Course name</td>
+                <td> Abbreviation</td>
+                <td> Course ID</td>
+                <td> Sign Up</td>
+            </tr>
+            @for(course <- courseRegistrationForm.get().availableCourse){
+                <tr>
+                    <td>@course.getName()</td>
+                    <td>@course.getAbbreviation()</td>
+                    <td>@course.getId()</td>
+                    <td><input type = "checkbox" name="registeredCourses[]" value=@String.valueOf(course.getId())></td>
+                </tr>
+            }
+        </table>
+        <input type="submit" name="submitRegistrationButton" value="Sign up">
+        }
+</body>
