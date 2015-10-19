@@ -85,8 +85,14 @@ CREATE TABLE `import_database`.`COMPLETED_COURSE` (
   PRIMARY KEY (`id`)  COMMENT '',
   UNIQUE INDEX `id_UNIQUE` (`id` ASC)  COMMENT '',
   INDEX `course_id_idx` (`course_id` ASC)  COMMENT '',
+  INDEX `student_number_idx` (`student_number` ASC)  COMMENT '',
   CONSTRAINT `course_id_completed_course`
     FOREIGN KEY (`course_id`)
     REFERENCES `import_database`.`COURSE` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `student_number`
+    FOREIGN KEY (`student_number`)
+    REFERENCES `import_database`.`STUDENT` (`student_number`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
