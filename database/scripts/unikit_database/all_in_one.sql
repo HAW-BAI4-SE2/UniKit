@@ -1,3 +1,7 @@
+DROP TABLE `unikit_database`.`COURSE_REGISTRATION`;
+DROP TABLE `unikit_database`.`TEAM_REGISTRATION`;
+DROP TABLE `unikit_database`.`TEAM`;
+
 CREATE TABLE `unikit_database`.`TEAM` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `course_id` INT NOT NULL COMMENT '',
