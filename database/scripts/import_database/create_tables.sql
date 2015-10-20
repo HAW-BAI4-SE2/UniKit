@@ -11,6 +11,7 @@ CREATE TABLE `import_database`.`COURSE` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `name` VARCHAR(63) NOT NULL COMMENT '',
   `abbreviation` VARCHAR(31) NOT NULL COMMENT '',
+  `semester` INT NULL COMMENT '',
   `max_participants` INT NULL COMMENT '',
   `min_team_size` INT NOT NULL COMMENT '',
   `max_team_size` INT NOT NULL COMMENT '',
