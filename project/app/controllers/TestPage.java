@@ -8,13 +8,14 @@ import play.Play;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.index;
+import views.html.testPage;
 
 import java.io.InputStream;
 import java.util.List;
 
 import static database.common.implementations.DatabaseConfigurationUtils.createDatabaseConfiguration;
 
-public class Application extends Controller {
+public class TestPage extends Controller {
     static {
         InputStream inputStreamImport = Play.application().resourceAsStream("hibernate_import.properties");
         DatabaseConfiguration databaseConfigurationImport = createDatabaseConfiguration(inputStreamImport);
@@ -28,11 +29,11 @@ public class Application extends Controller {
     }
 
     public static Result index() {
-        //Student currentUser = DatabaseManager.getCurrentUser();
+        //Student currentUser = UnikitDatabaseManager.getCurrentUser();
         //String message = currentUser.toString();
 
         List<Student> students = ImportDatabaseManager.getAllStudents();
         String message = students.toString();
-        return ok(index.render(message));
+        return ok(testPage.render(message));
     }
 }

@@ -1,6 +1,5 @@
-@(currentUser: models.imports.interfaces.Student)
-
-<h1>Hello @(currentUser.getFirstName + " " + currentUser.getLastName)</h1>
+@(currentUser: database.haw_hamburg.interfaces.Student)
     <body>
-        <a href=@routes.courseRegistration.showCourseRegistration>Register for course</a>
+        Hello @(currentUser.getFirstName + " " + currentUser.getLastName)
+        <a href=@routes.CourseRegistrationController.showRegisterCourses()>Register for course</a>
     </body>

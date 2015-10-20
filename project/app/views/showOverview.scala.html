@@ -1,17 +1,25 @@
-@import models.hibernate.CourseRegistrationModel
-@(courseRegistrations: List[database.unikit.interfaces.CourseRegistration])
+@import helper._
+@(courseRegistrations: models.courseRegistration.OverviewCourseRegistrationModel)
 
-<h1>Course registrations for @courseRegistrations.get(0).getStudentNumber</h1>
+<h1>Your courses:</h1>
 <body>
+    Your student number: <input type="text" name="studentNumber" value=@courseRegistrations.getStudentNumber readonly>
     <table border = "1">
         <tr>
-            <td> Student number</td>
+            <td> Course Name</td>
             <td> Course ID</td>
         </tr>
-        @for(course <- courseRegistrations){
+        @for(course <- courseRegistrations.getRegisteredCourses){
             <tr>
-                <td>@course.getCourseId</td>
+                <td>@course.getName</td>
+                <td>@course.getId</td>
             </tr>
-    }
+        }
     </table>
+        <a href=@routes.CourseRegistrationController.showRegisterCourses>
+            <button>Register more courses</button>
+        </a>
+        <a href=@routes.CourseRegistrationController.showOverview>
+            <button>Cancel registrations</button>
+        </a>
 </body>

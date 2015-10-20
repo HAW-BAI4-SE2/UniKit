@@ -3,13 +3,15 @@
 # ~~~~
 
 # Home page
-GET         /                        controllers.courseRegistration.index()
-GET         /courses/overview        controllers.courseRegistration.showOverview()
-GET         /courses/register        controllers.courseRegistration.showCourseRegistration()
-POST        /courses/register        controllers.courseRegistration.registerCourses()
+GET         /                        controllers.CourseRegistrationController.index()
+GET         /courses/overview        controllers.CourseRegistrationController.showOverview()
+GET         /courses/register        controllers.CourseRegistrationController.showRegisterCourses()
+POST        /courses/register        controllers.CourseRegistrationController.registerCourses()
+GET         /courses/cancel          controllers.CourseRegistrationController.showCancelRegistration()
+POST        /courses/cancel          controllers.CourseRegistrationController.cancelCourseRegistration()
 
 # Test page
-GET         /application             controllers.Application.index
+GET         /test                    controllers.TestPage.index()
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file            controllers.Assets.at(path="/public", file)
