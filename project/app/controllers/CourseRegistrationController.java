@@ -152,13 +152,27 @@ public class CourseRegistrationController extends Controller {
 
         CourseRegistrationFormModel crfm = courseRegistrationForm.get();
 
+
+
         //Persist data
         if(crfm.registeredCourses != null){
+            List<CourseRegistration> allCourseRegistrations = UnikitDatabaseManager.getAllCourseRegistrations();
+            CourseRegistration dbEntry = UnikitDatabaseManager.createCourseRegistration();
+            dbEntry.setStudentNumber(crfm.studentNumber);
+
             for(String course : crfm.registeredCourses){
-                CourseRegistration dbEntry = UnikitDatabaseManager.createCourseRegistration();
-                dbEntry.setStudentNumber(crfm.studentNumber);
+
                 dbEntry.setCourseId(Integer.parseInt(course));
-                UnikitDatabaseManager.deleteCourseRegistration(dbEntry);
+
+                for(CourseRegistration cr : allCourseRegistrations ){
+                    if(crfm.studentNumber.equals(cr.getStudentNumber()) && Integer.parseInt(course) == cr.getCourseId()){
+                        dbEntry.setId(cr.getId());
+                        UnikitDatabaseManager.deleteCourseRegistration(dbEntry);
+                    }
+                }
+
+
+
             }
         }
 
