@@ -42,12 +42,12 @@ public class CourseRegistrationController extends Controller {
         InputStream inputStreamImport = Play.application().resourceAsStream("hibernate_import.properties");
         DatabaseConfiguration databaseConfigurationImport = createDatabaseConfiguration(inputStreamImport);
         ImportDatabaseManager.init(databaseConfigurationImport);
-        ImportDatabaseManager.cacheData();
+//        ImportDatabaseManager.cacheData();
 
         InputStream inputStreamUnikit = Play.application().resourceAsStream("hibernate_unikit.properties");
         DatabaseConfiguration databaseConfigurationUnikit = createDatabaseConfiguration(inputStreamUnikit);
         UnikitDatabaseManager.init(databaseConfigurationUnikit);
-        UnikitDatabaseManager.cacheData();
+//        UnikitDatabaseManager.cacheData();
 
         /*
         The current user for the course registration.
@@ -76,10 +76,10 @@ public class CourseRegistrationController extends Controller {
         return ok(showOverview.render(allRegistrationsCurrentUser));
     }
 
-    /*
-    Displays the options for courese registration.
-    @param currentUser: a logged in user
-    @return showRegisterCourses page displaying all available courses for regsitration
+    /**
+    * Displays the options for courese registration.
+    * @pre currentUser: a logged in user
+    * @return showRegisterCourses page displaying all available courses for regsitration
      */
     public static Result showRegisterCourses() {
         Form<CourseRegistrationFormModel> courseRegistration =
@@ -104,20 +104,20 @@ public class CourseRegistrationController extends Controller {
 
         return ok(showCancelRegistration.render(courseRegistration));
     }
-    /*
-    Redirects to the course registrations for the current user.
-    @param currentUser: a logged in user
-    @return redirects to showRegisterCourses
+    /**
+    * Redirects to the course registrations for the current user.
+    * @pre currentUser: a logged in user
+    * @return redirects to showRegisterCourses
      */
     public static Result index() {
         return showOverview();
     }
 
-    /*
-    Receives the registration choices by the current user, persists them to the databank and displays the results.
-    @param courseRegistrationForm: Form object from the POST request of the showRegisterCourses page
-    @return showOverview page displaying all registered courses for the user
-     */
+    /**
+    * Receives the registration choices by the current user, persists them to the databank and displays the results.
+    * @param courseRegistrationForm: Form object from the POST request of the showRegisterCourses page
+    * @return showOverview page displaying all registered courses for the user
+     **/
     public static Result registerCourses(){
         //Bind Form-object to Model
         Form<CourseRegistrationFormModel> courseRegistrationForm =
@@ -139,11 +139,11 @@ public class CourseRegistrationController extends Controller {
         return showOverview();
     }
 
-    /*
-    Receives the registration choices by the current user, persists them to the databank and displays the results.
-    @param courseRegistrationForm: Form object from the POST request of the showRegisterCourses page
-    @return showOverview page displaying all registered courses for the user
-     */
+    /**
+    *Receives the registration choices by the current user, persists them to the databank and displays the results.
+    * @param courseRegistrationForm: Form object from the POST request of the showRegisterCourses page
+    * @return showOverview page displaying all registered courses for the user
+     **/
     public static Result cancelCourseRegistration(){
         //Bind Form-object to Model
         Form<CourseRegistrationFormModel> courseRegistrationForm =
@@ -151,8 +151,6 @@ public class CourseRegistrationController extends Controller {
                         .bindFromRequest();
 
         CourseRegistrationFormModel crfm = courseRegistrationForm.get();
-
-
 
         //Persist data
         if(crfm.registeredCourses != null){
@@ -167,12 +165,10 @@ public class CourseRegistrationController extends Controller {
                 for(CourseRegistration cr : allCourseRegistrations ){
                     if(crfm.studentNumber.equals(cr.getStudentNumber()) && Integer.parseInt(course) == cr.getCourseId()){
                         dbEntry.setId(cr.getId());
-                        UnikitDatabaseManager.deleteCourseRegistration(dbEntry);
                     }
                 }
 
-
-
+                UnikitDatabaseManager.deleteCourseRegistration(dbEntry);
             }
         }
 
