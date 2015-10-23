@@ -42,12 +42,12 @@ public class CourseRegistrationController extends Controller {
         InputStream inputStreamImport = Play.application().resourceAsStream("hibernate_import.properties");
         DatabaseConfiguration databaseConfigurationImport = createDatabaseConfiguration(inputStreamImport);
         ImportDatabaseManager.init(databaseConfigurationImport);
-//        ImportDatabaseManager.cacheData();
+        ImportDatabaseManager.cacheData();
 
         InputStream inputStreamUnikit = Play.application().resourceAsStream("hibernate_unikit.properties");
         DatabaseConfiguration databaseConfigurationUnikit = createDatabaseConfiguration(inputStreamUnikit);
         UnikitDatabaseManager.init(databaseConfigurationUnikit);
-//        UnikitDatabaseManager.cacheData();
+        //UnikitDatabaseManager.cacheData();
 
         /*
         The current user for the course registration.
