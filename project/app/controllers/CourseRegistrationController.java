@@ -2,7 +2,7 @@ package controllers;
 
 /**
  * The CourseRegistrationController controller contains the logic for displaying the courses available to the student for
- * registration and persists the registration choices for further processing.
+ * registration and delegated any persisting operations to the DB-manager.
  * @pre currentUser logged-in student
  * @author Thomas Bednorz on 10/8/2015.
  */
@@ -55,11 +55,11 @@ public class CourseRegistrationController extends Controller {
         currentUser = ImportDatabaseManager.getCurrentUser();
     }
 
-    /*
-    Displays the registered courses for the student.
-    @param currentUser: a logged in user
-    @return showOverview page displaying all registered courses for the user
-     */
+    /**
+    *Displays the registered courses for the current user
+    *@pre currentUser: a logged in user
+    *@return showOverview page displaying all course registrations for the user
+     **/
     public static Result showOverview() {
         OverviewCourseRegistrationModel allRegistrationsCurrentUser = new OverviewCourseRegistrationModel(currentUser.getStudentNumber());
 
@@ -77,10 +77,10 @@ public class CourseRegistrationController extends Controller {
     }
 
     /**
-    * Displays the options for courese registration.
-    * @pre currentUser: a logged in user
-    * @return showRegisterCourses page displaying all available courses for regsitration
-     */
+    *Displays the options for course registration.
+    *@pre currentUser: a logged in user
+    *@return showRegisterCourses page displaying all available courses for regsitration
+     **/
     public static Result showRegisterCourses() {
         Form<CourseRegistrationFormModel> courseRegistration =
                 Form.form(CourseRegistrationFormModel.class)
@@ -105,18 +105,18 @@ public class CourseRegistrationController extends Controller {
         return ok(showCancelRegistration.render(courseRegistration));
     }
     /**
-    * Redirects to the course registrations for the current user.
-    * @pre currentUser: a logged in user
-    * @return redirects to showRegisterCourses
-     */
+    *Redirects to the overview of all registered courses for the current user.
+    *@pre currentUser: a logged in user
+    *@return showOverview page displaying all course registrations for the user
+     **/
     public static Result index() {
         return showOverview();
     }
 
     /**
-    * Receives the registration choices by the current user, persists them to the databank and displays the results.
-    * @param courseRegistrationForm: Form object from the POST request of the showRegisterCourses page
-    * @return showOverview page displaying all registered courses for the user
+    *Receives the choices by the current user, persists them to the databank and displays the results.
+    *@param courseRegistrationForm: Form object from the POST request of the showRegisterCourses page
+    *@return showOverview page displaying all course registrations for the user
      **/
     public static Result registerCourses(){
         //Bind Form-object to Model
@@ -140,9 +140,9 @@ public class CourseRegistrationController extends Controller {
     }
 
     /**
-    *Receives the registration choices by the current user, persists them to the databank and displays the results.
-    * @param courseRegistrationForm: Form object from the POST request of the showRegisterCourses page
-    * @return showOverview page displaying all registered courses for the user
+    *Receives the choices by the current user, deletes the databank entries and displays the results.
+    *@param courseRegistrationForm: Form object from the POST request of the showRegisterCourses page
+    *@return showOverview page displaying all course registrations for the user
      **/
     public static Result cancelCourseRegistration(){
         //Bind Form-object to Model

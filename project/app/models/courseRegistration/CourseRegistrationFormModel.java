@@ -6,9 +6,9 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Model to be wrapped by a Form during course registration (Phase 1)
+ * Model for the CourseRegistrationForm-form during course registration (Phase 1)
  * @author Thomas Bednorz
- */
+ **/
 public class CourseRegistrationFormModel {
     //Accoridng to sources the fields of a data models to wrapped by a Form have to be public
     public String studentNumber;

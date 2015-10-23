@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * Wrapper-class for display of course registrations in the showOverview-page
+ * Data-model for displaying of course registrations in the showOverview-page
  * @author Thomas Bednorz
  */
 public class OverviewCourseRegistrationModel{
