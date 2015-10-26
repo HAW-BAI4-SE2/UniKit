@@ -66,7 +66,7 @@ CREATE TABLE `import_database`.`APPOINTMENT` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `course_group_id` INT NOT NULL COMMENT '',
   `start_date` DATETIME NOT NULL COMMENT '',
-  `end_data` DATETIME NOT NULL COMMENT '',
+  `end_date` DATETIME NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '',
   UNIQUE INDEX `id_UNIQUE` (`id` ASC)  COMMENT '',
   INDEX `course_group_id_idx` (`course_group_id` ASC)  COMMENT '',
