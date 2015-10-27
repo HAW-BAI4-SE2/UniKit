@@ -39,14 +39,14 @@ CREATE TABLE `unikit_database`.`TEAM_REGISTRATION` (
 
 CREATE TABLE `unikit_database`.`TEAM_INVITATION` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
-  `student_number` VARCHAR(31) NOT NULL COMMENT '',
+  `invitee_student_number` VARCHAR(31) NOT NULL COMMENT '',
   `team_id` INT NOT NULL COMMENT '',
   `created_by_student_number` VARCHAR(31) NOT NULL COMMENT '',
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '',
   `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '',
   UNIQUE INDEX `id_UNIQUE` (`id` ASC)  COMMENT '',
-  INDEX `student_number_idx` (`student_number` ASC)  COMMENT '',
+  INDEX `invitee_student_number_idx` (`invitee_student_number` ASC)  COMMENT '',
   INDEX `team_id_idx` (`team_id` ASC)  COMMENT '',
   INDEX `created_by_student_number_idx` (`created_by_student_number` ASC)  COMMENT '',
   CONSTRAINT `team_id_team_invitation`
@@ -57,13 +57,13 @@ CREATE TABLE `unikit_database`.`TEAM_INVITATION` (
 
 CREATE TABLE `unikit_database`.`TEAM_APPLICATION` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
-  `student_number` VARCHAR(31) NOT NULL COMMENT '',
+  `applicant_student_number` VARCHAR(31) NOT NULL COMMENT '',
   `team_id` INT NOT NULL COMMENT '',
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '',
   `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '',
   UNIQUE INDEX `id_UNIQUE` (`id` ASC)  COMMENT '',
-  INDEX `student_number_idx` (`student_number` ASC)  COMMENT '',
+  INDEX `applicant_student_number_idx` (`applicant_student_number` ASC)  COMMENT '',
   INDEX `team_id_idx` (`team_id` ASC)  COMMENT '',
   CONSTRAINT `team_id_team_application`
     FOREIGN KEY (`team_id`)
