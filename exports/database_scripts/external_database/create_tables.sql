@@ -1,12 +1,4 @@
-DROP TABLE `import_database`.`COMPLETED_COURSE`;
-DROP TABLE `import_database`.`STUDENT`;
-DROP TABLE `import_database`.`APPOINTMENT`;
-DROP TABLE `import_database`.`COURSE_GROUP`;
-DROP TABLE `import_database`.`COURSE_TO_FIELD_OF_STUDY`;
-DROP TABLE `import_database`.`COURSE`;
-DROP TABLE `import_database`.`FIELD_OF_STUDY`;
-
-CREATE TABLE `import_database`.`FIELD_OF_STUDY` (
+CREATE TABLE `external_database`.`FIELD_OF_STUDY` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `name` VARCHAR(63) NOT NULL COMMENT '',
   `abbreviation` VARCHAR(31) NOT NULL COMMENT '',
@@ -15,12 +7,11 @@ CREATE TABLE `import_database`.`FIELD_OF_STUDY` (
   UNIQUE INDEX `name_UNIQUE` (`name` ASC)  COMMENT '',
   UNIQUE INDEX `abbreviation_UNIQUE` (`abbreviation` ASC)  COMMENT '');
 
-CREATE TABLE `import_database`.`COURSE` (
+CREATE TABLE `external_database`.`COURSE` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `name` VARCHAR(63) NOT NULL COMMENT '',
   `abbreviation` VARCHAR(31) NOT NULL COMMENT '',
   `semester` INT NULL COMMENT '',
-  `max_participants` INT NULL COMMENT '',
   `min_team_size` INT NOT NULL COMMENT '',
   `max_team_size` INT NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '',
@@ -28,7 +19,7 @@ CREATE TABLE `import_database`.`COURSE` (
   UNIQUE INDEX `name_UNIQUE` (`name` ASC)  COMMENT '',
   UNIQUE INDEX `abbreviation_UNIQUE` (`abbreviation` ASC)  COMMENT '');
 
-CREATE TABLE `import_database`.`COURSE_TO_FIELD_OF_STUDY` (
+CREATE TABLE `external_database`.`COURSE_TO_FIELD_OF_STUDY` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `course_id` INT NOT NULL COMMENT '',
   `field_of_study_id` INT NOT NULL COMMENT '',
@@ -38,31 +29,31 @@ CREATE TABLE `import_database`.`COURSE_TO_FIELD_OF_STUDY` (
   INDEX `field_of_study_id_idx` (`field_of_study_id` ASC)  COMMENT '',
   CONSTRAINT `course_id_course_to_field_of_study`
     FOREIGN KEY (`course_id`)
-    REFERENCES `import_database`.`COURSE` (`id`)
+    REFERENCES `external_database`.`COURSE` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `field_of_study_id_course_to_field_of_study`
     FOREIGN KEY (`field_of_study_id`)
-    REFERENCES `import_database`.`FIELD_OF_STUDY` (`id`)
+    REFERENCES `external_database`.`FIELD_OF_STUDY` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
 
-CREATE TABLE `import_database`.`COURSE_GROUP` (
+CREATE TABLE `external_database`.`COURSE_GROUP` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `course_id` INT NOT NULL COMMENT '',
   `group_number` INT NOT NULL COMMENT '',
-  `max_size` INT NOT NULL COMMENT '',
+  `max_group_size` INT NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '',
   UNIQUE INDEX `id_UNIQUE` (`id` ASC)  COMMENT '',
   INDEX `course_id_idx` (`course_id` ASC)  COMMENT '',
   CONSTRAINT `course_id_course_group`
     FOREIGN KEY (`course_id`)
-    REFERENCES `import_database`.`COURSE` (`id`)
+    REFERENCES `external_database`.`COURSE` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
-CREATE TABLE `import_database`.`APPOINTMENT` (
+CREATE TABLE `external_database`.`APPOINTMENT` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `course_group_id` INT NOT NULL COMMENT '',
   `start_date` DATETIME NOT NULL COMMENT '',
@@ -72,11 +63,11 @@ CREATE TABLE `import_database`.`APPOINTMENT` (
   INDEX `course_group_id_idx` (`course_group_id` ASC)  COMMENT '',
   CONSTRAINT `course_group_id_appointment`
     FOREIGN KEY (`course_group_id`)
-    REFERENCES `import_database`.`COURSE_GROUP` (`id`)
+    REFERENCES `external_database`.`COURSE_GROUP` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
-CREATE TABLE `import_database`.`STUDENT` (
+CREATE TABLE `external_database`.`STUDENT` (
   `student_number` VARCHAR(31) NOT NULL COMMENT '',
   `first_name` VARCHAR(63) NOT NULL COMMENT '',
   `last_name` VARCHAR(63) NOT NULL COMMENT '',
@@ -89,11 +80,11 @@ CREATE TABLE `import_database`.`STUDENT` (
   INDEX `field_of_study_id_idx` (`field_of_study_id` ASC)  COMMENT '',
   CONSTRAINT `field_of_study_id_student`
     FOREIGN KEY (`field_of_study_id`)
-    REFERENCES `import_database`.`FIELD_OF_STUDY` (`id`)
+    REFERENCES `external_database`.`FIELD_OF_STUDY` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
-CREATE TABLE `import_database`.`COMPLETED_COURSE` (
+CREATE TABLE `external_database`.`COMPLETED_COURSE` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `student_number` VARCHAR(31) NOT NULL COMMENT '',
   `course_id` INT NOT NULL COMMENT '',
@@ -103,11 +94,11 @@ CREATE TABLE `import_database`.`COMPLETED_COURSE` (
   INDEX `student_number_idx` (`student_number` ASC)  COMMENT '',
   CONSTRAINT `course_id_completed_course`
     FOREIGN KEY (`course_id`)
-    REFERENCES `import_database`.`COURSE` (`id`)
+    REFERENCES `external_database`.`COURSE` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `student_number_completed_course`
     FOREIGN KEY (`student_number`)
-    REFERENCES `import_database`.`STUDENT` (`student_number`)
+    REFERENCES `external_database`.`STUDENT` (`student_number`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);

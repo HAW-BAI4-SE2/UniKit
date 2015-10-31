@@ -1,4 +1,10 @@
-CREATE TABLE `unikit_database`.`COURSE_REGISTRATION` (
+DROP TABLE `internal_database`.`TEAM_APPLICATION`;
+DROP TABLE `internal_database`.`TEAM_INVITATION`;
+DROP TABLE `internal_database`.`TEAM_REGISTRATION`;
+DROP TABLE `internal_database`.`TEAM`;
+DROP TABLE `internal_database`.`COURSE_REGISTRATION`;
+
+CREATE TABLE `internal_database`.`COURSE_REGISTRATION` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `student_number` VARCHAR(31) NOT NULL COMMENT '',
   `course_id` INT NOT NULL COMMENT '',
@@ -10,7 +16,7 @@ CREATE TABLE `unikit_database`.`COURSE_REGISTRATION` (
   INDEX `student_number_idx` (`student_number` ASC)  COMMENT '',
   INDEX `course_id_idx` (`course_id` ASC)  COMMENT '');
 
-CREATE TABLE `unikit_database`.`TEAM` (
+CREATE TABLE `internal_database`.`TEAM` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `course_id` INT NOT NULL COMMENT '',
   `created_by_student_number` VARCHAR(31) NOT NULL COMMENT '',
@@ -21,7 +27,7 @@ CREATE TABLE `unikit_database`.`TEAM` (
   INDEX `course_id_idx` (`course_id` ASC)  COMMENT '',
   INDEX `created_by_student_number_idx` (`created_by_student_number` ASC)  COMMENT '');
 
-CREATE TABLE `unikit_database`.`TEAM_REGISTRATION` (
+CREATE TABLE `internal_database`.`TEAM_REGISTRATION` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `student_number` VARCHAR(31) NOT NULL COMMENT '',
   `team_id` INT NOT NULL COMMENT '',
@@ -33,11 +39,11 @@ CREATE TABLE `unikit_database`.`TEAM_REGISTRATION` (
   INDEX `team_id_idx` (`team_id` ASC)  COMMENT '',
   CONSTRAINT `team_id_team_registration`
     FOREIGN KEY (`team_id`)
-    REFERENCES `unikit_database`.`TEAM` (`id`)
+    REFERENCES `internal_database`.`TEAM` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
-CREATE TABLE `unikit_database`.`TEAM_INVITATION` (
+CREATE TABLE `internal_database`.`TEAM_INVITATION` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `invitee_student_number` VARCHAR(31) NOT NULL COMMENT '',
   `team_id` INT NOT NULL COMMENT '',
@@ -51,11 +57,11 @@ CREATE TABLE `unikit_database`.`TEAM_INVITATION` (
   INDEX `created_by_student_number_idx` (`created_by_student_number` ASC)  COMMENT '',
   CONSTRAINT `team_id_team_invitation`
     FOREIGN KEY (`team_id`)
-    REFERENCES `unikit_database`.`TEAM` (`id`)
+    REFERENCES `internal_database`.`TEAM` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
-CREATE TABLE `unikit_database`.`TEAM_APPLICATION` (
+CREATE TABLE `internal_database`.`TEAM_APPLICATION` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `applicant_student_number` VARCHAR(31) NOT NULL COMMENT '',
   `team_id` INT NOT NULL COMMENT '',
@@ -67,6 +73,6 @@ CREATE TABLE `unikit_database`.`TEAM_APPLICATION` (
   INDEX `team_id_idx` (`team_id` ASC)  COMMENT '',
   CONSTRAINT `team_id_team_application`
     FOREIGN KEY (`team_id`)
-    REFERENCES `unikit_database`.`TEAM` (`id`)
+    REFERENCES `internal_database`.`TEAM` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
