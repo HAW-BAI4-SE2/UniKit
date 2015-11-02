@@ -1,6 +1,6 @@
 package models.courseRegistration;
 
-import database.haw_hamburg.interfaces.Course;
+import net.unikit.database.external.interfaces.Course;
 
 import java.util.ArrayList;
 import java.util.Collection;

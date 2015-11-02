@@ -1,5 +1,5 @@
-DROP DATABASE `import_database`;
-DROP DATABASE `unikit_database`;
+DROP DATABASE `external_database`;
+DROP DATABASE `internal_database`;
 
-CREATE SCHEMA `import_database`;
-CREATE SCHEMA `unikit_database`;
+CREATE SCHEMA `external_database`;
+CREATE SCHEMA `internal_database`;

@@ -1,2 +1,2 @@
-CREATE SCHEMA `import_database`;
-CREATE SCHEMA `unikit_database`;
+CREATE SCHEMA `external_database`;
+CREATE SCHEMA `internal_database`;

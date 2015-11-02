@@ -1,2 +1,4 @@
 /hibernate_import.properties
 /hibernate_unikit.properties
+/hibernate_external.properties
+/hibernate_internal.properties

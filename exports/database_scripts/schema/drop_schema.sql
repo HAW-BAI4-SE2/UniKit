@@ -1,2 +1,2 @@
-DROP DATABASE `import_database`;
-DROP DATABASE `unikit_database`;
+DROP DATABASE `external_database`;
+DROP DATABASE `internal_database`;
