@@ -26,7 +26,6 @@ public final class Global extends GlobalSettings {
     private static TeamInvitationManager teamInvitationManager;
     private static TeamManager teamManager;
     private static TeamRegistrationManager teamRegistrationManager;
-    private static Student currentUser;
 
     @Override
     public void onStart(Application app) {
@@ -66,7 +65,6 @@ public final class Global extends GlobalSettings {
         Global.teamInvitationManager = internalDatabaseManager.getTeamInvitationManager();
         Global.teamManager = internalDatabaseManager.getTeamManager();
         Global.teamRegistrationManager = internalDatabaseManager.getTeamRegistrationManager();
-        Global.currentUser = Global.getStudentManager().getStudent("2055120");
 
         Logger.info("Application initialized!");
     }
@@ -114,9 +112,5 @@ public final class Global extends GlobalSettings {
 
     public static TeamRegistrationManager getTeamRegistrationManager() {
         return teamRegistrationManager;
-    }
-
-    public static Student getCurrentUser() {
-        return currentUser;
     }
 }

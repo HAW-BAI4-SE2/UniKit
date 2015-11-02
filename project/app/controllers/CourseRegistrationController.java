@@ -7,52 +7,27 @@ package controllers;
  * @author Thomas Bednorz on 10/8/2015.
  */
 
-import database.common.interfaces.DatabaseConfiguration;
-
-import database.haw_hamburg.implementations.ImportDatabaseManager;
-import database.haw_hamburg.interfaces.Course;
-import database.haw_hamburg.interfaces.Student;
-
-import database.unikit.implementations.UnikitDatabaseManager;
-import database.unikit.interfaces.CourseRegistration;
-
+import assets.Global;
 import models.courseRegistration.CourseRegistrationFormModel;
-
 import models.courseRegistration.OverviewCourseRegistrationModel;
-
-import play.Play;
+import net.unikit.database.external.interfaces.Course;
+import net.unikit.database.external.interfaces.Student;
+import net.unikit.database.unikit_.interfaces.CourseRegistration;
 import play.data.Form;
-import play.mvc.*;
-import views.html.*;
+import play.mvc.Controller;
+import play.mvc.Result;
+import views.html.showCancelRegistration;
+import views.html.showOverview;
+import views.html.showRegisterCourses;
 
-import java.io.InputStream;
-import java.util.*;
-
-import static database.common.implementations.DatabaseConfigurationUtils.createDatabaseConfiguration;
-
+import java.util.ArrayList;
+import java.util.List;
 
 public class CourseRegistrationController extends Controller {
-
     private static Student currentUser;
 
     static {
-        /*
-        Init database connection
-         */
-        InputStream inputStreamImport = Play.application().resourceAsStream("hibernate_import.properties");
-        DatabaseConfiguration databaseConfigurationImport = createDatabaseConfiguration(inputStreamImport);
-        ImportDatabaseManager.init(databaseConfigurationImport);
-        ImportDatabaseManager.cacheData();
-
-        InputStream inputStreamUnikit = Play.application().resourceAsStream("hibernate_unikit.properties");
-        DatabaseConfiguration databaseConfigurationUnikit = createDatabaseConfiguration(inputStreamUnikit);
-        UnikitDatabaseManager.init(databaseConfigurationUnikit);
-        //UnikitDatabaseManager.cacheData();
-
-        /*
-        The current user for the course registration.
-        */
-        currentUser = ImportDatabaseManager.getCurrentUser();
+        currentUser = Global.getStudentManager().getStudent("2055120");
     }
 
     /**
@@ -63,11 +38,11 @@ public class CourseRegistrationController extends Controller {
     public static Result showOverview() {
         OverviewCourseRegistrationModel allRegistrationsCurrentUser = new OverviewCourseRegistrationModel(currentUser.getStudentNumber());
 
-        List<CourseRegistration> allCourseRegistrations = UnikitDatabaseManager.getAllCourseRegistrations();
+        List<CourseRegistration> allCourseRegistrations = Global.getCourseRegistrationManager().getAllCourseRegistrations();
 
         //If entry in the table of all registered courses matches student number of the current user and isn't already in the list, the course name is added the the OverviewList
         for(CourseRegistration cr : allCourseRegistrations){
-            Course currentCourse = ImportDatabaseManager.getCourse(cr.getCourseId());
+            Course currentCourse = Global.getCourseManager().getCourse(cr.getCourseId());
             if(cr.getStudentNumber().equals(allRegistrationsCurrentUser.getStudentNumber()) && !allRegistrationsCurrentUser.getRegisteredCourses().contains(currentCourse)){
                 allRegistrationsCurrentUser.getRegisteredCourses().add(currentCourse);
             }
@@ -82,9 +57,13 @@ public class CourseRegistrationController extends Controller {
     *@return showRegisterCourses page displaying all available courses for regsitration
      **/
     public static Result showRegisterCourses() {
+        List<Course> availableCourses = new ArrayList<>(Global.getCourseManager().getAllCourses());
+        availableCourses.removeAll(currentUser.getCompletedCourses());
+
+
         Form<CourseRegistrationFormModel> courseRegistration =
                 Form.form(CourseRegistrationFormModel.class)
-                        .fill(new CourseRegistrationFormModel(currentUser.getStudentNumber(), currentUser.getAvailableCourses()));
+                        .fill(new CourseRegistrationFormModel(currentUser.getStudentNumber(), availableCourses));
 
         return ok(showRegisterCourses.render(courseRegistration));
     }
@@ -92,9 +71,9 @@ public class CourseRegistrationController extends Controller {
     public static Result showCancelRegistration(){
         List<Course> allCourseRegistrations = new ArrayList<>();
 
-        for(CourseRegistration courseRegistration : UnikitDatabaseManager.getAllCourseRegistrations()){
+        for(CourseRegistration courseRegistration : Global.getCourseRegistrationManager().getAllCourseRegistrations()){
             if(courseRegistration.getStudentNumber().equals(currentUser.getStudentNumber())){
-                allCourseRegistrations.add(ImportDatabaseManager.getCourse(courseRegistration.getCourseId()));
+                allCourseRegistrations.add(Global.getCourseManager().getCourse(courseRegistration.getCourseId()));
             }
         }
 
@@ -129,10 +108,10 @@ public class CourseRegistrationController extends Controller {
         //Persist data
         if(crfm.registeredCourses != null){
             for(String course : crfm.registeredCourses){
-                CourseRegistration dbEntry = UnikitDatabaseManager.createCourseRegistration();
+                CourseRegistration dbEntry = Global.getCourseRegistrationManager().createCourseRegistration();
                 dbEntry.setStudentNumber(crfm.studentNumber);
                 dbEntry.setCourseId(Integer.parseInt(course));
-                UnikitDatabaseManager.addCourseRegistration(dbEntry);
+                Global.getCourseRegistrationManager().addCourseRegistration(dbEntry);
             }
         }
 
@@ -154,8 +133,8 @@ public class CourseRegistrationController extends Controller {
 
         //Persist data
         if(crfm.registeredCourses != null){
-            List<CourseRegistration> allCourseRegistrations = UnikitDatabaseManager.getAllCourseRegistrations();
-            CourseRegistration dbEntry = UnikitDatabaseManager.createCourseRegistration();
+            List<CourseRegistration> allCourseRegistrations = Global.getCourseRegistrationManager().getAllCourseRegistrations();
+            CourseRegistration dbEntry = Global.getCourseRegistrationManager().createCourseRegistration();
             dbEntry.setStudentNumber(crfm.studentNumber);
 
             for(String course : crfm.registeredCourses){
@@ -164,11 +143,9 @@ public class CourseRegistrationController extends Controller {
 
                 for(CourseRegistration cr : allCourseRegistrations ){
                     if(crfm.studentNumber.equals(cr.getStudentNumber()) && Integer.parseInt(course) == cr.getCourseId()){
-                        dbEntry.setId(cr.getId());
+                        Global.getCourseRegistrationManager().deleteCourseRegistration(cr);
                     }
                 }
-
-                UnikitDatabaseManager.deleteCourseRegistration(dbEntry);
             }
         }
 
