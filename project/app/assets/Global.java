@@ -33,7 +33,7 @@ public final class Global extends GlobalSettings {
 
         // Load external database
         Logger.info("Loading external database...");
-        InputStream inputStreamExternal = Play.application().resourceAsStream("hibernate_external.properties");
+        InputStream inputStreamExternal = Play.application().resourceAsStream("database_external.properties");
         DatabaseConfiguration databaseConfigurationExternal = null;
         try {
             databaseConfigurationExternal = createDatabaseConfigurationFromProperties(inputStreamExternal);
@@ -44,7 +44,7 @@ public final class Global extends GlobalSettings {
 
         // Load internal database
         Logger.info("Loading internal database...");
-        InputStream inputStreamInternal = Play.application().resourceAsStream("hibernate_internal.properties");
+        InputStream inputStreamInternal = Play.application().resourceAsStream("database_internal.properties");
         DatabaseConfiguration databaseConfigurationInternal = null;
         try {
             databaseConfigurationInternal = createDatabaseConfigurationFromProperties(inputStreamInternal);
