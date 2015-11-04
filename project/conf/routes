@@ -4,14 +4,11 @@
 
 # Home page
 GET         /                        controllers.CourseRegistrationController.index()
-GET         /courses/overview        controllers.CourseRegistrationController.showOverview()
+GET         /courses/overview        controllers.CourseRegistrationController.showCourseOverview()
 GET         /courses/register        controllers.CourseRegistrationController.showRegisterCourses()
 POST        /courses/register        controllers.CourseRegistrationController.registerCourses()
 GET         /courses/cancel          controllers.CourseRegistrationController.showCancelRegistration()
 POST        /courses/cancel          controllers.CourseRegistrationController.cancelCourseRegistration()
-
-# Test page
-GET         /test                    controllers.TestPage.index()
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file            controllers.Assets.at(path="/public", file)
