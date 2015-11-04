@@ -16,9 +16,7 @@ import net.unikit.database.unikit_.interfaces.CourseRegistration;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
-import views.html.showCancelRegistration;
-import views.html.showOverview;
-import views.html.showRegisterCourses;
+import views.html.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +31,9 @@ public class CourseRegistrationController extends Controller {
     /**
     *Displays the registered courses for the current user
     *@pre currentUser: a logged in user
-    *@return showOverview page displaying all course registrations for the user
+    *@return showCourseOverview page displaying all course registrations for the user
      **/
-    public static Result showOverview() {
+    public static Result showCourseOverview() {
         OverviewCourseRegistrationModel allRegistrationsCurrentUser = new OverviewCourseRegistrationModel(currentUser.getStudentNumber());
 
         List<CourseRegistration> allCourseRegistrations = Global.getCourseRegistrationManager().getAllCourseRegistrations();
@@ -48,7 +46,7 @@ public class CourseRegistrationController extends Controller {
             }
         }
 
-        return ok(showOverview.render(allRegistrationsCurrentUser));
+        return ok(showCourseOverview.render(allRegistrationsCurrentUser));
     }
 
     /**
@@ -86,16 +84,16 @@ public class CourseRegistrationController extends Controller {
     /**
     *Redirects to the overview of all registered courses for the current user.
     *@pre currentUser: a logged in user
-    *@return showOverview page displaying all course registrations for the user
+    *@return showCourseOverview page displaying all course registrations for the user
      **/
     public static Result index() {
-        return showOverview();
+        return showCourseOverview();
     }
 
     /**
     *Receives the choices by the current user, persists them to the databank and displays the results.
     *@param courseRegistrationForm: Form object from the POST request of the showRegisterCourses page
-    *@return showOverview page displaying all course registrations for the user
+    *@return showCourseOverview page displaying all course registrations for the user
      **/
     public static Result registerCourses(){
         //Bind Form-object to Model
@@ -115,13 +113,13 @@ public class CourseRegistrationController extends Controller {
             }
         }
 
-        return showOverview();
+        return showCourseOverview();
     }
 
     /**
     *Receives the choices by the current user, deletes the databank entries and displays the results.
     *@param courseRegistrationForm: Form object from the POST request of the showRegisterCourses page
-    *@return showOverview page displaying all course registrations for the user
+    *@return showCourseOverview page displaying all course registrations for the user
      **/
     public static Result cancelCourseRegistration(){
         //Bind Form-object to Model
@@ -149,6 +147,6 @@ public class CourseRegistrationController extends Controller {
             }
         }
 
-        return showOverview();
+        return showCourseOverview();
     }
 }
