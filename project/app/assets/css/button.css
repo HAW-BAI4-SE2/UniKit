@@ -1,0 +1,124 @@
+@CHARSET "UTF-8";
+
+.button{
+	padding: 2px;
+	margin: 2px;
+	font-family:"Arial Black", Gadget, sans-serif;
+	/*font-size:14px;*/
+}
+
+.button_logout{
+  padding: 0px 0px 0px 0px;
+  float: right;
+}
+
+.button_left{
+   float: left;
+}
+
+.button_right{
+   float: right;
+}
+
+.button_center{
+   padding: auto;
+   margin: 0px  auto;
+   margin-left: auto;
+   margin-right: auto;
+}
+
+
+.button_active{
+	color:#A8AAB1;
+	/*padding: 10px;*/
+	font-family:"Arial Black", Gadget, sans-serif;
+	font-size:14px;
+	overflow: hidden;
+}
+
+.button_inactive{
+	color:#A8AAB1;
+	/*padding: 10px;*/
+	font-family:"Arial Black", Gadget, sans-serif;
+	/*font-size:14px;*/
+	overflow: hidden;
+}
+
+.button_a_left{
+	float:left;
+	background-image:url(../images/button_a_left.gif);
+	background-position:center;
+	widht: 4px;
+	height:22px;
+}
+
+.button_a_center{
+	float:left;
+	background-image:url(../images/button_a_center.gif);
+	background-repeat:repeat-x;
+	vertical-align:middle;
+	line-height: 22px;
+}
+
+.button_a_right{
+	float:left;
+	background-image:url(../images/button_a_right.gif);
+	background-position:center;
+	widht: 4px;
+	height:22px;
+	/*margin: 5px;*/
+}
+
+.button_ia_left{
+	float:left;
+	background-image:url(../images/button_ia_left.gif);
+	background-position:center;
+	widht: 4px;
+	height:22px;
+}
+
+.button_ia_center{
+	float:left;
+	background-image:url(../images/button_ia_center.gif);
+	background-repeat:repeat-x;
+	vertical-align:middle;
+	line-height: 22px;
+}
+
+.button_ia_right{
+	float:left;
+	background-image:url(../images/button_ia_right.gif);
+	background-position:center;
+	widht: 4px;
+	height:22px;
+	/*margin: 5px;*/
+}
+
+a.navlink{
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+a.navlink_active:link{
+	padding-left: 5px;
+	padding-right: 5px;
+	color:#9FBADA;
+}
+
+a.navlink_active:hover{
+	padding-left: 5px;
+	padding-right: 5px;
+	color:#9FBADA;
+}
+
+p{
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+.button_active a:link { font-weight:bold; color:#000066; text-decoration:none; }
+.button_active a:visited { font-weight:bold; color:#000066; text-decoration:none; }
+.button_active a:focus { font-weight:bold; color:#CCCCCC; text-decoration:underline; }
+/*a:hover { font-weight:bold; color:#9FBADA; text-decoration:none; }*/
+.button_active a:hover { font-weight:bold; color:	#FDD017; text-decoration:none; }
+.button_active a:active { font-weight:bold; color:#9FBADA; text-decoration:underline; }
