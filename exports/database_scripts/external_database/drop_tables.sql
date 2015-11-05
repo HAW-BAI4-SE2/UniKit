@@ -1,6 +1,6 @@
 DROP TABLE `external_database`.`COMPLETED_COURSE`;
 DROP TABLE `external_database`.`STUDENT`;
-DROP TABLE `external_database`.`LECTURE_SERIES`;
+DROP TABLE `external_database`.`COURSE_LECTURE`;
 DROP TABLE `external_database`.`COURSE_GROUP`;
 DROP TABLE `external_database`.`APPOINTMENT`;
 DROP TABLE `external_database`.`DIDACTIC_UNIT`;

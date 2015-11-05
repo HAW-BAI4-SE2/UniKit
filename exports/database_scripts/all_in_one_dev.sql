@@ -6,7 +6,7 @@ CREATE SCHEMA `internal_database_dev`;
 
 DROP TABLE `external_database_dev`.`COMPLETED_COURSE`;
 DROP TABLE `external_database_dev`.`STUDENT`;
-DROP TABLE `external_database_dev`.`LECTURE_SERIES`;
+DROP TABLE `external_database_dev`.`COURSE_LECTURE`;
 DROP TABLE `external_database_dev`.`COURSE_GROUP`;
 DROP TABLE `external_database_dev`.`APPOINTMENT`;
 DROP TABLE `external_database_dev`.`DIDACTIC_UNIT`;
@@ -95,13 +95,13 @@ CREATE TABLE `external_database_dev`.`COURSE_GROUP` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
-CREATE TABLE `external_database_dev`.`LECTURE_SERIES` (
+CREATE TABLE `external_database_dev`.`COURSE_LECTURE` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `didactic_unit_id` INT NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '',
   UNIQUE INDEX `id_UNIQUE` (`id` ASC)  COMMENT '',
   INDEX `didactic_unit_id_idx` (`didactic_unit_id` ASC)  COMMENT '',
-  CONSTRAINT `didactic_unit_id_lecture_series`
+  CONSTRAINT `didactic_unit_id_course_lecture`
     FOREIGN KEY (`didactic_unit_id`)
     REFERENCES `external_database_dev`.`DIDACTIC_UNIT` (`id`)
     ON DELETE NO ACTION

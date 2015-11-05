@@ -1,6 +1,6 @@
 DROP TABLE `external_database`.`COMPLETED_COURSE`;
 DROP TABLE `external_database`.`STUDENT`;
-DROP TABLE `external_database`.`LECTURE_SERIES`;
+DROP TABLE `external_database`.`COURSE_LECTURE`;
 DROP TABLE `external_database`.`COURSE_GROUP`;
 DROP TABLE `external_database`.`APPOINTMENT`;
 DROP TABLE `external_database`.`DIDACTIC_UNIT`;
@@ -89,13 +89,13 @@ CREATE TABLE `external_database`.`COURSE_GROUP` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
-CREATE TABLE `external_database`.`LECTURE_SERIES` (
+CREATE TABLE `external_database`.`COURSE_LECTURE` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `didactic_unit_id` INT NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '',
   UNIQUE INDEX `id_UNIQUE` (`id` ASC)  COMMENT '',
   INDEX `didactic_unit_id_idx` (`didactic_unit_id` ASC)  COMMENT '',
-  CONSTRAINT `didactic_unit_id_lecture_series`
+  CONSTRAINT `didactic_unit_id_course_lecture`
     FOREIGN KEY (`didactic_unit_id`)
     REFERENCES `external_database`.`DIDACTIC_UNIT` (`id`)
     ON DELETE NO ACTION
