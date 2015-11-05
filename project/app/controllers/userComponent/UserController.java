@@ -8,12 +8,15 @@ import views.html.*;
 
 import java.util.Date;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Created by Andreas on 05.11.2015.
  */
 public class UserController extends Controller {
     public static Result showUser() {
-        Student currentUser = Global.getStudentManager().getStudent("2055120");
+        Student currentUser = Global.getStudentManager().getStudent(session("username"));
+        checkNotNull(currentUser);
         
         Date sessionTimeoutDate = new Date();
         java.util.Calendar sessionTimeout = java.util.Calendar.getInstance();
