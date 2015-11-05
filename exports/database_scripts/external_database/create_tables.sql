@@ -121,3 +121,39 @@ CREATE TABLE `external_database`.`COMPLETED_COURSE` (
     REFERENCES `external_database`.`STUDENT` (`student_number`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
+
+DELIMITER //
+CREATE TRIGGER `external_database`.`chk_id_course_group_insert` BEFORE INSERT ON `COURSE_GROUP`
+FOR EACH ROW
+BEGIN
+  IF (NEW.`id` IN (SELECT `id` FROM `external_database`.`COURSE_LECTURE`)) THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'INSERT statement conflicted with CHECK constraint `external_database`.`chk_id_course_group_insert`.';
+  END IF;
+END; //
+
+DELIMITER //
+CREATE TRIGGER `external_database`.`chk_id_course_group_update` BEFORE UPDATE ON `COURSE_GROUP`
+FOR EACH ROW
+BEGIN
+  IF (NEW.`id` IN (SELECT `id` FROM `external_database`.`COURSE_LECTURE`)) THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'INSERT statement conflicted with CHECK constraint `external_database`.`chk_id_course_group_update`.';
+  END IF;
+END; //
+
+DELIMITER //
+CREATE TRIGGER `external_database`.`chk_id_course_lecture_insert` BEFORE INSERT ON `COURSE_LECTURE`
+FOR EACH ROW
+BEGIN
+  IF (NEW.`id` IN (SELECT `id` FROM `external_database`.`COURSE_GROUP`)) THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'INSERT statement conflicted with CHECK constraint `external_database`.`chk_id_course_lecture_insert`.';
+  END IF;
+END; //
+
+DELIMITER //
+CREATE TRIGGER `external_database`.`chk_id_course_lecture_update` BEFORE UPDATE ON `COURSE_LECTURE`
+FOR EACH ROW
+BEGIN
+  IF (NEW.`id` IN (SELECT `id` FROM `external_database`.`COURSE_GROUP`)) THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'INSERT statement conflicted with CHECK constraint `external_database`.`chk_id_course_lecture_update`.';
+  END IF;
+END; //
