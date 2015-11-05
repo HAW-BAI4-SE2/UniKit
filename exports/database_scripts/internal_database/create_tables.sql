@@ -55,7 +55,7 @@ CREATE TABLE `internal_database`.`TEAM_INVITATION` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
-CREATE TABLE `internal_database`.`TEAM_APPLICATION` (
+CREATE TABLE `internal_database`.`MEMBERSHIP_REQUEST` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `applicant_student_number` VARCHAR(31) NOT NULL COMMENT '',
   `team_id` INT NOT NULL COMMENT '',
@@ -65,7 +65,7 @@ CREATE TABLE `internal_database`.`TEAM_APPLICATION` (
   UNIQUE INDEX `id_UNIQUE` (`id` ASC)  COMMENT '',
   INDEX `applicant_student_number_idx` (`applicant_student_number` ASC)  COMMENT '',
   INDEX `team_id_idx` (`team_id` ASC)  COMMENT '',
-  CONSTRAINT `team_id_team_application`
+  CONSTRAINT `team_id_membership_request`
     FOREIGN KEY (`team_id`)
     REFERENCES `internal_database`.`TEAM` (`id`)
     ON DELETE NO ACTION

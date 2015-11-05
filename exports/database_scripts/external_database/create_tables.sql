@@ -39,15 +39,13 @@ CREATE TABLE `external_database`.`COURSE_TO_FIELD_OF_STUDY` (
     ON UPDATE NO ACTION);
 
 
-CREATE TABLE `external_database`.`COURSE_GROUP` (
+CREATE TABLE `external_database`.`DIDACTIC_UNIT` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `course_id` INT NOT NULL COMMENT '',
-  `group_number` INT NOT NULL COMMENT '',
-  `max_group_size` INT NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '',
   UNIQUE INDEX `id_UNIQUE` (`id` ASC)  COMMENT '',
   INDEX `course_id_idx` (`course_id` ASC)  COMMENT '',
-  CONSTRAINT `course_id_course_group`
+  CONSTRAINT `course_id_didactic_unit`
     FOREIGN KEY (`course_id`)
     REFERENCES `external_database`.`COURSE` (`id`)
     ON DELETE NO ACTION
@@ -55,15 +53,41 @@ CREATE TABLE `external_database`.`COURSE_GROUP` (
 
 CREATE TABLE `external_database`.`APPOINTMENT` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
-  `course_group_id` INT NOT NULL COMMENT '',
+  `didactic_unit_id` INT NOT NULL COMMENT '',
   `start_date` DATETIME NOT NULL COMMENT '',
   `end_date` DATETIME NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '',
   UNIQUE INDEX `id_UNIQUE` (`id` ASC)  COMMENT '',
-  INDEX `course_group_id_idx` (`course_group_id` ASC)  COMMENT '',
-  CONSTRAINT `course_group_id_appointment`
-    FOREIGN KEY (`course_group_id`)
-    REFERENCES `external_database`.`COURSE_GROUP` (`id`)
+  INDEX `didactic_unit_id_idx` (`didactic_unit_id` ASC)  COMMENT '',
+  CONSTRAINT `didactic_unit_id_appointment`
+    FOREIGN KEY (`didactic_unit_id`)
+    REFERENCES `external_database`.`DIDACTIC_UNIT` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE `external_database`.`COURSE_GROUP` (
+  `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
+  `didactic_unit_id` INT NOT NULL COMMENT '',
+  `group_number` INT NOT NULL COMMENT '',
+  `max_group_size` INT NOT NULL COMMENT '',
+  PRIMARY KEY (`id`)  COMMENT '',
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC)  COMMENT '',
+  INDEX `didactic_unit_id_idx` (`didactic_unit_id` ASC)  COMMENT '',
+  CONSTRAINT `didactic_unit_id_course_group`
+    FOREIGN KEY (`didactic_unit_id`)
+    REFERENCES `external_database`.`DIDACTIC_UNIT` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE `external_database`.`LECTURE_SERIES` (
+  `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
+  `didactic_unit_id` INT NOT NULL COMMENT '',
+  PRIMARY KEY (`id`)  COMMENT '',
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC)  COMMENT '',
+  INDEX `didactic_unit_id_idx` (`didactic_unit_id` ASC)  COMMENT '',
+  CONSTRAINT `didactic_unit_id_lecture_series`
+    FOREIGN KEY (`didactic_unit_id`)
+    REFERENCES `external_database`.`DIDACTIC_UNIT` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
