@@ -1,0 +1,280 @@
+@import helper._
+
+@(loginForm: Form[models.login.loginComponent.LoginFormModel])
+
+<html>
+<head>
+<title>StudierendenInformationSystem (StISys) - Login</title>
+
+<link href='@routes.Assets.at("css/fh.css")' rel="stylesheet" type="text/css">
+<link rel="shortcut icon" href='@routes.Assets.at("images/favicon.ico")'>
+<script type="text/javascript" language="JavaScript" src='@routes.Assets.at("js/swl-app-base.js")'></script>
+
+
+
+
+
+<script language="JavaScript">
+	function login() {
+
+		document.loginF.submit();
+	}
+</script>
+
+</head>
+
+
+<body bgcolor="white">
+
+	
+
+	<h1>
+		StISys (student information system)
+	</h1>
+
+	<table cellspacing="5" cellpadding="0">
+		<tr>
+			<td>
+				<table cellspacing="0" cellpadding="0">
+					<tr>
+						<td><table cellspacing="0" cellpadding="0" width="605"><tr><td>Please login to set your account properties, change your password, see the results of your exams or register for exams in next term.</td></tr></table></td>
+					</tr>
+				</table></td>
+			<td></td>
+		</tr>
+	</table>
+
+	
+
+	
+	<form name="loginF" method="post" action="/login.do;jsessionid=75072493D3A5A41176FCA4B9FA262ECB">
+		<table cellspacing="5" cellpadding="0">
+			<tr>
+				<td>
+					<table cellspacing="0" cellpadding="0">
+						<tr valign="top">
+							<td>
+								<table width="298" cellspacing="0" cellpadding="0"
+									class="tableframe">
+									<tr>
+									<td>&nbsp;&nbsp;StISys Login </td>
+									</tr>
+								</table>
+
+								<table width="298" cellspacing="0" cellpadding="0"
+									class="tablecontent">
+									<tr>
+										<td align="left">Username
+										</td>
+										<td align="right"><input type="text" name="username"
+											class="input_text">
+										</td>
+									</tr>
+									<tr>
+										<td colspan="2"></td>
+									</tr>
+
+									
+									<tr>
+										<td colspan="2" height="1"></td>
+									</tr>
+
+									<tr>
+										<td align="left">Password
+										</td>
+										<td align="right"><input id="password" type="password"
+											name="password" class="input_text"
+											onkeydown="javascript:if (event.keyCode == 13) login();">
+										</td>
+									</tr>
+									<tr>
+										<td colspan="2"></td>
+									</tr>
+
+									
+									<tr>
+										<td></td>
+									</tr>
+
+									<tr>
+										<td></td>
+										<td align="right">
+											<!--input type="image" src="images/button_login_en.gif"-->
+
+											<div class="button button_right button_active">
+												<div class="button_a_left">&nbsp;</div>
+												<div class="button_a_center">
+													<a id="login_link" href="javascript:login();"
+														class="button_link">login
+													</a>
+												</div>
+												<div class="button_a_right">&nbsp;</div>
+											</div></td>
+									</tr>
+								</table></td>
+							<td></td>
+						</tr>
+					</table></td>
+			</tr>
+		</table>
+	</form>
+	<br>
+
+	 <table width="605" cellspacing="0" cellpadding="0" class="tableframe">
+<tr>
+<td>&nbsp &Uuml;bersicht der n&auml;chsten Anmelde Termine f&uuml;r das aktuelle Semester (2015WS)</td>
+</tr>
+</table>
+<table width="605" cellspacing="0" cellpadding="0" class="tablecontent">
+<td>
+
+<left><table cellspacing="0" cellpadding="0" width="595">
+<tr>
+<td width="58%">Typ</td>
+<td width="1%">&nbsp;</td>
+<td width="20%">von</td>
+<td width="1%">&nbsp;</td>
+<td width="20%">bis</td>
+</tr>
+<tr class="tablecontentbackdark">
+<td>Klausuren</td>
+<td>&nbsp;</td>
+<td>21.09.2015 10:00</td>
+<td>&nbsp;</td>
+<td>17.01.2016 23:59</td>
+</tr>
+</table><br>
+</td></table>
+
+	<br>
+
+	<table width="605" cellspacing="0" cellpadding="0" border="0">
+		<tr>
+			<td align="left">
+				<table cellspacing="0" cellpadding="0" width="595">
+					<tr valign="top">
+						<td><table width="605" cellspacing="0" cellpadding="0" class="tableframe">
+<tr>
+<td>&nbsp Wichtige Informationen</td>
+</tr>
+</table>
+<table width="605" cellspacing="0" cellpadding="0" class="tablecontent">
+<td align="left">
+
+<table cellspacing="0" cellpadding="0" width="595">
+<tr>
+<td></td>
+<td><hr width="80%"/></td>
+<td>&nbsp;</td></tr>
+<tr>
+<td><br></td>
+</tr>
+<tr>
+<td></td>
+<td><font color=#990000>
+<b>Veranstaltungen mit Sonderanmeldezeiten : </b><br>
+<font color=#990000><b>Mechatronik - B-MT 5.Semester - <a target="_blanc" href=" http://www.elearning.haw-hamburg.de/course/view.php?id=6263#section-2">Fach PM (Grundlagen Projektmanagement)</a> <br><br>
+</b></font>
+Pflichtveranstaltung zur Begleitung des Bachelorprojektes <br>
+Anmeldepflicht !!!!!! &uuml;ber stisys "Veranstaltungen mit Sonderanmeldezeiten <br></td>
+<td>&nbsp;</td></tr>
+<tr>
+<td><br></td>
+</tr>
+<tr>
+<td></td>
+<td><hr width="80%"/></td>
+<td>&nbsp;</td></tr>
+<tr>
+<td><br></td>
+</tr>
+<tr>
+<td></td>
+<td><br>
+<h2>
+<font color=#990000>
+<b>Bitte kontrollieren Sie immer alle Anmeldungen!</b>
+</font>
+</h2></td>
+<td>&nbsp;</td></tr>
+<tr>
+<td><br></td>
+</tr>
+<tr>
+<td></td>
+<td><hr width="80%"/></td>
+<td>&nbsp;</td></tr>
+<tr>
+<td><br></td>
+</tr>
+<tr>
+<td></td>
+<td><b>Informatik Master</b><br><br>
+Studierende des Masterstudiengangs Informatik k&ouml;nnen auf Antrag an den Pr&uuml;fungsausschuss Informatik einzelne Module des Masterstudiengangs durch &auml;quivalente Module anderer Departments und Hochschulen mit gleicher oder h&ouml;herer CP-Zahl ersetzen und anrechnen lassen. Die Regelung des &sect;24 APSO-INGI gilt entsprechend.
+<br>
+20. Februar 2015 <br> 
+Der Pr&uuml;fungsausschuss Informatik <br></td>
+<td>&nbsp;</td></tr>
+<tr>
+<td><br></td>
+</tr>
+<tr>
+<td></td>
+<td><hr width="80%"/></td>
+<td>&nbsp;</td></tr>
+<tr>
+<td><br></td>
+</tr>
+<tr>
+<td></td>
+<td><b>Teilzeitstudium</b>
+<br><br>
+Studierende der Studieng&auml;nge Elekto- und Informationstechnik sowie der Angewandten und Technischen Informatik k&ouml;nnen ab dem Sommersemester 2014 auch in <a target="_blanc" href="http://www.haw-hamburg.de/teilzeitstudium.html">Teilzeit studieren</a>. Weitere Informationen erhalten Sie im Fakult&auml;tsserviceb&uuml;ro und im Studierendensekretariat.</td>
+<td>&nbsp;</td></tr>
+<tr>
+<td><br></td>
+</tr>
+<tr>
+<td></td>
+<td><hr width="80%"/></td>
+<td>&nbsp;</td></tr>
+<tr>
+<td><br></td>
+</tr>
+<tr>
+<td></td>
+<td>F&uuml;r die Nutzung der Labore gilt die Benutzungsordnung f&uuml;r die Informationsverarbeitungsinfrastruktur
+der Hochschule f&uuml;r Angewandte Wissenschaften Hamburg 
+(HAW Hamburg) 
+vom 12. Mai 2011:&nbsp; <a target="_blanc" href="http://www.haw-hamburg.de/fileadmin/user_upload/ITSC/pdf/Benutzerordnung.pdf">      
+Benutzungsordnung.pdf</a></td>
+<td>&nbsp;</td></tr>
+<tr>
+<td><br></td>
+</tr>
+<tr>
+<td></td>
+<td><hr width="80%"/></td>
+<td>&nbsp;</td></tr>
+<tr>
+<td><br></td>
+</tr>
+<tr>
+<td></td>
+<td><b>Wenden Sie sich bei Fehlern oder Problemen an das Fakult&auml;tsserviceb&uuml;ro (FSB):</b><br><br>
+&nbsp;&nbsp;&nbsp;&nbsp; fsb_ti(@@)haw-hamburg.de<br></td>
+<td>&nbsp;</td></tr>
+<tr>
+<td><br></td>
+</tr>
+</table>
+</td></table>
+</td>
+					</tr>
+				</table></td>
+		</tr>
+	</table>
+
+	<span style="color: white;">$Name:  $</span>
+</body>
+</html>

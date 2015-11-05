@@ -3,6 +3,8 @@
 # ~~~~
 
 # Home page
+GET         /login                   controllers.loginComponent.LoginController.showLogin()
+POST        /login                   controllers.loginComponent.LoginController.login()
 GET         /                        controllers.CourseRegistrationController.index()
 GET         /courses/overview        controllers.CourseRegistrationController.showCourseOverview()
 GET         /courses/register        controllers.CourseRegistrationController.showRegisterCourses()
