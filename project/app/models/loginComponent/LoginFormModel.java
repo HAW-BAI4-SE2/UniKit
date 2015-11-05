@@ -1,4 +1,4 @@
-package models.login.loginComponent;
+package models.loginComponent;
 
 /**
  * Model for the login form

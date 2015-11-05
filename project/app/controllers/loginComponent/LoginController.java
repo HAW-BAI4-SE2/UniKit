@@ -1,6 +1,6 @@
 package controllers.loginComponent;
 
-import models.login.loginComponent.LoginFormModel;
+import models.loginComponent.LoginFormModel;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
