@@ -1,0 +1,437 @@
+@import helper._
+
+@(currentUser: net.unikit.database.external.interfaces.Student, sessionTimeout: java.util.Calendar)
+
+<html>
+<head>
+	<title>StudentInformationSystem (StISys) - Benutzerdaten</title>
+	<link href='@routes.Assets.at("css/fh.css")' rel="stylesheet" type="text/css">
+<link rel="shortcut icon" href='@routes.Assets.at("images/favicon.ico")'>
+<script type="text/javascript" language="JavaScript" src='@routes.Assets.at("js/swl-app-base.js")'></script>
+
+
+ 
+	
+	<script language="JavaScript">
+	
+	function NaviFenster (f) {
+		
+		//var stop=1;
+		
+		var meldung = "null";
+		  
+		  if(meldung.length > 0 && meldung != "null") {
+		//	  alert(unescape(meldung));
+		  }		  
+	}
+	
+	</script>
+	
+</head>	
+<body bgcolor="white" onload="NaviFenster(this)">
+
+
+
+
+
+
+
+
+
+<div id="navigationsheader">
+
+		<div id="headline">
+			<font class="h_1">
+					@(currentUser.getFirstName()) @(currentUser.getLastName()) - Informatik
+			</font>
+		</div>
+		<div>
+			<div class="autoLogMessage">&nbsp;Automatische Abmeldung um: @(sessionTimeout.get(java.util.Calendar.HOUR_OF_DAY)):@(sessionTimeout.get(java.util.Calendar.MINUTE)) Uhr
+					<div class="button button_logout button_active" >
+						<div class="button_a_left" >&nbsp;</div>
+						<div class="button_a_center">
+							<a href="logout.do" class="button_link">logout</a>
+						</div>
+					<div class="button_a_right"/>&nbsp;
+				</div>				
+			</div>	
+		</div>	
+	 <div id="languageSelector">
+			   
+		
+			   
+				   <img align="right" src='@routes.Assets.at("images/de_d.gif")' border="0" alt="deutsch" >
+			   	   
+		
+			   
+		
+			    	   
+		
+			   	   
+		
+			   
+		 	       <a href="lang.do?lang=en"><img align="right" src='@routes.Assets.at("images/en.gif")' border="0" alt="englisch" ></a>
+		 	   
+	</div>
+</div>
+<!-- div class="clear"></div> -->
+
+<div class="posRight"></div>
+
+<div id="navi">
+	
+		<div class="navitem">
+			<div class="navbgleft">&nbsp;</div>
+			<div class="navbgcen">Profil</div>
+			<div class="navbgright">&nbsp;</div>
+		</div>
+		<div class="navitem">
+			<div class="navbgleft">&nbsp;</div>
+			<div class="navbgcen"><a href="anmeldungen.do?command=anmeldungen&referer=X" title="Veranstaltungen, die ich angemeldet habe" class="navlink">Anmeldungen</a></div>
+			<div class="navbgright">&nbsp;</div>
+		</div>
+		<div class="navitem">
+			<div class="navbgleft">&nbsp;</div>
+			<div class="navbgcen"><a href="viewExaminationData.do" title="Pr&uuml;fungsleistungen, die ich bis jetzt abgelegt habe" class="navlink">Ergebnisse</a></div>
+			<div class="navbgright">&nbsp;</div>
+		</div>
+		<div class="navitem">
+			<div class="navbgleft">&nbsp;</div>
+			<div class="navbgcen"><a href="chooseSL.do" title="Hier kann ich mich f&uuml;r diverse Dinge anmelden" class="navlink">anmelden</a></div>
+			<div class="navbgright">&nbsp;</div>
+		</div>
+		<div class="navitem">
+			<div class="navbgleft">&nbsp;</div>
+			<div class="navbgcen"><a href="navAbmelden.do" title="ACHTUNG!! Hier kann ich mich abmelden" class="navlink">abmelden</a></div>
+			<div class="navbgright">&nbsp;</div>
+		</div>
+		<div class="navitem">
+			<div class="navbgleft">&nbsp;</div>
+			<div class="navbgcen"><a href="maillist.do" title="Eigene Mailinglisten" class="navlink">Mailinglisten</a></div>
+			<div class="navbgright">&nbsp;</div>
+		</div>
+		<div class="navitem">
+			<div class="navbgleft">&nbsp;</div>
+			<div class="navbgcen"><a href="druckHistory.do" title="Hier kann ich mein Druckkonto und mein Druckjobs einsehen." class="navlink">Druckquoten</a></div>
+			<div class="navbgright">&nbsp;</div>
+		</div>
+	<div id="navihr"></div>
+</div>	
+
+
+	
+
+
+
+
+
+<!--div style="position:absolute; top:145px; left:10px; width:700px;background:white; z-index:1;"-->
+<div class="data">
+
+
+
+
+<table width="605" >
+ <tr>
+	<td>&Uuml;berpr&uuml;fen Sie bitte Ihre pers&ouml;nlichen Daten. Achten Sie bitte darauf, ob Vor- und Nachname richtig eingetragen und geschrieben sind. Die Angaben zur Person sind wichtiger Bestandteil der Pr&uuml;fung. Bei Unstimmigkeiten eine kurze E-Mail an <a href="mailto:fsb_ti@@haw-hamburg.de"> (FSB)</a>.</td>
+ </tr>
+</table>
+
+<tr><td>&nbsp;</td></tr>
+
+
+ <table width="605">
+  <tr>
+    <td> 
+	   <table width="605" cellspacing="0" cellpadding="0" class="tableframe">
+		  <tr>
+			<td align="left">&nbsp;&nbsp;Ihre Daten </td>
+			<td align="right"><a href="javascript:openWin('getHelp.do?keyword=persDat','200','300','help');">Hilfe</a>&nbsp;</td>
+		  </tr>
+	   </table>
+				
+	   <table width="605" cellspacing="0" cellpadding="0" class="tablecontent">
+		  <tr class="tablecontentbackdark">
+		    <td align="left">Name</td>
+		    <td align="right">@(currentUser.getFirstName())&nbsp;@(currentUser.getLastName())</td>
+		  </tr>
+		  <tr>
+		    <td colspan="2" height="1"></td>
+		  </tr>			
+		  <tr class="tablecontentbacklight">
+		    <td align="left">Benutzername</td>
+		    <td align="right">DUMMY_VALUE{abc123}</td>
+		  </tr>
+		    <tr>
+		    <td colspan="2" height="1"></td>
+		  </tr>
+		   <tr class="tablecontentbackdark">
+		    <td align="left">Ablaufdatum des Passwortes</td>
+		    <td align="right">DUMMY_VALUE{01.01.2015}</td>
+		  </tr>
+		  <tr>
+		    <td colspan="2" height="1"></td>
+		  </tr>			
+		  <tr class="tablecontentbacklight">
+		    <td align="left">aktive Benutzerrolle</td>
+		    <td align="right">DUMMY_VALUE{Student}</td>
+		  </tr>
+		  
+		  <tr>
+		    <td colspan="2" height="1"></td>
+		  </tr>
+		  <tr class="tablecontentbackdark">
+		    <td align="left">Geburtsort</td>
+		    
+			    <td align="right">DUMMY_VALUE{Hamburg}</td>
+			
+		    			
+		  </tr>
+		  
+		  <tr>
+		    <td colspan="2" height="1"></td>
+		  </tr>
+		  <tr class="tablecontentbackdark">
+		    <td align="left">Geschlecht</td>
+		    
+			    <td align="right">DUMMY_VALUE{M}</td>
+			
+		    			
+		  </tr>
+		  
+
+		  <tr>
+		    <td colspan="2" height="1"></td>
+		  </tr>
+		  <tr class="tablecontentbackdark">
+		    <td align="left">Geburtstag</td>
+		    
+			    <td align="right">DUMMY_VALUE{Montag}, DUMMY_VALUE{01.01.2015}</td>
+			
+		    			
+		  </tr>
+
+		  <tr>
+		    <td colspan="2" height="1"></td>
+		  </tr>			
+		  <tr class="tablecontentbacklight">
+		    <td align="left">Martrikelnummer</td>
+		    <td align="right">@(currentUser.getStudentNumber())</td>
+		  </tr>
+		
+		   <tr>
+		    <td colspan="2" height="1"></td>
+		  </tr>
+		  
+		  <tr class="tablecontentbackdark">
+		    <td align="left">Pr&uuml;fungsordnung</td>
+		    <td align="right">@(currentUser.getFieldOfStudy().getAbbreviation()): DUMMY_VALUE{PO 2008} (DUMMY_VALUE{4015})</td>
+		  </tr>
+		  
+		  <tr>
+		    <td colspan="2" height="1"></td>
+		  </tr>	
+		
+		  <tr class="tablecontentbackdark">
+		    <td align="left">Studiengang</td>
+		    <td align="right">@(currentUser.getFieldOfStudy().getName())</td>
+		  </tr>  
+		  
+		  <tr>
+		    <td colspan="2" height="1"></td>
+		  </tr>	
+		
+		 <!-- tr class="tablecontentbacklight">
+		    <td align="left">Heimatverzeichniss</td>
+		    <td align="right">/home/students/DUMMY_VALUE{abc123}</td>
+		  </tr>
+		  <tr>
+		    <td colspan="2" height="1"></td>
+		  </tr-->
+		  
+	  <tr class="tablecontentbacklight">
+	    <td align="left">Prim&auml;re HAW EMail-Adresse</td>
+	    <td align="right">@(currentUser.getEmail())</td>
+	  </tr>
+
+
+	  
+		  <tr class="tablecontentbackdark">
+		    <td align="left">HAW-Kennung</td>
+		    <td align="right">DUMMY_VALUE{abc123}</td>
+		  </tr>
+      
+
+      <tr class="tablecontentbacklight"> 
+       <td align="left">TI-Departmentname</td>
+       <td align="right">DUMMY_VALUE{Informatik}</td>
+      </tr>
+	      
+	  <tr class="tablecontentbackdark">
+	    <td align="left">TI-Departmentnummer</td>
+	    <td align="right">DUMMY_VALUE{52}</td>
+	  </tr>
+	  
+		  
+      
+
+	      
+          
+		</table>
+
+<br>
+ 
+ <table width="605" cellspacing="0" cellpadding="0" >
+
+	<tr>
+		<td valign="top"/>	 <!-- Printquoten -->
+
+		
+		
+		 
+		 
+		    <table width="605"  cellspacing="0" cellpadding="0" class="tableframe">
+	 		 <tr>
+				<td>&nbsp;&nbsp;Ihre aktuellen Druckquoten 
+					<td align="right"><a href="javascript:openWin('getHelp.do?keyword=prtQut','200','300','help');">Hilfe</a>&nbsp; </td>
+				</td>
+			 </tr>
+		    </table>
+
+		    <table width="605" cellspacing="0" cellpadding="0" class="tablecontent">
+			  			
+			
+			    
+			      <tr>
+			  	    <td align="left"><span class="thick">Guthaben</span></td>
+				    <td align="right">DUMMY_VALUE{12,50}&nbsp;&euro;</td>
+				    <!--td align="right"><a href="javascript:openWin('getHelp.do?keyword=printQuota','200','300','help');"><img src="images/help.gif" border=0></a></td-->
+				  </tr>
+				  <tr><td>&nbsp;</td></tr>
+				
+				
+					
+			
+			  			
+			
+			    
+				
+				
+					
+				  	<tr>
+				  	<td align="left"> Druckkosten &nbsp;
+						<span class="thick">Laser701</span>&nbsp;(0,05&nbsp;&euro;/Seite)
+					</td>
+					<td align="right"></td>
+						<!--td align="right">~&nbsp;0,00&nbsp;&euro;</td-->
+				  	</tr>
+					
+			
+			  			
+			
+			    
+				
+				
+					
+				  	<tr>
+				  	<td align="left"> Druckkosten &nbsp;
+						<span class="thick">Laser765</span>&nbsp;(0,02&nbsp;&euro;/Seite)
+					</td>
+					<td align="right"></td>
+						<!--td align="right">~&nbsp;0,00&nbsp;&euro;</td-->
+				  	</tr>
+					
+			
+			  			
+			
+			    
+				
+				
+					
+				  	<tr>
+				  	<td align="left"> Druckkosten &nbsp;
+						<span class="thick">Laser709</span>&nbsp;(0,05&nbsp;&euro;/Seite)
+					</td>
+					<td align="right"></td>
+						<!--td align="right">~&nbsp;0,00&nbsp;&euro;</td-->
+				  	</tr>
+					
+			
+			  			
+			
+			    
+				
+				
+					
+				  	<tr>
+				  	<td align="left"> Druckkosten &nbsp;
+						<span class="thick">Laser761</span>&nbsp;(0,05&nbsp;&euro;/Seite)
+					</td>
+					<td align="right"></td>
+						<!--td align="right">~&nbsp;0,00&nbsp;&euro;</td-->
+				  	</tr>
+					
+			
+			  			
+			
+			    
+				
+				
+					
+				  	<tr>
+				  	<td align="left"> Druckkosten &nbsp;
+						<span class="thick">APoolFarbe1104</span>&nbsp;(0,35&nbsp;&euro;/Seite)
+					</td>
+					<td align="right"></td>
+						<!--td align="right">~&nbsp;0,00&nbsp;&euro;</td-->
+				  	</tr>
+					
+			
+			  			
+			
+			    
+				
+				
+					
+				  	<tr>
+				  	<td align="left"> Druckkosten &nbsp;
+						<span class="thick">APoolLaser1104_2</span>&nbsp;(0,05&nbsp;&euro;/Seite)
+					</td>
+					<td align="right"></td>
+						<!--td align="right">~&nbsp;18,10&nbsp;&euro;</td-->
+				  	</tr>
+					
+			
+			  			
+			
+			    
+				
+				
+					
+				  	<tr>
+				  	<td align="left"> Druckkosten &nbsp;
+						<span class="thick">APoolLaser1104_1</span>&nbsp;(0,05&nbsp;&euro;/Seite)
+					</td>
+					<td align="right"></td>
+						<!--td align="right">~&nbsp;6,90&nbsp;&euro;</td-->
+				  	</tr>
+					
+			
+			  
+			  
+			</table>
+			
+			
+		
+
+	</td>   <!-- Printquoten-->
+  </tr>
+</table> <!-- Passwort, Printquoten -->
+
+	
+</div>
+
+
+
+</body>
+</html>

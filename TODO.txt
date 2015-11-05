@@ -8,12 +8,25 @@ TODO:
 
 
 4. Import helper and insert input parameters:
-
 @import helper._
 
 @(loginForm: Form[models.loginComponent.LoginFormModel])
 
 
 
-5. Replace <form>...</form>
+
+5. Change Assert location:
+'@routes.Assets.at("PATH_TO_FILE")'
+
+
+
+
+6. Replace <form>...</form>
    with @form(...) {...}
+
+
+
+
+7. 
+
+
