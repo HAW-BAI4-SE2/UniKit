@@ -1,10 +1,10 @@
 @import helper._
-
-@(courseRegistrationForm: Form[models.courseRegistration.CourseRegistrationFormModel])
+@import models.courseComponent.FormModels.CourseRegistrationFormModel
+@(courseRegistrationForm: Form[CourseRegistrationFormModel])
 
 <h1>Cancel registrations:</h1>
 <body>
-    @form(routes.CourseRegistrationController.cancelCourseRegistration()){
+    @form(routes.courseComponent.CourseRegistrationController.cancelCourseRegistration()){
         <table border = "1">
             Your student number: <input type="text" name="studentNumber" value=@courseRegistrationForm("studentNumber").value readonly>
             <tr>

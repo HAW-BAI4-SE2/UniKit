@@ -1,4 +1,4 @@
-package models.courseRegistration;
+package models.courseComponent.FormModels;
 
 import net.unikit.database.external.interfaces.Course;
 

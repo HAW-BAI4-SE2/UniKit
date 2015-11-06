@@ -10,6 +10,7 @@ import net.unikit.database.external.interfaces.Course;
 import net.unikit.database.external.interfaces.Student;
 import net.unikit.database.unikit_.interfaces.CourseRegistration;
 
+import controllers.courseComponent.CourseController;
 import play.mvc.Controller;
 import play.mvc.Result;
 
@@ -68,7 +69,7 @@ public class TeamController extends Controller {
          *      send mail to student
          *      send mail to all team members
         */
-        return showCourseDetails();
+        return CourseController.showCourseDetails();
     }
 
     public static Result showTeamOverview(){
@@ -83,7 +84,7 @@ public class TeamController extends Controller {
     /**
      *   Displays the details for a team
      **/
-    public static Result showEditTeam(){
+    public static Result showEditTeam(String studentNumber, int courseID){
         /**
         *   TODO:
         *       get all members of the current team

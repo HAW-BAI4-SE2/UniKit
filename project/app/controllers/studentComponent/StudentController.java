@@ -6,10 +6,12 @@ package controllers.studentComponent;
 
 import assets.Global;
 
-import net.unikit.database.external.interfaces.Course;
-import net.unikit.database.external.interfaces.Student;
-import net.unikit.database.unikit_.interfaces.CourseRegistration;
+import models.studentComponent.FormModels.CreateTeamFormModel;
+import models.studentComponent.StudentDatabaseConnector;
 
+import controllers.courseComponent.CourseController;
+
+import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 
@@ -17,33 +19,36 @@ import views.html.*;
 
 public class StudentController extends Controller {
 
+    private static StudentDatabaseConnector databaseConnector = new StudentDatabaseConnector();
     /**
      *  Creates a team associated with the studentNumber and courseID
-     *  @param studentNumber the first member of the team
-     *  @param courseID the course for which the team will be created    
      *  @return showEditTeam-page
      */
     public static Result createTeam(){
-        /* 
-         *  TODO: 
-         *      create team in database
-         *      send mail to student
+        /* TODO: send mail to student
         */
-        return ok(showEditTeam.render());
+
+        Form<CreateTeamFormModel> createTeamForm =
+                Form.form(CreateTeamFormModel.class)
+                        .bindFromRequest();
+        CreateTeamFormModel ctfm = createTeamForm.get();
+
+        if(ctfm.studentNumber != null && ctfm.courseID != 0){
+            databaseConnector.createTeam(ctfm.studentNumber, ctfm.courseID);
+            return TeamController.showEditTeam(ctfm.studentNumber,ctfm.courseID);
+        }
+
+        return internalServerError("There was an error creating the team, please contact the administrator");
     }
 
     /**
-     *  Deletes the team associated with the studentNumber and courseID
-     *  @param team the team that is to be deleted
-     *  @return showCourseDetails-page
+     *  Deletes the team associated with the teamID and updates the registration status of all involved students
+     *  @param teamID the team that is to be deleted
+     *  @return showCourseDetails-page for the course the team was associated with
      */
-    public static Result deleteTeam(){
-        /*
-         *  TODO:
-         *      delete team from database
-         *      change flag in COURSE_REGISTRATION for all students
-        */
-        return TeamController.showCourseDetails();
+    public static Result deleteTeam(int teamID){
+        int courseIDForTeam = StudentDatabaseConnector.deleteTeam(teamID);
+        return CourseController.showCourseDetails(courseIDForTeam);
     }
 
     /**
@@ -57,7 +62,7 @@ public class StudentController extends Controller {
          *      persist membershiprequest from a student to database
          *      send mail to student and potential teammembers
          */
-        return TeamController.showCourseDetails();
+        return CourseController.showCourseDetails();
     }
 
     /**
@@ -71,9 +76,8 @@ public class StudentController extends Controller {
          *      delete membership request from database
          *      send mail to team members
          *      send mail to student
-         *      display course detail page
          */
-        return TeamController.showCourseDetails();
+        return CourseController.showCourseDetails();
     }
 
     public static Result acceptInvitation(){

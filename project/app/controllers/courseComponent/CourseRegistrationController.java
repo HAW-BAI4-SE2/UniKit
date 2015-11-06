@@ -1,4 +1,4 @@
-package controllers;
+package controllers.courseComponent;
 
 /**
  * The CourseRegistrationController controller contains the logic for displaying the courses available to the student for
@@ -8,8 +8,9 @@ package controllers;
  */
 
 import assets.Global;
-import models.courseRegistration.CourseRegistrationFormModel;
-import models.courseRegistration.OverviewCourseRegistrationModel;
+import models.courseComponent.CourseDatabaseConnector;
+import models.courseComponent.FormModels.CourseRegistrationFormModel;
+import models.courseComponent.FormModels.OverviewCourseRegistrationModel;
 import net.unikit.database.external.interfaces.Course;
 import net.unikit.database.external.interfaces.Student;
 import net.unikit.database.unikit_.interfaces.CourseRegistration;
@@ -148,5 +149,15 @@ public class CourseRegistrationController extends Controller {
         }
 
         return showCourseOverview();
+    }
+
+    /**
+     * Changes the status of a student for a course to either true (is in the team pool) or false (is in the single pool)
+     * @param studentNumber the student for which the status will be changed
+     * @param courseID the course for which the status of the student will be changed
+     * @param status true if student is in team, else false
+     */
+    public static void changeTeamRegistrationStatus(String studentNumber, int courseID, boolean status){
+        CourseDatabaseConnector.changeTeamRegistrationStatus(studentNumber, courseID, status);
     }
 }
