@@ -1,0 +1,26 @@
+@import helper._
+@import models.courseComponent.FormModels.OverviewCourseRegistrationModel
+@(courseRegistrations: OverviewCourseRegistrationModel)
+
+<h1>Your courses:</h1>
+<body>
+    Your student number: <input type="text" name="studentNumber" value=@courseRegistrations.getStudentNumber readonly>
+    <table border = "1">
+        <tr>
+            <td> Course Name</td>
+            <td> Course ID</td>
+        </tr>
+        @for(course <- courseRegistrations.getRegisteredCourses){
+            <tr>
+                <td>@course.getName</td>
+                <td>@course.getId</td>
+            </tr>
+        }
+    </table>
+        <a href=@controllers.courseComponent.routes.CourseRegistrationController.showRegisterCourses>
+            <button>Register more courses</button>
+        </a>
+        <a href=@controllers.courseComponent.routes.CourseRegistrationController.cancelCourseRegistration>
+            <button>Cancel registrations</button>
+        </a>
+</body>
