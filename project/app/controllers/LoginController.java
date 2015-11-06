@@ -3,10 +3,13 @@ package controllers;
 import assets.Global;
 import controllers.userComponent.UserController;
 import models.loginComponent.LoginFormModel;
+import net.unikit.database.external.interfaces.Student;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.*;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Created by abq308 on 05.11.2015.
@@ -25,11 +28,13 @@ public class LoginController extends Controller {
         Form<LoginFormModel> loginForm = Form.form(LoginFormModel.class).bindFromRequest();
         LoginFormModel loginFormModel = loginForm.get();
 
-        // TODO: Implement username check
-        // ...
+        // Check if username is in database
+        String username = loginForm.get().username;
+        Student currentUser = Global.getStudentManager().getStudent(username);
+        checkNotNull(currentUser, "Unknown username '" + username + "'!");
 
-        // TODO: Implement password check
-        // ...
+        // Check if password is correct
+        // TODO!
 
         // If errors occured, show errors
         if (loginForm.hasErrors()) {
@@ -41,7 +46,6 @@ public class LoginController extends Controller {
         session().clear();
 
         // Store username in session
-        String username = loginForm.get().username;
         session("username", username);
 
         // Go to user overview page
@@ -52,7 +56,7 @@ public class LoginController extends Controller {
         // Clear session data
         session().clear();
 
-        // Show message box
+        // Show result message
         flash("Auf Wiedersehen!", "Sie wurden erfolgreich ausgeloggt!");
 
         // Go to login page
