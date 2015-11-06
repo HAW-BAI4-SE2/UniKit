@@ -1,5 +1,5 @@
 @(currentUser: net.unikit.database.external.interfaces.Student)
     <body>
         Hello @(currentUser.getFirstName + " " + currentUser.getLastName)
-        <a href=@routes.CourseRegistrationController.showRegisterCourses()>Register for course</a>
+        <a href=@controllers.courseComponent.routes.CourseRegistrationController.showRegisterCourses()>Register for course</a>
     </body>

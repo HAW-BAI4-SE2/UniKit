@@ -35,7 +35,7 @@ public class StudentController extends Controller {
 
         if(ctfm.studentNumber != null && ctfm.courseID != 0){
             databaseConnector.createTeam(ctfm.studentNumber, ctfm.courseID);
-            return TeamController.showEditTeam(ctfm.studentNumber,ctfm.courseID);
+            return TeamController.showEditTeam();
         }
 
         return internalServerError("There was an error creating the team, please contact the administrator");
@@ -48,7 +48,7 @@ public class StudentController extends Controller {
      */
     public static Result deleteTeam(int teamID){
         int courseIDForTeam = StudentDatabaseConnector.deleteTeam(teamID);
-        return CourseController.showCourseDetails(courseIDForTeam);
+        return CourseController.showCourseDetails();
     }
 
     /**
