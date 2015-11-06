@@ -1,11 +1,13 @@
-package controllers;
+package controllers.loginComponent;
 
 import assets.Global;
+import controllers.routes;
 import models.loginComponent.LoginFormModel;
 import net.unikit.database.external.interfaces.Student;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
+import play.mvc.Results;
 import views.html.showLogin;
 import views.html.test;
 
@@ -49,7 +51,7 @@ public class LoginController extends Controller {
         session("username", username);
 
         // Go to user overview page
-        return redirect(routes.UserController.showUser());
+        return redirect(controllers.userComponent.routes.UserController.showUser());
     }
 
     public static Result logout() {
@@ -60,6 +62,6 @@ public class LoginController extends Controller {
         flash("Auf Wiedersehen!", "Sie wurden erfolgreich ausgeloggt!");
 
         // Go to login page
-        return redirect(routes.LoginController.showLogin());
+        return redirect(controllers.loginComponent.routes.LoginController.showLogin());
     }
 }
