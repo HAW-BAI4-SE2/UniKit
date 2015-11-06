@@ -1,13 +1,13 @@
 package controllers;
 
 import assets.Global;
-import controllers.userComponent.UserController;
 import models.loginComponent.LoginFormModel;
 import net.unikit.database.external.interfaces.Student;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
-import views.html.*;
+import views.html.showLogin;
+import views.html.test;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -28,7 +28,7 @@ public class LoginController extends Controller {
         Form<LoginFormModel> loginForm = Form.form(LoginFormModel.class).bindFromRequest();
         LoginFormModel loginFormModel = loginForm.get();
 
-        // Check if username is in database
+        // Check if username exists
         String username = loginForm.get().username;
         Student currentUser = Global.getStudentManager().getStudent(username);
         checkNotNull(currentUser, "Unknown username '" + username + "'!");
@@ -49,7 +49,7 @@ public class LoginController extends Controller {
         session("username", username);
 
         // Go to user overview page
-        return redirect("user");
+        return redirect(routes.UserController.showUser());
     }
 
     public static Result logout() {
@@ -60,6 +60,6 @@ public class LoginController extends Controller {
         flash("Auf Wiedersehen!", "Sie wurden erfolgreich ausgeloggt!");
 
         // Go to login page
-        return redirect("login");
+        return redirect(routes.LoginController.showLogin());
     }
 }

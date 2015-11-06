@@ -1,4 +1,4 @@
-package controllers.userComponent;
+package controllers;
 
 import assets.Global;
 import net.unikit.database.external.interfaces.Student;
