@@ -3,9 +3,11 @@
 # ~~~~
 
 # Home page
-GET         /login                   controllers.loginComponent.LoginController.showLogin()
-POST        /login                   controllers.loginComponent.LoginController.login()
-GET         /                        controllers.courseComponent.CourseRegistrationController.showCourseOverview()
+GET         /                    controllers.loginComponent.LoginController.showLogin()
+GET         /login               controllers.loginComponent.LoginController.showLogin()
+POST        /login               controllers.loginComponent.LoginController.login()
+GET         /logout              controllers.loginComponent.LoginController.logout()
+GET         /user                controllers.userComponent.UserController.showUser()
 GET         /courses/overview        controllers.courseComponent.CourseRegistrationController.showCourseOverview()
 GET         /courses/register        controllers.courseComponent.CourseRegistrationController.showRegisterCourses()
 POST        /courses/register        controllers.courseComponent.CourseRegistrationController.registerCourses()
