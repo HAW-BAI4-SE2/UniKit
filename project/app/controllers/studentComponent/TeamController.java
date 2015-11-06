@@ -84,7 +84,7 @@ public class TeamController extends Controller {
     /**
      *   Displays the details for a team
      **/
-    public static Result showEditTeam(String studentNumber, int courseID){
+    public static Result showEditTeam(){
         /**
         *   TODO:
         *       get all members of the current team
