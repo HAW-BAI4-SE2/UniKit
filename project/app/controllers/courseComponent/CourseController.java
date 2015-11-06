@@ -13,7 +13,7 @@ import views.html.*;
 
 public class CourseController extends Controller {
 
-    public static Result showCourseDetails(int teamID){
+    public static Result showCourseDetails(){
 
         /* TODO: CourseDataBaseConnector: Get course for courseID
          *

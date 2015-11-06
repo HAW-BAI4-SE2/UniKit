@@ -4,7 +4,7 @@
 
 <h1>Available courses for registration:</h1>
 <body>
-    @form(routes.CourseRegistrationController.registerCourses()){
+    @form(controllers.courseComponent.routes.CourseRegistrationController.registerCourses()){
         Your student number: <input type="text" name="studentNumber" value=@courseRegistrationForm("studentNumber").value readonly>
         <table border = "1">
             <tr>
@@ -23,7 +23,7 @@
             }
         </table>
         <input type="submit" name="submitRegistrationButton" value="Register course">
-        <a href=@routes.CourseRegistrationController.showCourseOverview>
+        <a href=@controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview>
             <button>Show overview</button>
         </a>
         }
