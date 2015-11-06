@@ -5,11 +5,18 @@ package models.studentComponent;
  */
 
 import assets.Global;
+
 import controllers.courseComponent.CourseRegistrationController;
+
+import models.UnikitDatabaseHelper;
+
 import net.unikit.database.unikit_.interfaces.Team;
 import net.unikit.database.unikit_.interfaces.TeamRegistration;
 
 import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+
 
 public class StudentDatabaseConnector{
 
@@ -28,35 +35,38 @@ public class StudentDatabaseConnector{
     /**
     *  Deletes the team associated with the teamID and updates the flags for the students in the course registration
     *  @param teamID the team that is to be deleted
-    *  @return courseID the ID of the course the team was associated with
+    *  @return courseForTeam the course for which the team was associated
     */
     public static int deleteTeam(int teamID){
 
         // TODO: Better mechanic if team wasn't found
 
         // If team doesn't exist -1 is returned
-        int courseID = -1;
+        int courseForTeam = -1;
         Team teamToBeDeleted = null;
 
         List<Team> allTeams = Global.getTeamManager().getAllTeams();
 
         for(Team currentTeam : allTeams){
             if(currentTeam.getId() == teamID){
-                courseID = currentTeam.getCourseId();
                 teamToBeDeleted = currentTeam;
             }
         }
 
-        //TODO: Add response if team didn't exist
-        if(teamToBeDeleted != null){
-            //Update status of students to single registration
-            for(TeamRegistration currentRegistration : teamToBeDeleted.getTeamRegistrations()){
-                CourseRegistrationController.changeTeamRegistrationStatus(currentRegistration.getStudentNumber(), currentRegistration.getTeam().getCourseId(),false);
-            }
-            Global.getTeamManager().deleteTeam(teamToBeDeleted);
+        checkNotNull(teamToBeDeleted);
+        courseForTeam = teamToBeDeleted.getCourseId();
+
+        //Update status of students to single registration
+        for(TeamRegistration currentRegistration : teamToBeDeleted.getTeamRegistrations()){
+            CourseRegistrationController.changeTeamRegistrationStatus(
+                    currentRegistration.getStudentNumber(), currentRegistration.getTeam().getCourseId(),false);
         }
 
-        return courseID;
+        //Delete team
+        Global.getTeamManager().deleteTeam(teamToBeDeleted);
+
+
+        return courseForTeam;
     }
 
     /**
@@ -105,4 +115,8 @@ public class StudentDatabaseConnector{
          *      send mail to student
          */
     }
- }
+
+    public Team getTeam(String studentNumber, int courseID) {
+        return UnikitDatabaseHelper.getTeam(studentNumber,courseID);
+    }
+}

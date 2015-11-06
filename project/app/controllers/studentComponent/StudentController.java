@@ -4,13 +4,12 @@ package controllers.studentComponent;
  * @author Thomas Bednorz
  */
 
-import assets.Global;
-
 import models.studentComponent.FormModels.CreateTeamFormModel;
 import models.studentComponent.StudentDatabaseConnector;
 
 import controllers.courseComponent.CourseController;
 
+import net.unikit.database.unikit_.interfaces.Team;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -34,11 +33,12 @@ public class StudentController extends Controller {
         CreateTeamFormModel ctfm = createTeamForm.get();
 
         if(ctfm.studentNumber != null && ctfm.courseID != 0){
-            databaseConnector.createTeam(ctfm.studentNumber, ctfm.courseID);
-            return TeamController.showEditTeam();
+            StudentDatabaseConnector.createTeam(ctfm.studentNumber, ctfm.courseID);
+            Team newTeam = databaseConnector.getTeam(ctfm.studentNumber, ctfm.courseID);
+            return TeamController.showEditTeam(newTeam);
+        }else{
+            return internalServerError("There was an error creating the team, please contact the administrator");
         }
-
-        return internalServerError("There was an error creating the team, please contact the administrator");
     }
 
     /**
@@ -47,14 +47,12 @@ public class StudentController extends Controller {
      *  @return showCourseDetails-page for the course the team was associated with
      */
     public static Result deleteTeam(int teamID){
-        int courseIDForTeam = StudentDatabaseConnector.deleteTeam(teamID);
-        return CourseController.showCourseDetails();
+        int courseForTeam = StudentDatabaseConnector.deleteTeam(teamID);
+        return CourseController.showCourseDetails(courseForTeam);
     }
 
     /**
-     *  The student requests the membership with the team
-     *  @param studentID the student who wants to join the team
-     *  @param teamID the ID for which the students requests membership
+     *  The student requests the membership with the team. The relevant data is retrived using a TeamStateChangeForm-object
      *  @return showCourseDetails-page
     **/
     public static Result requestMembership(){
@@ -62,13 +60,13 @@ public class StudentController extends Controller {
          *      persist membershiprequest from a student to database
          *      send mail to student and potential teammembers
          */
-        return CourseController.showCourseDetails();
+        int courseToDispay = -1;
+
+        return CourseController.showCourseDetails(courseToDispay);
     }
 
     /**
-     *  The student cancels his membership request with the team
-     *  @param studentNumber the student who wants to cancel his membership request
-     *  @param teamID the ID of the team the students wants to cancel his request
+     *  The student cancels his membership request with the team. The relevant data is retrived using a TeamStateChangeForm-object
      *  @return showCourseDetails-page
     **/
     public static Result cancelMembershipRequest(){
@@ -77,7 +75,8 @@ public class StudentController extends Controller {
          *      send mail to team members
          *      send mail to student
          */
-        return CourseController.showCourseDetails();
+        int courseToDispay = -1;
+        return CourseController.showCourseDetails(courseToDispay);
     }
 
     public static Result acceptInvitation(){
@@ -88,9 +87,7 @@ public class StudentController extends Controller {
     }
 
     /**
-    *   Declines (deletes) the invitation for the student by the team
-    *   @param teamID the ID of the team that issued the invite
-    *   @param studentNumber the student number of the student who declined the invitation
+    *   Declines (deletes) the invitation for the student by the team. The relevant data is retrived using a TeamStateChangeForm-object
     **/
     public static Result declineInvitation(){
         /* TODO
@@ -98,6 +95,9 @@ public class StudentController extends Controller {
          *      send mail to team members
          *      send mail to student
          */
-        return TeamController.showEditTeam();
+
+        Team teamToDisplay = null;
+
+        return TeamController.showEditTeam(teamToDisplay);
     }
 }

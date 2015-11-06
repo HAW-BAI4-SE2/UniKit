@@ -51,7 +51,7 @@ public class LoginController extends Controller {
         session("username", username);
 
         // Go to user overview page
-        return redirect(controllers.userComponent.routes.UserController.showUser());
+        return controllers.userComponent.UserController.showUser();
     }
 
     public static Result logout() {
