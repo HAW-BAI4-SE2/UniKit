@@ -1,6 +1,6 @@
 @import helper._
 
-@(currentUser: net.unikit.database.external.interfaces.Student, sessionTimeout: java.util.Calendar)
+@(currentUser: net.unikit.database.external.interfaces.Student, sessionTimeout: java.util.Date)
 
 <html>
 <head>
@@ -46,7 +46,7 @@
 			</font>
 		</div>
 		<div>
-			<div class="autoLogMessage">&nbsp;Automatische Abmeldung um: @(sessionTimeout.get(java.util.Calendar.HOUR_OF_DAY)):@(sessionTimeout.get(java.util.Calendar.MINUTE)) Uhr
+			<div class="autoLogMessage">&nbsp;Automatische Abmeldung um: @((new java.text.SimpleDateFormat("hh:mm")).format(sessionTimeout)) Uhr
 					<div class="button button_logout button_active" >
 						<div class="button_a_left" >&nbsp;</div>
 						<div class="button_a_center">

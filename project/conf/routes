@@ -3,6 +3,7 @@
 # ~~~~
 
 # Home page
+GET         /                    controllers.LoginController.showLogin()
 GET         /login               controllers.LoginController.showLogin()
 POST        /login               controllers.LoginController.login()
 GET         /logout              controllers.LoginController.logout()

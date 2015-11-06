@@ -17,10 +17,8 @@ public class UserController extends Controller {
     public static Result showUser() {
         Student currentUser = Global.getStudentManager().getStudent(session("username"));
         checkNotNull(currentUser);
-        
-        Date sessionTimeoutDate = new Date();
-        java.util.Calendar sessionTimeout = java.util.Calendar.getInstance();
-        sessionTimeout.setTime(sessionTimeoutDate);
+
+        Date sessionTimeout = new Date();
 
         return ok(showUser.render(currentUser, sessionTimeout));
     }
