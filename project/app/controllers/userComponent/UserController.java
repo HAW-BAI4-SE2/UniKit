@@ -1,6 +1,7 @@
 package controllers.userComponent;
 
 import assets.Global;
+import assets.Utils;
 import net.unikit.database.external.interfaces.Student;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -15,10 +16,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class UserController extends Controller {
     public static Result showUser() {
-        Student currentUser = Global.getStudentManager().getStudent(session("username"));
-        checkNotNull(currentUser);
-
-        Date sessionTimeout = new Date();
+        Student currentUser = Utils.getCurrentUser(session());
+        Date sessionTimeout = Utils.getSessionTimeout(session());
 
         return ok(showUser.render(currentUser, sessionTimeout));
     }

@@ -40,6 +40,10 @@ public class LoginController extends Controller {
         // Clear previous session data
         session().clear();
 
+        // Store unique id in session
+        String uuid = java.util.UUID.randomUUID().toString();
+        session("uuid", uuid);
+
         // Store username in session
         session("username", loginFormModel.username);
 

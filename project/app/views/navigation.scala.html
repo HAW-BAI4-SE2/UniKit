@@ -8,7 +8,7 @@
     </div>
     <div class="navitem">
         <div class="navbgleft">&nbsp;</div>
-        <div class="navbgcen">@if(activeNavigationItem != assets.NavigationItem.REGISTRATIONS) {<a href="anmeldungen.do?command=anmeldungen&referer=X" title="Veranstaltungen, die ich angemeldet habe" class="navlink">Anmeldungen</a>} else {Anmeldungen}</div>
+        <div class="navbgcen">@if(activeNavigationItem != assets.NavigationItem.REGISTRATIONS) {<a href="@controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview()" title="Veranstaltungen, die ich angemeldet habe" class="navlink">Anmeldungen</a>} else {Anmeldungen}</div>
         <div class="navbgright">&nbsp;</div>
     </div>
     <div class="navitem">
