@@ -12,7 +12,7 @@
         </tr>
         @for(course <- courseRegistrations.getRegisteredCourses){
             <tr>
-                <td>@course.getName</td>
+                <td><a href='@controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId)' title="Coursedetails for @course.getName" class="navlink">@course.getName</a></td>
                 <td>@course.getId</td>
             </tr>
         }

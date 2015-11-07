@@ -6,11 +6,15 @@ package models.studentComponent;
 
 import assets.Global;
 import net.unikit.database.external.interfaces.Student;
+import net.unikit.database.external.interfaces.StudentManager;
 import net.unikit.database.unikit_.interfaces.Team;
+import net.unikit.database.unikit_.interfaces.TeamApplication;
 import net.unikit.database.unikit_.interfaces.TeamRegistration;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class TeamDatabaseConnector {
 
@@ -39,7 +43,33 @@ public class TeamDatabaseConnector {
                 }
             }
         }
-        if(teamForCourse == null) throw new NullPointerException();
+
+        checkNotNull(teamForCourse);
         return teamForCourse;
     }
+
+    public static List<Student> getAllStudents(Team teamToDispay) {
+        List<Student> allStudentsInTeam = null;
+
+        List<Team> allTeams =  Global.getTeamManager().getAllTeams();
+        List<TeamRegistration> allRegistrationsForTeam = null;
+        StudentManager studentManager = Global.getStudentManager();
+
+        //Get all registrations for team
+        for(Team currentTeam : allTeams){
+            if(currentTeam.getId() == teamToDispay.getId()){
+                allRegistrationsForTeam = currentTeam.getTeamRegistrations();
+            }
+        }
+
+        //Get all registered students
+         for(TeamRegistration currentRegistration : allRegistrationsForTeam){
+            allStudentsInTeam.add(studentManager.getStudent(currentRegistration.getStudentNumber()));
+         }
+
+        checkNotNull(allStudentsInTeam);
+
+        return allStudentsInTeam;
+    }
+
 }

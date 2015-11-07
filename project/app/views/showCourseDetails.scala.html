@@ -1,1 +1,22 @@
-@()
+@(course: net.unikit.database.external.interfaces.Course)
+<h1>Your courses:</h1>
+<body>
+    <table border = "1">
+        <tr>
+            <td> Course Name</td>
+            <td> Abbreviation</td>
+            <td> Field of Study</td>
+            <td> Semester</td>
+        </tr>
+        <tr>
+            <td>@course.getName</td>
+            <td>@course.getAbbreviation</td>
+            <td>N/A</td>
+            <td>N/A</td>
+        </tr>
+
+    </table>
+    <a href=@controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview()>
+        <button>Return to Overview</button>
+    </a>
+</body>
