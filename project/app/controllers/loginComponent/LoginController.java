@@ -26,29 +26,22 @@ public class LoginController extends Controller {
     }
 
     public static Result login() {
-        // Load input form
+        // Get form with data from request
         Form<LoginFormModel> loginForm = Form.form(LoginFormModel.class).bindFromRequest();
-        LoginFormModel loginFormModel = loginForm.get();
 
-        // Check if username exists
-        String username = loginForm.get().username;
-        Student currentUser = Global.getStudentManager().getStudent(username);
-        checkNotNull(currentUser, "Unknown username '" + username + "'!");
-
-        // Check if password is correct
-        // TODO!
-
-        // If errors occured, show errors
+        // If errors occurred, redirect to view and show the errors
         if (loginForm.hasErrors()) {
-            // return badRequest(login.render(loginForm));
-            return badRequest(test.render(loginForm.toString()));
+            return badRequest(showLogin.render(loginForm));
         }
+
+        // Get form model
+        LoginFormModel loginFormModel = loginForm.get();
 
         // Clear previous session data
         session().clear();
 
         // Store username in session
-        session("username", username);
+        session("username", loginFormModel.username);
 
         // Go to user overview page
         return redirect(controllers.userComponent.routes.UserController.showUser());
