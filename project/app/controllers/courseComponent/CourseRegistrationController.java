@@ -8,9 +8,9 @@ package controllers.courseComponent;
  */
 
 import assets.Global;
+import assets.SessionUtils;
 import models.courseComponent.CourseDatabaseConnector;
 import models.courseComponent.FormModels.CourseRegistrationFormModel;
-import models.courseComponent.FormModels.OverviewCourseRegistrationModel;
 import net.unikit.database.external.interfaces.Course;
 import net.unikit.database.external.interfaces.Student;
 import net.unikit.database.unikit_.interfaces.CourseRegistration;
@@ -20,34 +20,33 @@ import play.mvc.Result;
 import views.html.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class CourseRegistrationController extends Controller {
-    private static Student currentUser;
-
-    static {
-        currentUser = Global.getStudentManager().getStudent("2055120");
-    }
-
     /**
     *Displays the registered courses for the current user
     *@pre currentUser: a logged in user
     *@return showCourseOverview page displaying all course registrations for the user
      **/
     public static Result showCourseOverview() {
-        OverviewCourseRegistrationModel allRegistrationsCurrentUser = new OverviewCourseRegistrationModel(currentUser.getStudentNumber());
+        Student currentUser = SessionUtils.getCurrentUser(session());
+        Date sessionTimeout = SessionUtils.getSessionTimeout(session());
+
+        String studentNumber = currentUser.getStudentNumber();
+        List<Course> registeredCourses = new ArrayList<>();
 
         List<CourseRegistration> allCourseRegistrations = Global.getCourseRegistrationManager().getAllCourseRegistrations();
 
         //If entry in the table of all registered courses matches student number of the current user and isn't already in the list, the course name is added the the OverviewList
         for(CourseRegistration cr : allCourseRegistrations){
             Course currentCourse = Global.getCourseManager().getCourse(cr.getCourseId());
-            if(cr.getStudentNumber().equals(allRegistrationsCurrentUser.getStudentNumber()) && !allRegistrationsCurrentUser.getRegisteredCourses().contains(currentCourse)){
-                allRegistrationsCurrentUser.getRegisteredCourses().add(currentCourse);
+            if(cr.getStudentNumber().equals(studentNumber) && !registeredCourses.contains(currentCourse)){
+                registeredCourses.add(currentCourse);
             }
         }
 
-        return ok(showCourseOverview.render(allRegistrationsCurrentUser));
+        return ok(showCourseOverview.render(registeredCourses, currentUser, sessionTimeout));
     }
 
     /**
@@ -56,6 +55,9 @@ public class CourseRegistrationController extends Controller {
     *@return showRegisterCourses page displaying all available courses for regsitration
      **/
     public static Result showRegisterCourses() {
+        Student currentUser = SessionUtils.getCurrentUser(session());
+        Date sessionTimeout = SessionUtils.getSessionTimeout(session());
+
         List<Course> availableCourses = new ArrayList<>(Global.getCourseManager().getAllCourses());
         availableCourses.removeAll(currentUser.getCompletedCourses());
 
@@ -68,6 +70,9 @@ public class CourseRegistrationController extends Controller {
     }
 
     public static Result showCancelRegistration(){
+        Student currentUser = SessionUtils.getCurrentUser(session());
+        Date sessionTimeout = SessionUtils.getSessionTimeout(session());
+
         List<Course> allCourseRegistrations = new ArrayList<>();
 
         for(CourseRegistration courseRegistration : Global.getCourseRegistrationManager().getAllCourseRegistrations()){

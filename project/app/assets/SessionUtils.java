@@ -10,7 +10,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Created by Andreas on 06.11.2015.
  */
-public final class Utils {
+public final class SessionUtils {
     public static Student getCurrentUser(Http.Session session) {
         String username = session.get("username");
         checkNotNull(username, "username is null!");
