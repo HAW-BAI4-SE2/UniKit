@@ -1,39 +1,39 @@
-@()
+@(activeNavigationItem: assets.NavigationItem)
 
 <div id="navi">
     <div class="navitem">
         <div class="navbgleft">&nbsp;</div>
-        <div class="navbgcen">Profil</div>
+        <div class="navbgcen">@if(activeNavigationItem != assets.NavigationItem.PROFILE) {<a href="@controllers.userComponent.routes.UserController.showUser()" title="Meine Benutzerdaten" class="navlink">Profil</a>} else {Profil}</div>
         <div class="navbgright">&nbsp;</div>
     </div>
     <div class="navitem">
         <div class="navbgleft">&nbsp;</div>
-        <div class="navbgcen"><a href="anmeldungen.do?command=anmeldungen&referer=X" title="Veranstaltungen, die ich angemeldet habe" class="navlink">Anmeldungen</a></div>
+        <div class="navbgcen">@if(activeNavigationItem != assets.NavigationItem.REGISTRATIONS) {<a href="anmeldungen.do?command=anmeldungen&referer=X" title="Veranstaltungen, die ich angemeldet habe" class="navlink">Anmeldungen</a>} else {Anmeldungen}</div>
         <div class="navbgright">&nbsp;</div>
     </div>
     <div class="navitem">
         <div class="navbgleft">&nbsp;</div>
-        <div class="navbgcen"><a href="viewExaminationData.do" title="Pr&uuml;fungsleistungen, die ich bis jetzt abgelegt habe" class="navlink">Ergebnisse</a></div>
+        <div class="navbgcen">@if(activeNavigationItem != assets.NavigationItem.RESULTS) {<a href="viewExaminationData.do" title="Pr&uuml;fungsleistungen, die ich bis jetzt abgelegt habe" class="navlink">Ergebnisse</a>} else {Ergebnisse}</div>
         <div class="navbgright">&nbsp;</div>
     </div>
     <div class="navitem">
         <div class="navbgleft">&nbsp;</div>
-        <div class="navbgcen"><a href="chooseSL.do" title="Hier kann ich mich f&uuml;r diverse Dinge anmelden" class="navlink">anmelden</a></div>
+        <div class="navbgcen">@if(activeNavigationItem != assets.NavigationItem.REGISTER) {<a href="chooseSL.do" title="Hier kann ich mich f&uuml;r diverse Dinge anmelden" class="navlink">anmelden</a>} else {anmelden}</div>
         <div class="navbgright">&nbsp;</div>
     </div>
     <div class="navitem">
         <div class="navbgleft">&nbsp;</div>
-        <div class="navbgcen"><a href="navAbmelden.do" title="ACHTUNG!! Hier kann ich mich abmelden" class="navlink">abmelden</a></div>
+        <div class="navbgcen">@if(activeNavigationItem != assets.NavigationItem.UNREGISTER) {<a href="navAbmelden.do" title="ACHTUNG!! Hier kann ich mich abmelden" class="navlink">abmelden</a>} else {abmelden}</div>
         <div class="navbgright">&nbsp;</div>
     </div>
     <div class="navitem">
         <div class="navbgleft">&nbsp;</div>
-        <div class="navbgcen"><a href="maillist.do" title="Eigene Mailinglisten" class="navlink">Mailinglisten</a></div>
+        <div class="navbgcen">@if(activeNavigationItem != assets.NavigationItem.MAILING_LISTS) {<a href="maillist.do" title="Eigene Mailinglisten" class="navlink">Mailinglisten</a>} else {Mailinglisten}</div>
         <div class="navbgright">&nbsp;</div>
     </div>
     <div class="navitem">
         <div class="navbgleft">&nbsp;</div>
-        <div class="navbgcen"><a href="druckHistory.do" title="Hier kann ich mein Druckkonto und mein Druckjobs einsehen." class="navlink">Druckquoten</a></div>
+        <div class="navbgcen">@if(activeNavigationItem != assets.NavigationItem.PRINT_QUOTAS) {<a href="druckHistory.do" title="Hier kann ich mein Druckkonto und mein Druckjobs einsehen." class="navlink">Druckquoten</a>} else {Druckquoten}</div>
         <div class="navbgright">&nbsp;</div>
     </div>
     

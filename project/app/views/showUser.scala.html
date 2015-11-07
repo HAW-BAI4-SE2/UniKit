@@ -2,7 +2,7 @@
 
 @(currentUser: net.unikit.database.external.interfaces.Student, sessionTimeout: java.util.Date)
 
-@main("Benutzerdaten", currentUser, sessionTimeout) {
+@main("Benutzerdaten", assets.NavigationItem.PROFILE, currentUser, sessionTimeout) {
 <table width="605" >
  <tr>
 	<td>&Uuml;berpr&uuml;fen Sie bitte Ihre pers&ouml;nlichen Daten. Achten Sie bitte darauf, ob Vor- und Nachname richtig eingetragen und geschrieben sind. Die Angaben zur Person sind wichtiger Bestandteil der Pr&uuml;fung. Bei Unstimmigkeiten eine kurze E-Mail an <a href="mailto:fsb_ti@@haw-hamburg.de"> (FSB)</a>.</td>

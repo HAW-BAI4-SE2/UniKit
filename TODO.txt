@@ -1,7 +1,18 @@
 0. Extract content:
 <div class="data">
-	@content
+CONTENT
 </div>
+
+
+
+-- Insert main template and set TITLE:
+@import helper._
+
+@(currentUser: net.unikit.database.external.interfaces.Student, sessionTimeout: java.util.Date)
+
+@main("TITLE", currentUser, sessionTimeout) {
+CONTENT
+}
 
 
 

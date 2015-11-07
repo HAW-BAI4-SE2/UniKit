@@ -1,4 +1,4 @@
-@(title: String, currentUser: net.unikit.database.external.interfaces.Student, sessionTimeout: java.util.Date)(content: Html)
+@(title: String, activeNavigationItem: assets.NavigationItem, currentUser: net.unikit.database.external.interfaces.Student, sessionTimeout: java.util.Date)(content: Html)
 
 <html>
 <head>
@@ -30,7 +30,7 @@
     
     <div class="posRight"></div>
     
-    @navigation()
+    @navigation(activeNavigationItem)
     
     <div class="data">
         @content
