@@ -1,4 +1,9 @@
-TODO:
+0. Extract content:
+<div class="data">
+	@content
+</div>
+
+
 
 1. Replace all '@' with '@@'
 2. Replace all 'ü' with '&uuml;', ...
@@ -14,10 +19,8 @@ TODO:
 
 
 
-
 5. Change Assert location:
 '@routes.Assets.at("PATH_TO_FILE")'
-
 
 
 
@@ -26,7 +29,4 @@ TODO:
 
 
 
-
-7. 
-
-
+7. ...

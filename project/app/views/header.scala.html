@@ -1,0 +1,27 @@
+@(currentUser: net.unikit.database.external.interfaces.Student, sessionTimeout: java.util.Date)
+
+<div id="navigationsheader">
+    <div id="headline">
+        <font class="h_1">
+            @(currentUser.getFirstName()) @(currentUser.getLastName()) - Informatik
+        </font>
+    </div>
+    
+    <div>
+        <div class="autoLogMessage">&nbsp;Automatische Abmeldung um: @((new java.text.SimpleDateFormat("HH:mm")).format(sessionTimeout)) Uhr
+            <div class="button button_logout button_active" >
+                <div class="button_a_left" >&nbsp;</div>
+                
+                <div class="button_a_center">
+                    <a href='@controllers.loginComponent.routes.LoginController.logout()' class="button_link">logout</a>
+                </div>
+                
+                <div class="button_a_right"/>&nbsp;</div>
+            </div>
+    </div>
+    
+    <div id="languageSelector">
+        <img align="right" src='@routes.Assets.at("images/de_d.gif")' border="0" alt="deutsch" >
+        <!--<a href="lang.do?lang=en">--><img align="right" src='@routes.Assets.at("images/en.gif")' border="0" alt="englisch" ><!--</a>-->
+    </div>
+</div>

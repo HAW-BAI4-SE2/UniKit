@@ -4,16 +4,17 @@
 
 # Home page
 
-GET         /login                      controllers.loginComponent.LoginController.showLogin()
-POST        /login                      controllers.loginComponent.LoginController.login()
-GET         /logout                     controllers.loginComponent.LoginController.logout()
-GET         /                           controllers.loginComponent.LoginController.showLogin()
-GET         /courses/details/           controllers.courseComponent.CourseController.showCourseDetails(courseID: Integer)
-GET         /courses/overview           controllers.courseComponent.CourseRegistrationController.showCourseOverview()
-GET         /courses/register           controllers.courseComponent.CourseRegistrationController.showRegisterCourses()
-POST        /courses/register           controllers.courseComponent.CourseRegistrationController.registerCourses()
-GET         /courses/cancel             controllers.courseComponent.CourseRegistrationController.showCancelRegistration()
-POST        /courses/cancel             controllers.courseComponent.CourseRegistrationController.cancelCourseRegistration()
+GET         /                        controllers.loginComponent.LoginController.showLogin()
+GET         /login                   controllers.loginComponent.LoginController.showLogin()
+POST        /login                   controllers.loginComponent.LoginController.login()
+GET         /logout                  controllers.loginComponent.LoginController.logout()
+GET         /user                    controllers.userComponent.UserController.showUser()
+GET         /courses/details/        controllers.courseComponent.CourseController.showCourseDetails(courseID: Integer)
+GET         /courses/overview        controllers.courseComponent.CourseRegistrationController.showCourseOverview()
+GET         /courses/register        controllers.courseComponent.CourseRegistrationController.showRegisterCourses()
+POST        /courses/register        controllers.courseComponent.CourseRegistrationController.registerCourses()
+GET         /courses/cancel          controllers.courseComponent.CourseRegistrationController.showCancelRegistration()
+POST        /courses/cancel          controllers.courseComponent.CourseRegistrationController.cancelCourseRegistration()
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file            controllers.Assets.at(path="/public", file)
