@@ -52,6 +52,9 @@ public class CourseDatabaseConnector {
         List<Team> allTeams = Global.getTeamManager().getAllTeams();
 
         //TODO: Implement list of available teams. Need: max size for team
+        List<Course> allCourses = Global.getCourseManager().getAllCourses();
+        for(Course c : allCourses){
+        }
 
         return availableTeams;
     }

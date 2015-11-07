@@ -56,7 +56,7 @@ public class CourseRegistrationController extends Controller {
     *@return showRegisterCourses page displaying all available courses for regsitration
      **/
     public static Result showRegisterCourses() {
-        List<Course> availableCourses = new ArrayList<>(Global.getCourseManager().getAllCourses());
+        List<Course> availableCourses = Global.getCourseManager().getAllCourses();
         availableCourses.removeAll(currentUser.getCompletedCourses());
 
 
