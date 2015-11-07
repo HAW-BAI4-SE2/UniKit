@@ -30,6 +30,9 @@ public class StudentDatabaseConnector{
         newTeam.setCourseId(courseID);
         newTeam.setCreatedByStudentNumber(studentNumber);
         Global.getTeamManager().addTeam(newTeam);
+
+        // Update status of student to team registration
+        UnikitDatabaseHelper.changeTeamRegistrationStatus(studentNumber,courseID,false);
     }
 
     /**
@@ -58,7 +61,7 @@ public class StudentDatabaseConnector{
 
         //Update status of students to single registration
         for(TeamRegistration currentRegistration : teamToBeDeleted.getTeamRegistrations()){
-            CourseRegistrationController.changeTeamRegistrationStatus(
+            UnikitDatabaseHelper.changeTeamRegistrationStatus(
                     currentRegistration.getStudentNumber(), currentRegistration.getTeam().getCourseId(),false);
         }
 

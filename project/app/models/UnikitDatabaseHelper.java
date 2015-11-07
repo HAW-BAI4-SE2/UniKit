@@ -7,6 +7,7 @@ package models;
 import assets.Global;
 import controllers.courseComponent.CourseRegistrationController;
 import net.unikit.database.external.interfaces.Course;
+import net.unikit.database.unikit_.interfaces.CourseRegistration;
 import net.unikit.database.unikit_.interfaces.Team;
 import net.unikit.database.unikit_.interfaces.TeamRegistration;
 
@@ -58,5 +59,26 @@ public class UnikitDatabaseHelper {
 
         checkNotNull(course);
         return course;
+    }
+
+    /**
+     * Changes the status of a course registration for a given student.
+     * @param studentNumber the student of the student for which the status will be changed
+     * @param courseID the course for which the status will be changed
+     * @param status true if student is in a team for this course, else false
+     */
+    public static void changeTeamRegistrationStatus(String studentNumber, int courseID, boolean status){
+        checkNotNull(studentNumber);
+        List<CourseRegistration> allCourseRegistrations = Global.getCourseRegistrationManager().getAllCourseRegistrations();
+        CourseRegistration courseRegistrationToBUpdated = null;
+
+        for(CourseRegistration currentCourseRegistration : allCourseRegistrations){
+            if(currentCourseRegistration.getCourseId() == courseID && currentCourseRegistration.getStudentNumber().equals(studentNumber)){
+                courseRegistrationToBUpdated = currentCourseRegistration;
+                courseRegistrationToBUpdated.setCurrentlyAssignedToTeam(status);
+            }
+        }
+
+        Global.getCourseRegistrationManager().updateCourseRegistration(courseRegistrationToBUpdated);
     }
 }

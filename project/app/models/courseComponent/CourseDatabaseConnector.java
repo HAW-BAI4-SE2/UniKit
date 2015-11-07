@@ -24,18 +24,7 @@ public class CourseDatabaseConnector {
      * @param status true if student is in a team for this course, else false
      */
     public static void changeTeamRegistrationStatus(String studentNumber, int courseID, boolean status){
-        checkNotNull(studentNumber);
-        List<CourseRegistration> allCourseRegistrations = Global.getCourseRegistrationManager().getAllCourseRegistrations();
-        CourseRegistration courseRegistrationToBUpdated = null;
-
-        for(CourseRegistration currentCourseRegistration : allCourseRegistrations){
-            if(currentCourseRegistration.getCourseId() == courseID && currentCourseRegistration.getStudentNumber().equals(studentNumber)){
-                courseRegistrationToBUpdated = currentCourseRegistration;
-                courseRegistrationToBUpdated.setCurrentlyAssignedToTeam(status);
-            }
-        }
-
-        Global.getCourseRegistrationManager().updateCourseRegistration(courseRegistrationToBUpdated);
+        UnikitDatabaseHelper.changeTeamRegistrationStatus(studentNumber,courseID,status);
     }
 
     /**
