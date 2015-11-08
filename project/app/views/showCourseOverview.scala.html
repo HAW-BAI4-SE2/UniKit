@@ -414,7 +414,7 @@
                     
         
                             <td colspan="2" align="left"  height="25" width="391">
-                                <span class="thin">@(elem.getName())</span>
+                                <span class="thin"><a href="@controllers.courseComponent.routes.CourseController.showCourseDetails(elem.getId())" title="Pr&uuml;fungsleistungen, die ich bis jetzt abgelegt habe" class="navlink">@(elem.getName())</a></span>
                             </td>
                             
                             <td   class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>								    
