@@ -18,12 +18,12 @@
     </div>
     <div class="navitem">
         <div class="navbgleft">&nbsp;</div>
-        <div class="navbgcen">@if(activeNavigationItem != assets.NavigationItem.REGISTER) {<a href="chooseSL.do" title="Hier kann ich mich f&uuml;r diverse Dinge anmelden" class="navlink">anmelden</a>} else {anmelden}</div>
+        <div class="navbgcen">@if(activeNavigationItem != assets.NavigationItem.REGISTER) {<a href="@controllers.courseComponent.routes.CourseRegistrationController.showRegisterCourses()" title="Hier kann ich mich f&uuml;r diverse Dinge anmelden" class="navlink">anmelden</a>} else {anmelden}</div>
         <div class="navbgright">&nbsp;</div>
     </div>
     <div class="navitem">
         <div class="navbgleft">&nbsp;</div>
-        <div class="navbgcen">@if(activeNavigationItem != assets.NavigationItem.UNREGISTER) {<a href="navAbmelden.do" title="ACHTUNG!! Hier kann ich mich abmelden" class="navlink">abmelden</a>} else {abmelden}</div>
+        <div class="navbgcen">@if(activeNavigationItem != assets.NavigationItem.UNREGISTER) {<a href="@controllers.courseComponent.routes.CourseRegistrationController.showCancelRegistration()" title="ACHTUNG!! Hier kann ich mich abmelden" class="navlink">abmelden</a>} else {abmelden}</div>
         <div class="navbgright">&nbsp;</div>
     </div>
     <div class="navitem">
