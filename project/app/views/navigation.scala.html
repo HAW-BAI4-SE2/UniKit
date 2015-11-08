@@ -28,12 +28,12 @@
     </div>
     <div class="navitem">
         <div class="navbgleft">&nbsp;</div>
-        <div class="navbgcen">@if(activeNavigationItem != assets.NavigationItem.MAILING_LISTS) {<a href="maillist.do" title="Eigene Mailinglisten" class="navlink">Mailinglisten</a>} else {Mailinglisten}</div>
+        <div class="navbgcen">@if(activeNavigationItem != assets.NavigationItem.MAILING_LISTS) {<a href="@controllers.userComponent.routes.UserController.showMailingLists()" title="Eigene Mailinglisten" class="navlink">Mailinglisten</a>} else {Mailinglisten}</div>
         <div class="navbgright">&nbsp;</div>
     </div>
     <div class="navitem">
         <div class="navbgleft">&nbsp;</div>
-        <div class="navbgcen">@if(activeNavigationItem != assets.NavigationItem.PRINT_QUOTAS) {<a href="druckHistory.do" title="Hier kann ich mein Druckkonto und mein Druckjobs einsehen." class="navlink">Druckquoten</a>} else {Druckquoten}</div>
+        <div class="navbgcen">@if(activeNavigationItem != assets.NavigationItem.PRINT_QUOTAS) {<a href="@controllers.userComponent.routes.UserController.showPrintHistory()" title="Hier kann ich mein Druckkonto und mein Druckjobs einsehen." class="navlink">Druckquoten</a>} else {Druckquoten}</div>
         <div class="navbgright">&nbsp;</div>
     </div>
     

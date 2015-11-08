@@ -4,8 +4,7 @@ import assets.SessionUtils;
 import net.unikit.database.external.interfaces.Student;
 import play.mvc.Controller;
 import play.mvc.Result;
-import views.html.showResults;
-import views.html.showUser;
+import views.html.*;
 
 import java.util.Date;
 
@@ -25,5 +24,33 @@ public class UserController extends Controller {
         Date sessionTimeout = SessionUtils.getSessionTimeout(session());
 
         return ok(showResults.render(currentUser, sessionTimeout));
+    }
+
+    public static Result showMailingLists() {
+        Student currentUser = SessionUtils.getCurrentUser(session());
+        Date sessionTimeout = SessionUtils.getSessionTimeout(session());
+
+        return ok(showMailingLists.render(currentUser, sessionTimeout));
+    }
+
+    public static Result showPrintHistory() {
+        Student currentUser = SessionUtils.getCurrentUser(session());
+        Date sessionTimeout = SessionUtils.getSessionTimeout(session());
+
+        return ok(showPrintHistory.render(currentUser, sessionTimeout));
+    }
+
+    public static Result showPrintCreditsHistory() {
+        Student currentUser = SessionUtils.getCurrentUser(session());
+        Date sessionTimeout = SessionUtils.getSessionTimeout(session());
+
+        return ok(showPrintCreditsHistory.render(currentUser, sessionTimeout));
+    }
+
+    public static Result showPrintCredits() {
+        Student currentUser = SessionUtils.getCurrentUser(session());
+        Date sessionTimeout = SessionUtils.getSessionTimeout(session());
+
+        return ok(showPrintCredits.render(currentUser, sessionTimeout));
     }
 }

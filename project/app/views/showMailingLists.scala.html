@@ -1,0 +1,1194 @@
+@import snippets._
+
+@(currentUser: net.unikit.database.external.interfaces.Student, sessionTimeout: java.util.Date)
+
+@main("Mailinglisten bearbeiten", assets.NavigationItem.MAILING_LISTS, currentUser, sessionTimeout) {
+<br>
+<font class="h_2">Mailinglisten</font>
+<br><br>
+<form name="changeArt" method="get" action="/maillistArt.do">
+
+
+	<table width="605" cellspacing="0" cellpadding="0" class="tableframe">
+	 <tr>
+	  <td>&nbsp;&nbsp;<b>Verbindliche</b> Anmeldung f&uuml;r</td>
+	 </tr>
+	 <tr><td></td></tr>
+	</table>
+
+	<table width="605" cellspacing="0" cellpadding="0" class="tablecontent">
+		<td>
+			<table cellspacing="0" cellpadding="0" width="595">
+				<tr >
+					<td width="50%">
+						<select name="mailListArt" onchange="javascript:submitChangeArt()"><option value="Praktika" selected="selected">Praktikum Maillinglisten</option>
+							<option value="PO">Projekt Maillinglisten</option>
+							<option value="WPP">Wahlpflicht Maillinglisten</option>
+							<option value="SemGrp">Semestergruppe Maillinglisten</option></select>
+	               </td>
+	               <td width="50%">
+	               
+	               		     	<div class="button button_right button_active" >
+									<div class="button_a_left" >&nbsp;</div>
+										<div class="button_a_center">
+											<a id="login_link" href="javascript:store();" class="button_link">Mailisten Speichern</a>
+										</div>
+									<div class="button_a_right"/>&nbsp;</div>
+								</div>
+	               </td>
+				</tr>
+			</table>
+			</center>
+		</td>
+	
+	</table>
+
+</form>
+
+<form  name="store" action="storeMaillists.do" method="post">
+
+    
+	<table width="605" cellspacing="0" cellpadding="0" class="tableframe">
+	     <tr>
+	             <td>&nbsp;&nbsp;Mailinglisten:</td>
+	     </tr>
+	</table>
+	
+	
+	
+	<table width="605" cellspacing="0" cellpadding="0" class="tablecontent">
+		<td>
+		         <center>
+		              <table cellspacing="0" cellpadding="0" width="595">
+		                  <tr class="tableheadline">
+		                      <td>Bezeichnung</td>
+		                      <td width="1" class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                      <td>Liste</td>
+		                      <td width="1" class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                      <td align="center">angemeldet</td>
+		                  </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Programmieren 1</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-ai1prp1</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-ai1prp1"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Programmieren 2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-ai2prp2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-ai2prp2"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Rechnerstrukt.u.Masch.nah.Prg</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-ai2rmpp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-ai2rmpp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Logik und Berechnenbarkeit</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-ai2lbp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-ai2lbp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Datenbanken</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-ai2dbp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-ai2dbp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Algorithm u Datenstrukturen</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-ai3adp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-ai3adp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Betriebswirtschaft 2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-ai3bwp2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-ai3bwp2"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Graphen Konz. u Algorithmen</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-ai3gkap</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-ai3gkap"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Betriebssysteme</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-ai3bsp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-ai3bsp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Software Engineering I</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-ai3sep1</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-ai3sep1"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Compiler und Interpreter</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-ai4cip</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-ai4cip"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Rechnernetze</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-ai4rnp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-ai4rnp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Software Engineering 2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-ai4sep2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-ai4sep2"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Architektur von Informationssystemen</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-ai5aip</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-ai5aip"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Verteilte Systeme</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-ai5vsp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-ai5vsp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Intelligente Systeme</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-ai6isp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-ai6isp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Grundkurs Tech.Inf.</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-ti1gtp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-ti1gtp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Programmieren 1</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-ti1prp1</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-ti1prp1"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Grundlagen Elektrotechnik 2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-ti2gep2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-ti2gep2"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Grundlag. syst.nah.prog.</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-ti2gsp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-ti2gsp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Datenbanken</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-ti2dbp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-ti2dbp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Programmieren 2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-ti2prp2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-ti2prp2"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Software Engineering I</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-ti3se1p</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-ti3se1p"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Betriebssystem</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-ti3bsp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-ti3bsp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Algorithm u Datenstrukturen</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-ti3adp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-ti3adp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Digitaltechnik</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-ti3dtp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-ti3dtp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Software Engineering 2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-ti4sep2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-ti4sep2"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Rechnernetze</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-ti4rnp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-ti4rnp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Computer Engineering</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-ti4cep</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-ti4cep"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Verteilte Systeme</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-ti5vsp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-ti5vsp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Programmieren 1</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-mt1prp1</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-mt1prp1"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Grundlagen Elektrotechnik</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-mt1gep1</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-mt1gep1"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Konstruktion</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-mt1kop1</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-mt1kop1"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Grundlagen Elektrotechnik 2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-mt2gep2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-mt2gep2"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Programmiertechniken 2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-mt2prp2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-mt2prp2"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Elektronik</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-mt2elp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-mt2elp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Konstruktion</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-mt2kop2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-mt2kop2"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Software Engineering</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-mt3sep</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-mt3sep"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Digitaltechnik</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-mt3dtp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-mt3dtp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Mechatronische Systeme</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-mt3msp1</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-mt3msp1"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Konstruktion 3</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-mt3kop3</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-mt3kop3"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Fertigungstechnik</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-mt3ftp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-mt3ftp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Sensorik und EMV</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-mt4emp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-mt4emp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Methodisches Konstruieren</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-mt4mkp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-mt4mkp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Automatisierungstechnik 1</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-mt4atp1</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-mt4atp1"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Mikroprozessortechnik</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-mt4mpp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-mt4mpp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Mechatronische Systeme 2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-mt4msp2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-mt4msp2"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Thermo- und Fluiddynamik</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-mt4tfp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-mt4tfp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Automatisierungstechnik</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-mt5atp2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-mt5atp2"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Bussysteme</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-mt5bup</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-mt5bup"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Mechatronisches Design</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-mt5mdp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-mt5mdp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Aktorik</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-mt5akp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-mt5akp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Bildverarbeitung</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-mt6bvp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-mt6bvp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Sensorik</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-mt6snp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-mt6snp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Robotertechnik</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-mt6rop</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-mt6rop"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Handhabungstechnik</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-mt6htp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-mt6htp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Technik und Technologie</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>m-inf1ttp1</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="m-inf1ttp1"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Modellierung techn. Systeme</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>m-inf1mtp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="m-inf1mtp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Modellierung Informationssysteme</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>m-inf1mip</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="m-inf1mip"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Technik u. Technologie 2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>m-inf2ttp2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="m-inf2ttp2"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Theoretische Informatik 2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>m-inf3thu2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="m-inf3thu2"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>AI- und TI-Seminar</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>ais_tis_ss</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="ais_tis_ss"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>AI- und TI-Seminar</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>ais_tis_ws</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="ais_tis_ws"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Programmieren 1</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-ti1ptp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-ti1ptp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Programmieren 1</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-ai1ptp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-ai1ptp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Programmieren 1</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-wi1ptp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-wi1ptp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Programmieren 1</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-wi1prp1</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-wi1prp1"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Informationssysteme</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-wi2inp1</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-wi2inp1"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Quantitative Methoden</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-wi2qmp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-wi2qmp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Programmieren 2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-wi2prp2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-wi2prp2"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Betriebswirtschaft 2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-wi2bwp2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-wi2bwp2"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Wahrscheinlichkeitsrechnung und Statistik</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-wi3wsp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-wi3wsp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Betriebswirtschaft 3</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-wi3bwlp3</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-wi3bwlp3"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Software Engineering &amp; Architektur I</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-wi3seap1</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-wi3seap1"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Algorithmen und Datenstrukturen</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-wi3adp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-wi3adp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Wirtschaftsinformatik 1</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-wi3wip1</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-wi3wip1"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Informationssysteme II</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-wi4inp2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-wi4inp2"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Betriebswirtschaft 4</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-wi4bwlp4</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-wi4bwlp4"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Software Engineering &amp; Architektur</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-wi4seap2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-wi4seap2"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Rechnernetze &amp; Betriebssysteme</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-wi4rbp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-wi4rbp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Wirtschaftsinformatik II</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-wi4wip2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-wi4wip2"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Seminar</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-wi5wis</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-wi5wis"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Wirtschaftsinformatik III</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-wi5wip3</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-wi5wip3"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Wirtschaftsinformatik I</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-wi1bwlp1</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-wi1bwlp1"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Programmiermethodik 2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-ai2pmp2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-ai2pmp2"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Programmiermethodik 2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-ti2pmp2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-ti2pmp2"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Programmiermethodik 2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-wi2pmp2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-wi2pmp2"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Betriebswirtschaft 2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>b-wi2bwlp2</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="b-wi2bwlp2"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Technik und Technologie vernetzter Systeme</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>m-inf_wsttvp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="m-inf_wsttvp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Technik und Technologie vert. Informationssysteme</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>m-inf_ssttip</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="m-inf_ssttip"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Modellierung dynamischer Systeme</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>m-inf_ssmdp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="m-inf_ssmdp"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          <tr class="tablecontentbackdark">
+		                          
+		                          
+		                                  <td>Modellierung von Informationssystemen</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>m-inf_wsmip</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="m-inf_wsmip"   ></input></td>
+		                          </tr>
+		                  
+		                          
+		                          
+		                          <tr class="tablecontentbacklight">
+		                          
+		                                  <td>Form. Semantiken und Verfein. verteilter  Prozessmodelle</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td>m-inf_wssvpp</td>
+		                                  <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+		                                  <td align="center">
+	                                      <input type="checkbox" name="mailLists" value="m-inf_wssvpp"   ></input></td>
+		                          </tr>
+		                  
+						  
+		              </table>
+		         </center>
+		</td>
+	</table>
+</form>
+<br>
+}
