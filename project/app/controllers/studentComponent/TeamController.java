@@ -34,7 +34,7 @@ public class TeamController extends Controller {
 
         Team teamToDisplay = null;
 
-        return showEditTeam(teamToDisplay);
+        return showEditTeam(teamToDisplay.getId());
     }
 
     public static Result removeMember(){
@@ -45,7 +45,7 @@ public class TeamController extends Controller {
          */
         Team teamToDisplay = null;
 
-        return showEditTeam(teamToDisplay);
+        return showEditTeam(teamToDisplay.getId());
     }
 
     public static Result inviteStudent(){
@@ -57,7 +57,7 @@ public class TeamController extends Controller {
 
         Team teamToDisplay = null;
 
-        return showEditTeam(teamToDisplay);
+        return showEditTeam(teamToDisplay.getId());
     }
 
     public static Result cancelInvitation(){
@@ -69,7 +69,7 @@ public class TeamController extends Controller {
         */
         Team teamToDisplay = null;
 
-        return showEditTeam(teamToDisplay);
+        return showEditTeam(teamToDisplay.getId());
     }
 
     public static Result acceptMembershipRequest(){
@@ -77,7 +77,7 @@ public class TeamController extends Controller {
         */
         Team teamToDisplay = null;
 
-        return showEditTeam(teamToDisplay);
+        return showEditTeam(teamToDisplay.getId());
     }
 
     public static Result declineMembershipRequest(){
@@ -106,13 +106,15 @@ public class TeamController extends Controller {
     /**
      *   Displays the details for a team
      **/
-    public static Result showEditTeam(Team teamToDispay){
+    public static Result showEditTeam(int teamID){
         /**
         *   TODO:
         *       get all members of the current team
         *       get all pending invitations for the team
         *       get all pending membership requests for the team
         **/
+
+        Team teamToDispay = Global.getTeamManager().getTeam(teamID);
 
         List<Student> allStudentsForTeam = TeamDatabaseConnector.getAllStudents(teamToDispay);
 

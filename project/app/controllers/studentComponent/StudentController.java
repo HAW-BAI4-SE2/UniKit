@@ -4,17 +4,17 @@ package controllers.studentComponent;
  * @author Thomas Bednorz
  */
 
-import models.studentComponent.FormModels.CreateTeamFormModel;
+import assets.SessionUtils;
 import models.studentComponent.StudentDatabaseConnector;
 
 import controllers.courseComponent.CourseController;
 
+import net.unikit.database.external.interfaces.Student;
 import net.unikit.database.unikit_.interfaces.Team;
-import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 
-import views.html.*;
+import java.util.Date;
 
 public class StudentController extends Controller {
 
@@ -23,19 +23,17 @@ public class StudentController extends Controller {
      *  Creates a team associated with the studentNumber and courseID
      *  @return showEditTeam-page
      */
-    public static Result createTeam(){
+    public static Result createTeam(int courseID){
+        Student currentUser = SessionUtils.getCurrentUser(session());
+        Date sessionTimeout = SessionUtils.getSessionTimeout(session());
+
         /* TODO: send mail to student
         */
 
-        Form<CreateTeamFormModel> createTeamForm =
-                Form.form(CreateTeamFormModel.class)
-                        .bindFromRequest();
-        CreateTeamFormModel ctfm = createTeamForm.get();
-
-        if(ctfm.studentNumber != null && ctfm.courseID != 0){
-            StudentDatabaseConnector.createTeam(ctfm.studentNumber, ctfm.courseID);
-            Team newTeam = databaseConnector.getTeam(ctfm.studentNumber, ctfm.courseID);
-            return TeamController.showEditTeam(newTeam);
+        if(currentUser.getStudentNumber() != null && courseID != 0){
+            StudentDatabaseConnector.createTeam(currentUser.getStudentNumber(), courseID);
+            Team newTeam = databaseConnector.getTeam(currentUser.getStudentNumber(), courseID);
+            return TeamController.showEditTeam(newTeam.getId());
         }else{
             return internalServerError("There was an error creating the team, please contact the administrator");
         }
@@ -98,6 +96,6 @@ public class StudentController extends Controller {
 
         Team teamToDisplay = null;
 
-        return TeamController.showEditTeam(teamToDisplay);
+        return TeamController.showEditTeam(teamToDisplay.getId());
     }
 }

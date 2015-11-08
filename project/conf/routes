@@ -16,6 +16,8 @@ GET         /courses/register        controllers.courseComponent.CourseRegistrat
 POST        /courses/register        controllers.courseComponent.CourseRegistrationController.registerCourses()
 GET         /courses/cancel          controllers.courseComponent.CourseRegistrationController.showCancelRegistration()
 POST        /courses/cancel          controllers.courseComponent.CourseRegistrationController.cancelCourseRegistration()
+GET         /teams/create/           controllers.studentComponent.StudentController.createTeam(courseID: Integer)
+GET         /teams/details/          controllers.studentComponent.TeamController.showEditTeam(teamID: Integer)
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file            controllers.Assets.at(path="/public", file)
