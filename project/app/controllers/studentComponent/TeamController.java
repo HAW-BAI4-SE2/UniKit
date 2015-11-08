@@ -116,7 +116,7 @@ public class TeamController extends Controller {
 
         List<Student> allStudentsForTeam = TeamDatabaseConnector.getAllStudents(teamToDispay);
 
-        return ok(showEditTeam.render(allStudentsForTeam,teamToDispay.getTeamApplications(),teamToDispay.getTeamInvitations()));
+        return ok(showTeamEdit.render(allStudentsForTeam,teamToDispay.getTeamApplications(),teamToDispay.getTeamInvitations()));
 }
 
 
@@ -129,6 +129,6 @@ public class TeamController extends Controller {
          *  TODO:
          *      get all teams which are not full for a given course
         */
-        return ok(showAvailableTeams.render());
+        return ok(showTeamAvailable.render());
     }
 }

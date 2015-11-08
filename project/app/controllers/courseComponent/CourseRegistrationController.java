@@ -66,7 +66,7 @@ public class CourseRegistrationController extends Controller {
                 Form.form(CourseRegistrationFormModel.class)
                         .fill(new CourseRegistrationFormModel(currentUser.getStudentNumber(), availableCourses));
 
-        return ok(showRegisterCourses.render(courseRegistration));
+        return ok(showCourseRegister.render(courseRegistration));
     }
 
     public static Result showCancelRegistration(){
@@ -85,7 +85,7 @@ public class CourseRegistrationController extends Controller {
                 Form.form(CourseRegistrationFormModel.class)
                         .fill(new CourseRegistrationFormModel(currentUser.getStudentNumber(), allCourseRegistrations));
 
-        return ok(showCancelRegistration.render(courseRegistration));
+        return ok(showCourseUnregister.render(courseRegistration));
     }
     /**
     *Redirects to the overview of all registered courses for the current user.
