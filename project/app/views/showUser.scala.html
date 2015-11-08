@@ -1,302 +1,41 @@
-@import helper._
+@import snippets._
 
 @(currentUser: net.unikit.database.external.interfaces.Student, sessionTimeout: java.util.Date)
 
 @main("Benutzerdaten", assets.NavigationItem.PROFILE, currentUser, sessionTimeout) {
-<table width="605" >
- <tr>
-	<td>&Uuml;berpr&uuml;fen Sie bitte Ihre pers&ouml;nlichen Daten. Achten Sie bitte darauf, ob Vor- und Nachname richtig eingetragen und geschrieben sind. Die Angaben zur Person sind wichtiger Bestandteil der Pr&uuml;fung. Bei Unstimmigkeiten eine kurze E-Mail an <a href="mailto:fsb_ti@@haw-hamburg.de"> (FSB)</a>.</td>
- </tr>
-</table>
+	@evidence(605) {
+		&Uuml;berpr&uuml;fen Sie bitte Ihre pers&ouml;nlichen Daten. Achten Sie bitte darauf, ob Vor- und Nachname richtig eingetragen und geschrieben sind. Die Angaben zur Person sind wichtiger Bestandteil der Pr&uuml;fung. Bei Unstimmigkeiten eine kurze E-Mail an <a href="mailto:fsb_ti@@haw-hamburg.de"> (FSB)</a>.
+	}
 
-<tr><td>&nbsp;</td></tr>
+	@space()
 
+	@listSection("Ihre Daten", 605) {
+		@listItemDark() {Name} {@(currentUser.getFirstName()) @(currentUser.getLastName())}
+		@listItemLight() {Benutzername} {<!--DUMMY_VALUE-->{abc123}}
+		@listItemDark() {Ablaufdatum des Passwortes} {<!--DUMMY_VALUE-->{01.01.2015}}
+		@listItemLight() {Aktive Benutzerrolle} {<!--DUMMY_VALUE-->{Student}}
+		@listItemDark() {Geburtsort} {<!--DUMMY_VALUE-->{Hamburg}}
+		@listItemLight() {Geschlecht} {<!--DUMMY_VALUE-->{M}}
+		@listItemDark() {Geburtstag} {<!--DUMMY_VALUE-->{Montag}, <!--DUMMY_VALUE-->{01.01.2015}}
+		@listItemLight() {Martrikelnummer} {@(currentUser.getStudentNumber())}
+		@listItemDark() {Pr&uuml;fungsordnung} {@(currentUser.getFieldOfStudy().getAbbreviation()): <!--DUMMY_VALUE-->{PO 2008} (<!--DUMMY_VALUE-->{4015})}
+		@listItemLight() {Studiengang} {@(currentUser.getFieldOfStudy().getName())}
+		@listItemDark() {Prim&auml;re HAW EMail-Adresse} {@(currentUser.getEmail())}
+		@listItemLight() {HAW-Kennung} {<!--DUMMY_VALUE-->{abc123}}
+		@listItemDark() {TI-Departmentname} {<!--DUMMY_VALUE-->{Informatik}}
+		@listItemLight() {TI-Departmentnummer} {<!--DUMMY_VALUE-->{52}}
+	}
 
- <table width="605">
-  <tr>
-    <td> 
-	   <table width="605" cellspacing="0" cellpadding="0" class="tableframe">
-		  <tr>
-			<td align="left">&nbsp;&nbsp;Ihre Daten </td>
-			<td align="right"><a href="javascript:openWin('getHelp.do?keyword=persDat','200','300','help');">Hilfe</a>&nbsp;</td>
-		  </tr>
-	   </table>
-				
-	   <table width="605" cellspacing="0" cellpadding="0" class="tablecontent">
-		  <tr class="tablecontentbackdark">
-		    <td align="left">Name</td>
-		    <td align="right">@(currentUser.getFirstName())&nbsp;@(currentUser.getLastName())</td>
-		  </tr>
-		  <tr>
-		    <td colspan="2" height="1"></td>
-		  </tr>			
-		  <tr class="tablecontentbacklight">
-		    <td align="left">Benutzername</td>
-		    <td align="right"><!--DUMMY_VALUE-->{abc123}</td>
-		  </tr>
-		    <tr>
-		    <td colspan="2" height="1"></td>
-		  </tr>
-		   <tr class="tablecontentbackdark">
-		    <td align="left">Ablaufdatum des Passwortes</td>
-		    <td align="right"><!--DUMMY_VALUE-->{01.01.2015}</td>
-		  </tr>
-		  <tr>
-		    <td colspan="2" height="1"></td>
-		  </tr>			
-		  <tr class="tablecontentbacklight">
-		    <td align="left">aktive Benutzerrolle</td>
-		    <td align="right"><!--DUMMY_VALUE-->{Student}</td>
-		  </tr>
-		  
-		  <tr>
-		    <td colspan="2" height="1"></td>
-		  </tr>
-		  <tr class="tablecontentbackdark">
-		    <td align="left">Geburtsort</td>
-		    
-			    <td align="right"><!--DUMMY_VALUE-->{Hamburg}</td>
-			
-		    			
-		  </tr>
-		  
-		  <tr>
-		    <td colspan="2" height="1"></td>
-		  </tr>
-		  <tr class="tablecontentbackdark">
-		    <td align="left">Geschlecht</td>
-		    
-			    <td align="right"><!--DUMMY_VALUE-->{M}</td>
-			
-		    			
-		  </tr>
-		  
+	@space()
 
-		  <tr>
-		    <td colspan="2" height="1"></td>
-		  </tr>
-		  <tr class="tablecontentbackdark">
-		    <td align="left">Geburtstag</td>
-		    
-			    <td align="right"><!--DUMMY_VALUE-->{Montag}, <!--DUMMY_VALUE-->{01.01.2015}</td>
-			
-		    			
-		  </tr>
-
-		  <tr>
-		    <td colspan="2" height="1"></td>
-		  </tr>			
-		  <tr class="tablecontentbacklight">
-		    <td align="left">Martrikelnummer</td>
-		    <td align="right">@(currentUser.getStudentNumber())</td>
-		  </tr>
-		
-		   <tr>
-		    <td colspan="2" height="1"></td>
-		  </tr>
-		  
-		  <tr class="tablecontentbackdark">
-		    <td align="left">Pr&uuml;fungsordnung</td>
-		    <td align="right">@(currentUser.getFieldOfStudy().getAbbreviation()): <!--DUMMY_VALUE-->{PO 2008} (<!--DUMMY_VALUE-->{4015})</td>
-		  </tr>
-		  
-		  <tr>
-		    <td colspan="2" height="1"></td>
-		  </tr>	
-		
-		  <tr class="tablecontentbackdark">
-		    <td align="left">Studiengang</td>
-		    <td align="right">@(currentUser.getFieldOfStudy().getName())</td>
-		  </tr>  
-		  
-		  <tr>
-		    <td colspan="2" height="1"></td>
-		  </tr>	
-		
-		 <!-- tr class="tablecontentbacklight">
-		    <td align="left">Heimatverzeichniss</td>
-		    <td align="right">/home/students/DUMMY_VALUE{abc123}</td>
-		  </tr>
-		  <tr>
-		    <td colspan="2" height="1"></td>
-		  </tr-->
-		  
-	  <tr class="tablecontentbacklight">
-	    <td align="left">Prim&auml;re HAW EMail-Adresse</td>
-	    <td align="right">@(currentUser.getEmail())</td>
-	  </tr>
-
-
-	  
-		  <tr class="tablecontentbackdark">
-		    <td align="left">HAW-Kennung</td>
-		    <td align="right"><!--DUMMY_VALUE-->{abc123}</td>
-		  </tr>
-      
-
-      <tr class="tablecontentbacklight"> 
-       <td align="left">TI-Departmentname</td>
-       <td align="right"><!--DUMMY_VALUE-->{Informatik}</td>
-      </tr>
-	      
-	  <tr class="tablecontentbackdark">
-	    <td align="left">TI-Departmentnummer</td>
-	    <td align="right"><!--DUMMY_VALUE-->{52}</td>
-	  </tr>
-	  
-		  
-      
-
-	      
-          
-		</table>
-
-<br>
- 
- <table width="605" cellspacing="0" cellpadding="0" >
-
-	<tr>
-		<td valign="top"/>	 <!-- Printquoten -->
-
-		
-		
-		 
-		 
-		    <table width="605"  cellspacing="0" cellpadding="0" class="tableframe">
-	 		 <tr>
-				<td>&nbsp;&nbsp;Ihre aktuellen Druckquoten 
-					<td align="right"><a href="javascript:openWin('getHelp.do?keyword=prtQut','200','300','help');">Hilfe</a>&nbsp; </td>
-				</td>
-			 </tr>
-		    </table>
-
-		    <table width="605" cellspacing="0" cellpadding="0" class="tablecontent">
-			  			
-			
-			    
-			      <tr>
-			  	    <td align="left"><span class="thick">Guthaben</span></td>
-				    <td align="right"><!--DUMMY_VALUE-->{12,50}&nbsp;&euro;</td>
-				    <!--td align="right"><a href="javascript:openWin('getHelp.do?keyword=printQuota','200','300','help');"><img src="images/help.gif" border=0></a></td-->
-				  </tr>
-				  <tr><td>&nbsp;</td></tr>
-				
-				
-					
-			
-			  			
-			
-			    
-				
-				
-					
-				  	<tr>
-				  	<td align="left"> Druckkosten &nbsp;
-						<span class="thick">Laser701</span>&nbsp;(0,05&nbsp;&euro;/Seite)
-					</td>
-					<td align="right"></td>
-						<!--td align="right">~&nbsp;0,00&nbsp;&euro;</td-->
-				  	</tr>
-					
-			
-			  			
-			
-			    
-				
-				
-					
-				  	<tr>
-				  	<td align="left"> Druckkosten &nbsp;
-						<span class="thick">Laser765</span>&nbsp;(0,02&nbsp;&euro;/Seite)
-					</td>
-					<td align="right"></td>
-						<!--td align="right">~&nbsp;0,00&nbsp;&euro;</td-->
-				  	</tr>
-					
-			
-			  			
-			
-			    
-				
-				
-					
-				  	<tr>
-				  	<td align="left"> Druckkosten &nbsp;
-						<span class="thick">Laser709</span>&nbsp;(0,05&nbsp;&euro;/Seite)
-					</td>
-					<td align="right"></td>
-						<!--td align="right">~&nbsp;0,00&nbsp;&euro;</td-->
-				  	</tr>
-					
-			
-			  			
-			
-			    
-				
-				
-					
-				  	<tr>
-				  	<td align="left"> Druckkosten &nbsp;
-						<span class="thick">Laser761</span>&nbsp;(0,05&nbsp;&euro;/Seite)
-					</td>
-					<td align="right"></td>
-						<!--td align="right">~&nbsp;0,00&nbsp;&euro;</td-->
-				  	</tr>
-					
-			
-			  			
-			
-			    
-				
-				
-					
-				  	<tr>
-				  	<td align="left"> Druckkosten &nbsp;
-						<span class="thick">APoolFarbe1104</span>&nbsp;(0,35&nbsp;&euro;/Seite)
-					</td>
-					<td align="right"></td>
-						<!--td align="right">~&nbsp;0,00&nbsp;&euro;</td-->
-				  	</tr>
-					
-			
-			  			
-			
-			    
-				
-				
-					
-				  	<tr>
-				  	<td align="left"> Druckkosten &nbsp;
-						<span class="thick">APoolLaser1104_2</span>&nbsp;(0,05&nbsp;&euro;/Seite)
-					</td>
-					<td align="right"></td>
-						<!--td align="right">~&nbsp;18,10&nbsp;&euro;</td-->
-				  	</tr>
-					
-			
-			  			
-			
-			    
-				
-				
-					
-				  	<tr>
-				  	<td align="left"> Druckkosten &nbsp;
-						<span class="thick">APoolLaser1104_1</span>&nbsp;(0,05&nbsp;&euro;/Seite)
-					</td>
-					<td align="right"></td>
-						<!--td align="right">~&nbsp;6,90&nbsp;&euro;</td-->
-				  	</tr>
-					
-			
-			  
-			  
-			</table>
-			
-			
-		
-
-	</td>   <!-- Printquoten-->
-  </tr>
-</table> <!-- Passwort, Printquoten -->
+	@listSection("Ihre aktuellen Druckquoten", 605) {
+		@listItemWhite() {Guthaben} {<!--DUMMY_VALUE-->{12,50} &euro;}
+		@listItemWhite() {Druckkosten <span class="thick">Laser701</span> (0,05 &euro;/Seite)} {&nbsp;}
+		@listItemWhite() {Druckkosten <span class="thick">Laser765</span> (0,02 &euro;/Seite)} {&nbsp;}
+		@listItemWhite() {Druckkosten <span class="thick">Laser709</span> (0,05 &euro;/Seite)} {&nbsp;}
+		@listItemWhite() {Druckkosten <span class="thick">Laser761</span> (0,05 &euro;/Seite)} {&nbsp;}
+		@listItemWhite() {Druckkosten <span class="thick">APoolFarbe1104</span> (0,35 &euro;/Seite)} {&nbsp;}
+		@listItemWhite() {Druckkosten <span class="thick">APoolLaser1104_2</span> (0,05 &euro;/Seite)} {&nbsp;}
+		@listItemWhite() {Druckkosten <span class="thick">APoolLaser1104_1</span> (0,05 &euro;/Seite)} {&nbsp;}
+	}
 }
