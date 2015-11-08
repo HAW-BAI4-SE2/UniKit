@@ -67,9 +67,13 @@ public class TeamController extends Controller {
         checkNotNull(teamStateChange.studentNumber);
         checkNotNull(teamStateChange.teamID);
 
-        TeamDatabaseUtils.storeInvitation(teamStateChange.studentNumber,teamStateChange.teamID, Utils.getCurrentUser(session()));
-
-        //TODO send mail to all team members
+        //If team is not full and can invite more students, the invitation is sent
+        if(!TeamDatabaseUtils.isTeamFull(teamStateChange.teamID) && TeamDatabaseUtils.hasInvitationSlots(teamStateChange.teamID)){
+            TeamDatabaseUtils.storeInvitation(teamStateChange.studentNumber,teamStateChange.teamID, Utils.getCurrentUser(session()));
+            //TODO: send mail to all team members
+        }else{
+            //TODO: feedback if team is full or max invitations reached
+        }
 
         return showEditTeam(teamStateChange.teamID);
     }

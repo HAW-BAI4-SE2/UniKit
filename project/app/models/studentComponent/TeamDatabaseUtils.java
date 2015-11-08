@@ -6,6 +6,7 @@ package models.studentComponent;
 
 import assets.Global;
 import models.UnikitDatabaseUtils;
+import net.unikit.database.external.interfaces.Course;
 import net.unikit.database.external.interfaces.Student;
 import net.unikit.database.external.interfaces.StudentManager;
 import net.unikit.database.unikit_.interfaces.*;
@@ -124,5 +125,27 @@ public class TeamDatabaseUtils {
 
     public static void removeStudentFromTeam(String studentNumber, int teamID) {
         UnikitDatabaseUtils.removeStudentFromTeam(studentNumber,teamID);
+    }
+
+    public static boolean isTeamFull(int teamID) {
+        Team currentTeam = UnikitDatabaseUtils.getTeamByID(teamID);
+        Course associatedCourse = UnikitDatabaseUtils.getCourseByID(currentTeam.getCourseId());
+
+        if(currentTeam.getTeamRegistrations().size() >= associatedCourse.getMaxTeamSize()){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public static boolean hasInvitationSlots(int teamID) {
+        Team currentTeam = UnikitDatabaseUtils.getTeamByID(teamID);
+        Course associatedCourse = UnikitDatabaseUtils.getCourseByID(currentTeam.getCourseId());
+
+        if(currentTeam.getTeamInvitations().size() >= associatedCourse.getMaxTeamSize()){
+            return true;
+        }else{
+            return false;
+        }
     }
 }

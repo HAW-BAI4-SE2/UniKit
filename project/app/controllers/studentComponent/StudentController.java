@@ -27,18 +27,18 @@ public class StudentController extends Controller {
      *  @return showEditTeam-page
      */
     public static Result createTeam(){
-        //TODO send mail to student
-
         Form<CreateTeamFormModel> createTeamForm =
                 Form.form(CreateTeamFormModel.class)
                         .bindFromRequest();
         CreateTeamFormModel createTeam = createTeamForm.get();
 
-        //TODO: better form validation logic
+        //TODO: form validation
         checkNotNull(createTeam.studentNumber);
         checkNotNull(createTeam.courseID);
 
         int newTeam = StudentDatabaseUtils.createTeam(createTeam.studentNumber, createTeam.courseID);
+
+        //TODO send mail to student
 
         return TeamController.showEditTeam(newTeam);
     }
