@@ -4,11 +4,10 @@ import assets.SessionUtils;
 import net.unikit.database.external.interfaces.Student;
 import play.mvc.Controller;
 import play.mvc.Result;
-import views.html.*;
+import views.html.showResults;
+import views.html.showUser;
 
 import java.util.Date;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Created by Andreas on 05.11.2015.

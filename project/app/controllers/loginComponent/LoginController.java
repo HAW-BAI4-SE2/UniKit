@@ -1,19 +1,13 @@
 package controllers.loginComponent;
 
-import assets.Global;
-import controllers.routes;
 import models.loginComponent.LoginFormModel;
-import net.unikit.database.external.interfaces.Student;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
-import play.mvc.Results;
 import views.html.showLogin;
-import views.html.test;
 
 import static assets.SessionUtils.destroySession;
 import static assets.SessionUtils.initSession;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Created by abq308 on 05.11.2015.
