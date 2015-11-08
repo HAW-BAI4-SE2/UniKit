@@ -20,4 +20,11 @@ public class UserController extends Controller {
 
         return ok(showUser.render(currentUser, sessionTimeout));
     }
+
+    public static Result showResults() {
+        Student currentUser = SessionUtils.getCurrentUser(session());
+        Date sessionTimeout = SessionUtils.getSessionTimeout(session());
+
+        return ok(showResults.render(currentUser, sessionTimeout));
+    }
 }

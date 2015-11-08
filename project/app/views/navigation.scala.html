@@ -13,7 +13,7 @@
     </div>
     <div class="navitem">
         <div class="navbgleft">&nbsp;</div>
-        <div class="navbgcen">@if(activeNavigationItem != assets.NavigationItem.RESULTS) {<a href="viewExaminationData.do" title="Pr&uuml;fungsleistungen, die ich bis jetzt abgelegt habe" class="navlink">Ergebnisse</a>} else {Ergebnisse}</div>
+        <div class="navbgcen">@if(activeNavigationItem != assets.NavigationItem.RESULTS) {<a href="@controllers.userComponent.routes.UserController.showResults()" title="Pr&uuml;fungsleistungen, die ich bis jetzt abgelegt habe" class="navlink">Ergebnisse</a>} else {Ergebnisse}</div>
         <div class="navbgright">&nbsp;</div>
     </div>
     <div class="navitem">

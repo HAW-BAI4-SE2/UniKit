@@ -60,6 +60,7 @@
 
                 </tr>
                 
+                <!-- TODO: implement filter by course type 'Verteilung unbenotete GW' -->
                 @for((elem, index) <- (registeredCourses.filter{elem => true}).view.zipWithIndex) {
                     <tr class="@if(index % 2 == 0) {tablecontentbackdark} else {tablecontentbacklight}">
                 

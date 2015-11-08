@@ -1,13 +1,11 @@
 package assets;
 
-import controllers.loginComponent.LoginController;
 import net.unikit.database.external.interfaces.Student;
 import play.mvc.Http;
 
 import java.util.Date;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static play.mvc.Results.redirect;
 
 /**
  * Created by Andreas on 06.11.2015.

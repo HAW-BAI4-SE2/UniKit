@@ -9,6 +9,7 @@ GET         /login                   controllers.loginComponent.LoginController.
 POST        /login                   controllers.loginComponent.LoginController.login()
 GET         /logout                  controllers.loginComponent.LoginController.logout()
 GET         /user                    controllers.userComponent.UserController.showUser()
+GET         /results                 controllers.userComponent.UserController.showResults()
 GET         /courses/details/        controllers.courseComponent.CourseController.showCourseDetails(courseID: Integer)
 GET         /courses/overview        controllers.courseComponent.CourseRegistrationController.showCourseOverview()
 GET         /courses/register        controllers.courseComponent.CourseRegistrationController.showRegisterCourses()
