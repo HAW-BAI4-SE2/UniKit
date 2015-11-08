@@ -11,6 +11,8 @@ import play.mvc.Results;
 import views.html.showLogin;
 import views.html.test;
 
+import static assets.SessionUtils.destroySession;
+import static assets.SessionUtils.initSession;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -37,26 +39,16 @@ public class LoginController extends Controller {
         // Get form model
         LoginFormModel loginFormModel = loginForm.get();
 
-        // Clear previous session data
-        session().clear();
-
-        // Store unique id in session
-        String uuid = java.util.UUID.randomUUID().toString();
-        session("uuid", uuid);
-
-        // Store username in session
-        session("username", loginFormModel.username);
+        // Init session data
+        initSession(session(), loginFormModel.username);
 
         // Go to user overview page
         return redirect(controllers.userComponent.routes.UserController.showUser());
     }
 
     public static Result logout() {
-        // Clear session data
-        session().clear();
-
-        // Show result message
-        flash("Auf Wiedersehen!", "Sie wurden erfolgreich ausgeloggt!");
+        // Destroy session data
+        destroySession(session());
 
         // Go to login page
         return redirect(controllers.loginComponent.routes.LoginController.showLogin());
