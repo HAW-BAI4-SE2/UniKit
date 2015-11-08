@@ -66,10 +66,9 @@ public class StudentController extends Controller {
         checkNotNull(teamStateChange.teamID);
 
         //Add the student to the team and updates registration status
-        StudentDatabaseUtils.addStudentToTeam(teamStateChange.studentNumber, teamStateChange.teamID);
+        StudentDatabaseUtils.acceptInvitation(teamStateChange.studentNumber, teamStateChange.teamID);
 
-        //Deletes invite from database
-        StudentDatabaseUtils.deleteInvitation(teamStateChange.studentNumber,teamStateChange.teamID);
+        //TODO: send mail to team members
 
         return TeamController.addMember();
     }
@@ -87,7 +86,7 @@ public class StudentController extends Controller {
         checkNotNull(declinedInvitation.studentNumber);
         checkNotNull(declinedInvitation.teamID);
 
-        StudentDatabaseUtils.deleteInvitation(declinedInvitation.studentNumber,declinedInvitation.teamID);
+        StudentDatabaseUtils.declineInvitation(declinedInvitation.studentNumber,declinedInvitation.teamID);
 
         //TODO: send mail to teammembers & student
 

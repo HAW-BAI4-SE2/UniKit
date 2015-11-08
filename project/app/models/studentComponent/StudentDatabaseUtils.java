@@ -89,8 +89,22 @@ public class StudentDatabaseUtils {
      * @param teamID the ID of the team that the student will be added to
      */
     public static void acceptInvitation(String studentNumber, int teamID){
-        addStudentToTeam(studentNumber, teamID);
-        deleteInvitation(studentNumber, teamID);
+        UnikitDatabaseUtils.addStudentToTeam(studentNumber, teamID);
+        UnikitDatabaseUtils.deleteInvitation(studentNumber, teamID);
+
+        //Get course associated with the team
+        int associatedCourse = UnikitDatabaseUtils.getTeamByID(teamID).getCourseId();
+
+        UnikitDatabaseUtils.changeTeamRegistrationStatus(studentNumber, associatedCourse, true);
+    }
+
+    /**
+     * Declines the invitation by deleting the invitation
+     * @param studentNumber the student number of the student who accepted the invitation and will be added to the team
+     * @param teamID the ID of the team that the student will be added to
+     */
+    public static void declineInvitation(String studentNumber, int teamID){
+        UnikitDatabaseUtils.deleteInvitation(studentNumber,teamID);
     }
 
     /**
@@ -111,26 +125,5 @@ public class StudentDatabaseUtils {
       **/
     public static void cancelMembershipRequest(String studentNumber, int teamID){
         // TODO: delete membership request from database
-    }
-
-    /**
-     * Adds the student to the team and updates the registration status
-     * @param studentNumber the student number of the added student
-     * @param teamID the ID of the team the student was added to
-     */
-    public static void addStudentToTeam(String studentNumber, int teamID) {
-        UnikitDatabaseUtils.addStudentToTeam(studentNumber,teamID);
-        Team modifiedTeam = UnikitDatabaseUtils.getTeamByID(teamID);
-        int associatedCourse = modifiedTeam.getCourseId();
-        UnikitDatabaseUtils.changeTeamRegistrationStatus(studentNumber, associatedCourse, true);
-    }
-
-    /**
-     *   Deletes the invitation for the student by the team
-     *   @param studentNumber the student number of the student who declined the invitation
-     *   @param teamID the ID of the team that issued the invite
-     **/
-    public static void deleteInvitation(String studentNumber, int teamID) {
-        UnikitDatabaseUtils.deleteInvitation(studentNumber,teamID);
     }
 }

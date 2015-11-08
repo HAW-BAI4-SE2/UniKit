@@ -104,7 +104,7 @@ public class TeamController extends Controller {
         TeamDatabaseUtils.addStudentToTeam(teamStateChange.studentNumber,teamStateChange.teamID);
 
         //TODO: delete membership request from database
-        
+
         //TODO send mail to all team members
 
         return showEditTeam(teamStateChange.teamID);
