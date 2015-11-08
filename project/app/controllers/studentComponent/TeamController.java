@@ -92,7 +92,7 @@ public class TeamController extends Controller {
         return CourseController.showCourseDetails(courseID);
     }
 
-    public static Result showTeamOverview(int teamID){
+    public static Result showTeamOverview(int courseID){
         /* TODO:
          *      get all registered teams
          *      get all pending requests

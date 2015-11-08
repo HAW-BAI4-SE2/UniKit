@@ -61,6 +61,26 @@
 					<td align="right"></td>
 				  </tr>
                   <!-- BUTTON_END -->
+                  
+                  
+                  
+                  
+                  <!-- BUTTON_START -->
+                  <tr>
+				  	<td align="left">
+                    <div class="button button_active" >
+                        <div class="button_a_left" >&nbsp;</div>
+                        
+                        <div class="button_a_center">
+                            <a href='@controllers.studentComponent.routes.TeamController.showTeamOverview(course.getId())' class="button_link">Beitrittsanfrage versenden</a>
+                        </div>
+                        
+                        <div class="button_a_right"/>&nbsp;</div>
+                    </div>
+                    </td>
+					<td align="right"></td>
+				  </tr>
+                  <!-- BUTTON_END -->
 				} else {
                   <tr>
 			  	    <td align="left"><span class="thick">Sie sind dem Team 'T@(String.format("%03d", currentTeam.getId()))' zugeordnet!</span></td>
