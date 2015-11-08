@@ -3,7 +3,7 @@
 @(currentTeam: net.unikit.database.unikit_.interfaces.Team, currentInvitations: List[net.unikit.database.unikit_.interfaces.Team], currentMembershipRequests: List[net.unikit.database.unikit_.interfaces.Team], course: net.unikit.database.external.interfaces.Course, currentUser: net.unikit.database.external.interfaces.Student, sessionTimeout: java.util.Date)
 
 @main(course.getName(), assets.NavigationItem.REGISTRATIONS, currentUser, sessionTimeout) {
-<table width="605" >
+<table width="705" >
  <tr>
 	<td><span class="thick">@(course.getName())</span></td>
  </tr>
@@ -17,12 +17,12 @@
 
 
 
-<table width="605" cellspacing="0" cellpadding="0" >
+<table width="705" cellspacing="0" cellpadding="0" >
 
 	<tr>
 		<td valign="top"/>
             <!-- TABLE_HEADER_START -->
-		    <table width="605"  cellspacing="0" cellpadding="0" class="tableframe">
+		    <table width="705"  cellspacing="0" cellpadding="0" class="tableframe">
 	 		 <tr>
 				<td>&nbsp;&nbsp;Ihr aktueller Status
 					<td align="right"><a href="javascript:openWin('getHelp.do?keyword=prtQut','200','300','help');">Hilfe</a>&nbsp; </td>
@@ -34,13 +34,13 @@
             
             
             <!-- TABLE_CONTENT_START -->
-		    <table width="605" cellspacing="0" cellpadding="0" class="tablecontent">
+		    <table width="705" cellspacing="0" cellpadding="0" class="tablecontent">
 			    @if(currentTeam == null) {
 			      <tr><td>&nbsp;</td></tr>
                   
                   <!-- TEXT_START -->
                   <tr>
-			  	    <td align="left"><span class="thick">Sie sind keinem Team zugeordnet!</span></td>
+			  	    <td align="left" style="padding-left: 50px;"><span class="thick">Sie sind keinem Team zugeordnet!</span></td>
 				    <td align="right"></td>
 				  </tr>
                   <!-- TEXT_END -->
@@ -49,7 +49,7 @@
                   
                   <!-- BUTTON_START -->
                   <tr>
-				  	<td align="left">
+				  	<td align="left" style="padding-left: 50px;">
                     <div class="button button_active" >
                         <div class="button_a_left" >&nbsp;</div>
                         
@@ -69,7 +69,7 @@
                   
                   <!-- BUTTON_START -->
                   <tr>
-				  	<td align="left">
+				  	<td align="left" style="padding-left: 50px;">
                     <div class="button button_active" >
                         <div class="button_a_left" >&nbsp;</div>
                         
@@ -83,11 +83,13 @@
 					<td align="right"></td>
 				  </tr>
                   <!-- BUTTON_END -->
+                  
+                  <tr><td>&nbsp;</td></tr>
 				} else {
                   <tr><td>&nbsp;</td></tr>
                   
                   <tr>
-			  	    <td align="left"><span class="thick">Sie sind dem Team 'T@(String.format("%03d", currentTeam.getId()))' zugeordnet!</span></td>
+			  	    <td align="left" style="padding-left: 50px;"><span class="thick">Sie sind dem Team 'T@(String.format("%03d", currentTeam.getId()))' zugeordnet!</span></td>
 				    <td align="right"></td>
 				  </tr>
                   
@@ -95,7 +97,7 @@
                   
                   <!-- BUTTON_START -->
                   <tr>
-				  	<td align="left">
+				  	<td align="left" style="padding-left: 50px;">
                     <div class="button button_active" >
                         <div class="button_a_left" >&nbsp;</div>
                         
@@ -116,7 +118,7 @@
                   
                   <!-- BUTTON_START -->
                   <tr>
-				  	<td align="left">
+				  	<td align="left" style="padding-left: 50px;">
                     <div class="button button_active" >
                         <div class="button_a_left" >&nbsp;</div>
                         
@@ -130,6 +132,8 @@
 					<td align="right"></td>
 				  </tr>
                   <!-- BUTTON_END -->
+                  
+                  <tr><td>&nbsp;</td></tr>
                 }
 			</table>
             <!-- TABLE_CONTENT_END -->
@@ -169,20 +173,20 @@
 
 
 @if(currentTeam == null && !currentInvitations.isEmpty()) {
-<table width="605">
+<table width="705">
   <tr>
     <td> 
-	   <table width="605" cellspacing="0" cellpadding="0" class="tableframe">
+	   <table width="705" cellspacing="0" cellpadding="0" class="tableframe">
 		  <tr>
 			<td align="left">&nbsp;&nbsp;Erhaltene Teameinladungen</td>
 			<td align="right"><a href="javascript:openWin('getHelp.do?keyword=persDat','200','300','help');">Hilfe</a>&nbsp;</td>
 		  </tr>
 	   </table>
        
-	   <table width="605" cellspacing="0" cellpadding="0" class="tablecontent">
+	   <table width="705" cellspacing="0" cellpadding="0" class="tablecontent">
           @for((team, index) <- currentInvitations.view.zipWithIndex) {
               <tr class="@if(index % 2 == 0) {tablecontentbackdark} else {tablecontentbacklight}">
-                <td align="left">Team T@(String.format("%03d", team.getId()))</td>
+                <td align="left"><span class="thick">Team T@(String.format("%03d", team.getId()))</span></td>
                 <td align="right">
                     <!-- BUTTON_START -->
                     <div class="button button_active button_right" >
@@ -215,20 +219,20 @@
  
  
 @if(currentTeam == null && !currentMembershipRequests.isEmpty()) {
- <table width="605">
+ <table width="705">
   <tr>
     <td> 
-	   <table width="605" cellspacing="0" cellpadding="0" class="tableframe">
+	   <table width="705" cellspacing="0" cellpadding="0" class="tableframe">
 		  <tr>
 			<td align="left">&nbsp;&nbsp;Versendete Beitrittsanfragen</td>
 			<td align="right"><a href="javascript:openWin('getHelp.do?keyword=persDat','200','300','help');">Hilfe</a>&nbsp;</td>
 		  </tr>
 	   </table>
 				
-	   <table width="605" cellspacing="0" cellpadding="0" class="tablecontent">
+	   <table width="705" cellspacing="0" cellpadding="0" class="tablecontent">
 		  @for((team, index) <- currentMembershipRequests.view.zipWithIndex) {
               <tr class="@if(index % 2 == 0) {tablecontentbackdark} else {tablecontentbacklight}">
-                <td align="left">Team T@(String.format("%03d", team.getId()))</td>
+                <td align="left"><span class="thick">Team T@(String.format("%03d", team.getId()))</span></td>
                 <td align="right">
                     <!-- BUTTON_START -->
                     <div class="button button_active button_right" >
@@ -267,7 +271,7 @@
  
  
  
-<table width="700" cellspacing="0" cellpadding="0" >
+<table width="705" cellspacing="0" cellpadding="0" >
 
 	<tr>
 		<td valign="top"/>	 <!-- Printquoten -->
@@ -276,7 +280,7 @@
 		
 		 
 		 
-		    <table width="700"  cellspacing="0" cellpadding="0" class="tableframe">
+		    <table width="705"  cellspacing="0" cellpadding="0" class="tableframe">
 	 		 <tr>
 				<td>&nbsp;&nbsp;Modulbeschreibung
 					<td align="right"><a href="javascript:openWin('getHelp.do?keyword=prtQut','200','300','help');">Hilfe</a>&nbsp; </td>
@@ -284,7 +288,7 @@
 			 </tr>
 		    </table>
 
-		    <img src='@routes.Assets.at("images/descriptions/" + course.getAbbreviation() + ".png")' width="700">
+		    <img src='@routes.Assets.at("images/descriptions/" + course.getAbbreviation() + ".png")' width="705">
 			
 			
 		
