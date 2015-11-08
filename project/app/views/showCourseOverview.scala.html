@@ -1,548 +1,134 @@
-@import helper._
+@import snippets._
 
 @(registeredCourses: List[net.unikit.database.external.interfaces.Course], currentUser: net.unikit.database.external.interfaces.Student, sessionTimeout: java.util.Date)
 
+@getSemesterValue(course: net.unikit.database.external.interfaces.Course) = @{
+    var fieldOfStudy = ""
+    var semester = ""
+    var result = ""
+
+    if (!course.getFieldOfStudies().isEmpty()) {
+        fieldOfStudy = course.getFieldOfStudies().head.getAbbreviation()
+    }
+    if (course.getSemester != null) {
+        semester = course.getSemester().toString()
+    }
+
+    if (fieldOfStudy.isEmpty() && semester.isEmpty()) {
+        result = "-"
+    } else {
+        result = fieldOfStudy + "" + semester
+    }
+
+    result
+}
+
 @main("Anmeldungen", assets.NavigationItem.REGISTRATIONS, currentUser, sessionTimeout) {
-<div>
-    <b>Überblick der Anmeldungen</b>
-</div>
+    @evidence(605) {
+        <span class="thick">&Uuml;berblick der Anmeldungen</span>
+    }
 
-<br>
-<br>
+    @space()
 
-<table cellspacing="0" cellpadding="0"><tr valign="top"><td colspan="10">
-    <table width="605" cellspacing="0" cellpadding="0" class="tableframe">
+    <!-- TODO: implement filter by semester -->
+    @if(true) {
+        @listSection("Verbindliche Anmeldungen im aktuellen Semester", 605) {
+            <!-- TODO: implement filter by course type 'Verteilung unbenotete GW' -->
+            @if(false) {
+                @courseSection("Verteilung unbenotete GW", "Prof", "", "", "Status") {
+                    @for((course, index) <- (registeredCourses).view.zipWithIndex) {
+                        @if(index % 2 == 0) {
+                            @courseItemLight("{ZKN}", "", "", "{OK}") {
+                                <a href="@controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId())" title="@(course.getName())">@(course.getName())</a>
+                            }
+                        } else {
+                            @courseItemDark("{ZKN}", "", "", "{OK}") {
+                                <a href="@controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId())" title="@(course.getName())">@(course.getName())</a>
+                            }
+                        }
+                    }
+                }
+            }
+
+            <!-- TODO: implement filter by course type 'Prüfungen/Klausuren' -->
+            @if(false) {
+                @courseSection("Prüfungen/Klausuren", "Prof", "Sem.", "", "Status") {
+                    @for((course, index) <- (registeredCourses).view.zipWithIndex) {
+                        @if(index % 2 == 0) {
+                            @courseItemLight("{ZKN}", getSemesterValue(course), "", "{OK}") {
+                                <a href="@controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId())" title="@(course.getName())">@(course.getName())</a>
+                            }
+                        } else {
+                            @courseItemDark("{ZKN}", getSemesterValue(course), "", "{OK}") {
+                                <a href="@controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId())" title="@(course.getName())">@(course.getName())</a>
+                            }
+                        }
+                    }
+                }
+            }
+
+            <!-- TODO: implement filter by course type 'Verteilung Projekte' -->
+            @if(false) {
+                @courseSection("Verteilung Projekte", "Prof", "", "Gruppe", "Status") {
+                    @for((course, index) <- (registeredCourses).view.zipWithIndex) {
+                        @if(index % 2 == 0) {
+                            @courseItemLight("{ZKN}", "", "{-}", "{OK}") {
+                                <a href="@controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId())" title="@(course.getName())">@(course.getName())</a>
+                            }
+                        } else {
+                            @courseItemDark("{ZKN}", "", "{-}", "{OK}") {
+                                <a href="@controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId())" title="@(course.getName())">@(course.getName())</a>
+                            }
+                        }
+                    }
+                }
+            }
+
+            <!-- TODO: implement filter by course type 'Praktika' -->
+            @if(!(registeredCourses).isEmpty) {
+                @courseSection("Praktika", "Prof", "Sem.", "Gruppe", "Status") {
+                    @for((course, index) <- (registeredCourses).view.zipWithIndex) {
+                        @if(index % 2 == 0) {
+                            @courseItemLight("{ZKN}", getSemesterValue(course), "{-}", "{OK}") {
+                                <a href="@controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId())" title="@(course.getName())">@(course.getName())</a>
+                            }
+                        } else {
+                            @courseItemDark("{ZKN}", getSemesterValue(course), "{-}", "{OK}") {
+                                <a href="@controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId())" title="@(course.getName())">@(course.getName())</a>
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @space()
+
+    <!-- TODO: implement filter by semester -->
+    @if(false) {
+        @listSection("Verbindliche Anmeldungen im kommenden Semester", 605) {
+            <!-- TODO: Copy source code from above, but with semester filter -->
+        }
+    }
+
+    @space()
+    <hr>
+
+    <table width="300">
+        <tr class="tableheadline">
+            <td width="20%">Status</td>
+            <td width="80%">Beschreibung</td>
+        </tr>
+
         <tr>
-            <td>
-                <span class="thick"><b>verbindliche</b> Anmeldungen im aktuellen Semester</span>
-            </td>
+            <td>OK</td>
+            <td>Anmeldung geprüft und erlaubt</td>
+        </tr>
+
+        <tr>
+            <td>not OK</td>
+            <td>Voraussetzungen noch nicht erfüllt</td>
         </tr>
     </table>
-    
-    <table width="605" cellspacing="0" cellpadding="0" class="tablecontent">
-        @if(!(registeredCourses.filter{elem => false}).isEmpty()) {
-        <!-- TODO: implement filter by course type 'Verteilung unbenotete GW' -->
-        <tr><td><table cellspacing="0" cellpadding="0" width="595">
-            <th align="left"  height="1" width="100%" colspan="10"><span class="thick"></span></th>	
-            
-            
-                <tr>
-                
-                        <td colspan="2" align="center"  height="20" width="391">
-                            <span class="thick">Verteilung unbenotete GW</span>
-                        </td>
-                        
-                        <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
-                        <td align="center"  height="20"    width="45">
-                            <span class="thick">Prof</span>
-                      </td>
-                        
-                       
-                        <td  class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
-                        <td  align="center"  height="20"    width="45">
-                            <span class="thick"> </span>
-                      </td>
-                      
-                        
-                       
-                            <td   class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
-                            <td  align="center"  height="20"    width="60">
-                                <span class="thick"> </span>
-                            </td>
-                      
-                
-                       
-                          <td   class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
-                          <td  align="center"  height="20"    width="50">
-                                <span class="thick">Status</span>
-                          </td>
-                      
-
-                </tr>
-                
-                <!-- TODO: implement filter by course type 'Verteilung unbenotete GW' -->
-                @for((elem, index) <- (registeredCourses.filter{elem => true}).view.zipWithIndex) {
-                    <tr class="@if(index % 2 == 0) {tablecontentbackdark} else {tablecontentbacklight}">
-                
-                
-    
-                        <td colspan="2" align="left"  height="25" width="391">
-                            <span class="thin">@(elem.getName())</span>
-                        </td>
-                        
-                        <td   class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>								    
-                        <td  align="center"  height="25"    width="45">
-                            <span class="thin"><!--DUMMY_VALUE{registeredCourse.getProfessor().getAbbreviation()}-->{ZKN}</span>
-                      </td>
-
-                       
-                        <td   class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>								    
-                        <td  align="center"  height="25"    width="45">
-                            <span class="thin"> </span>
-                      </td>
-                      
-
-                       
-                            <td   class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>								    
-                            <td  align="center"  height="25"    width="60">
-                                <span class="thin"> </span>
-                            </td>
-                      
-                                            
-                       
-                            <td   class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>								    
-                            <td  align="center"  height="25"    width="50">
-                                <span class="thin"><!--DUMMY_VALUE-->{OK}</span>
-                            </td>
-                      
-                      
-                    </tr>
-                }
-            
-        </td></tr></table>				
-
-        <tr><td class="thinline" width="100%" colspan="9" height="2"></td></tr>
-        }
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        @if(!(registeredCourses.filter{elem => false}).isEmpty()) {
-            <!-- TODO: implement filter by course type 'Prüfungen/Klausuren' -->
-            <tr><td><table cellspacing="0" cellpadding="0" width="595">
-            
-                <th align="left"  height="1" width="100%" colspan="10"><span class="thick"></span></th>
-
-                <tr>
-                
-                        <td colspan="2" align="center"  height="20" width="391">
-                            <span class="thick">Prüfungen/Klausuren</span>
-                        </td>
-                        
-                        <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
-                        <td align="center"  height="20"    width="45">
-                            <span class="thick">Prof</span>
-                      </td>
-                        
-                       
-                        <td  class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
-                        <td  align="center"  height="20"    width="45">
-                            <span class="thick">Sem.</span>
-                      </td>
-                      
-                        
-                       
-                            <td   class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
-                            <td  align="center"  height="20"    width="60">
-                                <span class="thick"> </span>
-                            </td>
-                      
-                
-                       
-                          <td   class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
-                          <td  align="center"  height="20"    width="50">
-                                <span class="thick">Status</span>
-                          </td>
-                      
-
-                </tr>
-                
-                <!-- TODO: implement filter by course type 'Prüfungen/Klausuren' -->
-                @for((elem, index) <- (registeredCourses.filter{elem => true}).view.zipWithIndex) {
-                    <tr class="@if(index % 2 == 0) {tablecontentbackdark} else {tablecontentbacklight}">
-                
-                
-    
-                        <td colspan="2" align="left"  height="25" width="391">
-                            <span class="thin">@(elem.getName())</span>
-                        </td>
-                        
-                        <td   class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>								    
-                        <td  align="center"  height="25"    width="45">
-                            <span class="thin"><!--DUMMY_VALUE{registeredCourse.getProfessor().getAbbreviation()}-->{ZKN}</span>
-                      </td>
-
-                       
-                        <td   class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>								    
-                        <td  align="center"  height="25"    width="45">
-                            <span class="thin">@if(!elem.getFieldOfStudies().isEmpty()) {@(elem.getFieldOfStudies()(0).getAbbreviation())@(elem.getSemester())} else {-}</span> <!-- TODO: improved this! -->
-                      </td>
-                      
-
-                       
-                            <td   class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>								    
-                            <td  align="center"  height="25"    width="60">
-                                <span class="thin"> </span>
-                            </td>
-                      
-                                            
-                       
-                            <td   class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>								    
-                            <td  align="center"  height="25"    width="50">
-                                <span class="thin"><!--DUMMY_VALUE-->{OK}</span>
-                            </td>
-                      
-                      
-                    </tr>
-                }
-            </td></tr></table>
-        
-        
-        <tr><td class="thinline" width="100%" colspan="9" height="2"></td></tr>
-        }
-        
-        
-        
-        
-        
-        
-        
-        @if(!(registeredCourses.filter{elem => false}).isEmpty()) {
-            <!-- TODO: implement filter by course type 'Verteilung Projekte' -->
-        <tr><td><table cellspacing="0" cellpadding="0" width="595">
-            <th align="left"  height="1" width="100%" colspan="10"><span class="thick"></span></th>
-            
-            
-                <tr>
-                
-                        <td colspan="2" align="center"  height="20" width="391">
-                            <span class="thick">Verteilung Projekte</span>
-                        </td>
-                        
-                        <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
-                        <td align="center"  height="20"    width="45">
-                            <span class="thick">Prof</span>
-                      </td>
-                        
-                       
-                        <td  class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
-                        <td  align="center"  height="20"    width="45">
-                            <span class="thick"> </span>
-                      </td>
-                      
-                        
-                       
-                            <td   class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
-                            <td  align="center"  height="20"    width="60">
-                                <span class="thick">Gruppe</span>
-                            </td>
-                      
-                
-                       
-                          <td   class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
-                          <td  align="center"  height="20"    width="50">
-                                <span class="thick">Status</span>
-                          </td>
-                      
-
-                </tr>
-                
-                <!-- TODO: implement filter by course type 'Verteilung Projekte' -->
-                @for((elem, index) <- (registeredCourses.filter{elem => true}).view.zipWithIndex) {
-                        <tr class="@if(index % 2 == 0) {tablecontentbackdark} else {tablecontentbacklight}">
-                    
-                    
-        
-                            <td colspan="2" align="left"  height="25" width="391">
-                                <span class="thin">@(elem.getName())</span>
-                            </td>
-                            
-                            <td   class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>								    
-                            <td  align="center"  height="25"    width="45">
-                                <span class="thin"><!--DUMMY_VALUE{registeredCourse.getProfessor().getAbbreviation()}-->{ZKN}</span>
-                          </td>
-
-                           
-                            <td   class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>								    
-                            <td  align="center"  height="25"    width="45">
-                                <span class="thin"> </span>
-                          </td>
-                          
-
-                           
-                                <td   class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>								    
-                                <td  align="center"  height="25"    width="60">
-                                    <span class="thin"><!--DUMMY_VALUE{registeredCourse.getProfessor().getAbbreviation()}-->{-}</span>
-                                </td>
-                          
-                                                
-                           
-                                <td   class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>								    
-                                <td  align="center"  height="25"    width="50">
-                                    <span class="thin"><!--DUMMY_VALUE-->{OK}</span>
-                                </td>
-                          
-                          
-                        </tr>
-                }
-            
-
-
-            
-                
-                    
-                    </td>
-                    </tr>
-                    </table>				
-            
-
-
-                    
-                    <tr>
-                        <td class="thinline" width="100%" colspan="9" height="2"></td>
-                        </tr>
-            
-                }
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                @if(!(registeredCourses.filter{elem => true}).isEmpty()) {
-                <!-- TODO: implement filter by course type 'Praktika' -->
-                
-                
-                
-                
-                    <tr>
-                        <td>
-                            <table cellspacing="0" cellpadding="0" width="595">			
-                            <th align="left"  height="1" width="100%" colspan="10">
-                                
-                                <span class="thick">
-                            </span></th>	
-                
-
-                            
-                
-
-        
-        
-
-            
-                
-
-
-        
-        
-
-            
-                
-
-
-            
-                
-
-    
-                
-                
-                
-
-                
-                    <tr>
-                    
-                            <td colspan="2" align="center"  height="20" width="391">
-                                <span class="thick">Praktika</span>
-                            </td>
-                            
-                            <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
-                            <td align="center"  height="20"    width="45">
-                                <span class="thick">Prof</span>
-                          </td>
-                            
-                           
-                            <td  class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
-                            <td  align="center"  height="20"    width="45">
-                                <span class="thick">Sem.</span>
-                          </td>
-                          
-                            
-                           
-                                <td   class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
-                                <td  align="center"  height="20"    width="60">
-                                    <span class="thick">Gruppe</span>
-                                </td>
-                          
-                    
-                           
-                              <td   class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
-                              <td  align="center"  height="20"    width="50">
-                                    <span class="thick">Status</span>
-                              </td>
-                          
-
-                    </tr>	
-                
-
-        
-        
-
-            
-                
-
-
-            
-                
-
-    
-                
-                
-                
-
-                            
-                
-
-        
-        
-    
-                        <!-- TODO: implement filter by course type 'Praktika' -->
-                        @for((elem, index) <- (registeredCourses.filter{elem => true}).view.zipWithIndex) {
-                        <tr class="@if(index % 2 == 0) {tablecontentbackdark} else {tablecontentbacklight}">
-                    
-                    
-        
-                            <td colspan="2" align="left"  height="25" width="391">
-                                <span class="thin"><a href="@controllers.courseComponent.routes.CourseController.showCourseDetails(elem.getId())" title="Pr&uuml;fungsleistungen, die ich bis jetzt abgelegt habe" class="navlink">@(elem.getName())</a></span>
-                            </td>
-                            
-                            <td   class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>								    
-                            <td  align="center"  height="25"    width="45">
-                                <span class="thin"><!--DUMMY_VALUE{registeredCourse.getProfessor().getAbbreviation()}-->{ZKN}</span>
-                          </td>
-
-                           
-                            <td   class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>								    
-                            <td  align="center"  height="25"    width="45">
-                                <span class="thin">@if(!elem.getFieldOfStudies().isEmpty()) {@(elem.getFieldOfStudies()(0).getAbbreviation())@(elem.getSemester())} else {-}</span> <!-- TODO: improved this! -->
-                          </td>
-                          
-
-                           
-                                <td   class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>								    
-                                <td  align="center"  height="25"    width="60">
-                                    <span class="thin"><!--DUMMY_VALUE{registeredCourse.getProfessor().getAbbreviation()}-->{-}</span>
-                                </td>
-                          
-                                                
-                           
-                                <td   class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>								    
-                                <td  align="center"  height="25"    width="50">
-                                    <span class="thin"><!--DUMMY_VALUE-->{OK}</span>
-                                </td>
-                          
-                          
-                        </tr>
-                    }
-                
-            
-                
-
-    
-                
-                
-                
-
-                            
-                
-
-        
-        
-
-            
-                
-
-
-            
-                
-                    
-                    </td>
-                    </tr>
-                    </table>				
-            
-
-    
-                
-                
-                
-
-                            
-                
-
-        
-        
-
-            
-                
-                    
-                    <tr>
-                        <td class="thinline" width="100%" colspan="9" height="2"></td>
-                        </tr>
-            
-
-
-            
-                
-                }
-      
-
-    </td>	
-  </tr>
-</table>
-		
-	    
-	    
-		
-<br>
-
-
-	
-	  	
-				
-	  
-	    
-	    		
-	    
-	    		
-<table width="605" cellspacing="0" cellpadding="0" class="tableframe">
-    <tr>
-        <td> <span class="thick">Ich habe keine Anmeldungen im kommenden Semester </span></td>
-    </tr>
-</table>
-	    	
-		
-		
-<br>
-
-
-<hr>
-
-<table width="300">
-<tr class="tableheadline">
-   <td width="20%">Status</td>		
-   <td width="80%">Beschreibung</td>		
-</tr>	
-
-   <tr>
-     <td>OK</td>		
-     <td>Anmeldung geprüft und erlaubt</td>		
-   </tr>	
-
-   <tr>
-     <td>not OK</td>		
-     <td>Voraussetzungen noch nicht erfüllt</td>		
-   </tr>	
-
-</table>					
 }

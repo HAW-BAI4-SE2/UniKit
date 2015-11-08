@@ -1,0 +1,39 @@
+@(column1: String, column2: String, column3: String, column4: String)(title: Html)
+
+<tr class="tablecontentbacklight">
+    <td colspan="2" align="left"  height="25" width="391">
+        <span class="thin">@(title)</span>
+    </td>
+    
+    <td   class="thinline">
+        <img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0">
+    </td>
+    
+    <td  align="center"  height="25"    width="45">
+        <span class="thin">@(column1)</span>
+    </td>
+    
+    <td   class="thinline">
+        <img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0">
+    </td>
+    
+    <td  align="center"  height="25"    width="45">
+        <span class="thin">@(column2)</span>
+    </td>
+    
+    <td   class="thinline">
+        <img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0">
+    </td>
+    
+    <td  align="center"  height="25"    width="60">
+        <span class="thin">@(column3)</span>
+    </td>
+    
+    <td   class="thinline">
+        <img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0">
+    </td>
+    
+    <td  align="center"  height="25"    width="50">
+        <span class="thin">@(column4)</span>
+    </td>
+</tr>
