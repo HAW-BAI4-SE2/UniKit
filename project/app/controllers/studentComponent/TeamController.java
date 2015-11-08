@@ -37,7 +37,7 @@ public class TeamController extends Controller {
         return showEditTeam(teamToDisplay.getId());
     }
 
-    public static Result removeMember(){
+    public static Result removeMember(String studentNumber, int teamID){
         /* TODO:
          *      delete student from team
          *      send mail to former member
