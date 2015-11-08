@@ -5,17 +5,19 @@ package models.courseComponent;
  */
 
 import assets.Global;
-import models.UnikitDatabaseHelper;
+import models.UnikitDatabaseUtils;
 import net.unikit.database.external.interfaces.Course;
 import net.unikit.database.unikit_.interfaces.CourseRegistration;
+import net.unikit.database.unikit_.interfaces.CourseRegistrationManager;
 import net.unikit.database.unikit_.interfaces.Team;
+import net.unikit.database.unikit_.interfaces.TeamRegistrationManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class CourseDatabaseConnector {
+public class CourseDatabaseUtils {
 
     /**
      * Changes the status of a course registration for a given student.
@@ -24,36 +26,37 @@ public class CourseDatabaseConnector {
      * @param status true if student is in a team for this course, else false
      */
     public static void changeTeamRegistrationStatus(String studentNumber, int courseID, boolean status){
-        checkNotNull(studentNumber);
-        List<CourseRegistration> allCourseRegistrations = Global.getCourseRegistrationManager().getAllCourseRegistrations();
-        CourseRegistration courseRegistrationToBUpdated = null;
-
-        for(CourseRegistration currentCourseRegistration : allCourseRegistrations){
-            if(currentCourseRegistration.getCourseId() == courseID && currentCourseRegistration.getStudentNumber().equals(studentNumber)){
-                courseRegistrationToBUpdated = currentCourseRegistration;
-                courseRegistrationToBUpdated.setCurrentlyAssignedToTeam(status);
-            }
-        }
-
-        Global.getCourseRegistrationManager().updateCourseRegistration(courseRegistrationToBUpdated);
+        UnikitDatabaseUtils.changeTeamRegistrationStatus(studentNumber,courseID,status);
     }
 
     /**
-     * Returns the course for the queried course ID. Delegates the call to the UnikitDatabaseHelper.
+     * Returns the course for the queried course ID. Delegates the call to the UnikitDatabaseUtils.
      * @param courseID the ID of the queried course
      * @return course the queried course
      */
     public static Course getCourseByID(int courseID) {
-        return UnikitDatabaseHelper.getCourseByID(courseID);
+        return UnikitDatabaseUtils.getCourseByID(courseID);
     }
 
+    /**
+     * Returns all teams for the given course that are not full
+     * @param courseID the ID of the course
+     * @return List of all available teams
+     */
     public static List<Team> getAvailableTeamsForCourse(int courseID) {
         List<Team> availableTeams = new ArrayList<>();
         List<Team> allTeams = Global.getTeamManager().getAllTeams();
 
-        //TODO: Implement list of available teams. Need: max size for team
-        List<Course> allCourses = Global.getCourseManager().getAllCourses();
-        for(Course c : allCourses){
+        //Gets the course associated with the courseID
+        Course associatedCourse = null;
+        associatedCourse = UnikitDatabaseUtils.getCourseByID(courseID);
+        checkNotNull(associatedCourse);
+
+        //Gets all teams with free slots associated with the course
+        for(Team currentTeam : allTeams){
+            if(currentTeam.getCourseId() == associatedCourse.getId() && currentTeam.getTeamRegistrations().size() < associatedCourse.getMaxTeamSize()){
+               availableTeams.add(currentTeam);
+           }
         }
 
         return availableTeams;

@@ -8,7 +8,7 @@ package controllers.courseComponent;
  */
 
 import assets.Global;
-import models.courseComponent.CourseDatabaseConnector;
+import models.courseComponent.CourseDatabaseUtils;
 import models.courseComponent.FormModels.CourseRegistrationFormModel;
 import models.courseComponent.FormModels.OverviewCourseRegistrationModel;
 import net.unikit.database.external.interfaces.Course;
@@ -93,7 +93,6 @@ public class CourseRegistrationController extends Controller {
 
     /**
     *Receives the choices by the current user, persists them to the databank and displays the results.
-    *@param courseRegistrationForm: Form object from the POST request of the showRegisterCourses page
     *@return showCourseOverview page displaying all course registrations for the user
      **/
     public static Result registerCourses(){
@@ -119,7 +118,6 @@ public class CourseRegistrationController extends Controller {
 
     /**
     *Receives the choices by the current user, deletes the databank entries and displays the results.
-    *@param courseRegistrationForm: Form object from the POST request of the showRegisterCourses page
     *@return showCourseOverview page displaying all course registrations for the user
      **/
     public static Result cancelCourseRegistration(){
@@ -158,6 +156,6 @@ public class CourseRegistrationController extends Controller {
      * @param status true if student is in team, else false
      */
     public static void changeTeamRegistrationStatus(String studentNumber, int courseID, boolean status){
-        CourseDatabaseConnector.changeTeamRegistrationStatus(studentNumber, courseID, status);
+        CourseDatabaseUtils.changeTeamRegistrationStatus(studentNumber, courseID, status);
     }
 }
