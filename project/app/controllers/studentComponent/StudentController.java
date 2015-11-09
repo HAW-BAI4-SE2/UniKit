@@ -4,41 +4,43 @@ package controllers.studentComponent;
  * @author Thomas Bednorz
  */
 
+import models.UnikitDatabaseUtils;
+import models.courseComponent.CourseDatabaseUtils;
 import models.studentComponent.FormModels.CreateTeamFormModel;
-import models.studentComponent.StudentDatabaseConnector;
+import models.studentComponent.FormModels.TeamStateChangeFormModel;
+import models.studentComponent.StudentDatabaseUtils;
 
 import controllers.courseComponent.CourseController;
 
+import models.studentComponent.TeamDatabaseUtils;
 import net.unikit.database.unikit_.interfaces.Team;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 
-import views.html.*;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class StudentController extends Controller {
 
-    private static StudentDatabaseConnector databaseConnector = new StudentDatabaseConnector();
     /**
-     *  Creates a team associated with the studentNumber and courseID
+     *  Creates a team associated with the studentNumber and courseID from the CreateTeamForm-object
      *  @return showEditTeam-page
      */
     public static Result createTeam(){
-        /* TODO: send mail to student
-        */
-
         Form<CreateTeamFormModel> createTeamForm =
                 Form.form(CreateTeamFormModel.class)
                         .bindFromRequest();
-        CreateTeamFormModel ctfm = createTeamForm.get();
+        CreateTeamFormModel createTeam = createTeamForm.get();
 
-        if(ctfm.studentNumber != null && ctfm.courseID != 0){
-            StudentDatabaseConnector.createTeam(ctfm.studentNumber, ctfm.courseID);
-            Team newTeam = databaseConnector.getTeam(ctfm.studentNumber, ctfm.courseID);
-            return TeamController.showEditTeam(newTeam);
-        }else{
-            return internalServerError("There was an error creating the team, please contact the administrator");
-        }
+        //TODO: form validation
+        checkNotNull(createTeam.studentNumber);
+        checkNotNull(createTeam.courseID);
+
+        int newTeam = StudentDatabaseUtils.createTeam(createTeam.studentNumber, createTeam.courseID);
+
+        //TODO send mail to student
+
+        return TeamController.showEditTeam(newTeam);
     }
 
     /**
@@ -47,10 +49,49 @@ public class StudentController extends Controller {
      *  @return showCourseDetails-page for the course the team was associated with
      */
     public static Result deleteTeam(int teamID){
-        int courseForTeam = StudentDatabaseConnector.deleteTeam(teamID);
+        //TODO: send mail to all teammembers
+
+        int courseForTeam = StudentDatabaseUtils.deleteTeam(teamID);
         return CourseController.showCourseDetails(courseForTeam);
     }
 
+    public static Result acceptInvitation(){
+        Form<TeamStateChangeFormModel> acceptInvitation =
+                Form.form(TeamStateChangeFormModel.class)
+                        .bindFromRequest();
+        TeamStateChangeFormModel teamStateChange = acceptInvitation.get();
+
+        //TODO: actual form validation
+        checkNotNull(teamStateChange.studentNumber);
+        checkNotNull(teamStateChange.teamID);
+
+        //Add the student to the team and updates registration status
+        StudentDatabaseUtils.acceptInvitation(teamStateChange.studentNumber, teamStateChange.teamID);
+
+        //TODO: send mail to team members
+
+        return TeamController.addMember();
+    }
+
+    /**
+     *   Declines (deletes) the invitation for the student by the team. The relevant data is retrived using a TeamStateChangeForm-object
+     **/
+    public static Result declineInvitation(){
+        Form<TeamStateChangeFormModel> declinedInvitationForm =
+                Form.form(TeamStateChangeFormModel.class)
+                        .bindFromRequest();
+        TeamStateChangeFormModel declinedInvitation = declinedInvitationForm.get();
+
+        //TODO: actual form validation
+        checkNotNull(declinedInvitation.studentNumber);
+        checkNotNull(declinedInvitation.teamID);
+
+        StudentDatabaseUtils.declineInvitation(declinedInvitation.studentNumber,declinedInvitation.teamID);
+
+        //TODO: send mail to teammembers & student
+
+        return TeamController.showEditTeam(declinedInvitation.teamID);
+    }
     /**
      *  The student requests the membership with the team. The relevant data is retrived using a TeamStateChangeForm-object
      *  @return showCourseDetails-page
@@ -77,27 +118,5 @@ public class StudentController extends Controller {
          */
         int courseToDispay = -1;
         return CourseController.showCourseDetails(courseToDispay);
-    }
-
-    public static Result acceptInvitation(){
-        /* TODO:
-         *      delete invitation from database
-         */
-        return TeamController.addMember();
-    }
-
-    /**
-    *   Declines (deletes) the invitation for the student by the team. The relevant data is retrived using a TeamStateChangeForm-object
-    **/
-    public static Result declineInvitation(){
-        /* TODO
-         *      delete invitation from database
-         *      send mail to team members
-         *      send mail to student
-         */
-
-        Team teamToDisplay = null;
-
-        return TeamController.showEditTeam(teamToDisplay);
     }
 }

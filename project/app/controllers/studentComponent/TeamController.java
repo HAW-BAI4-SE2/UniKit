@@ -4,17 +4,14 @@ package controllers.studentComponent;
  * @author Thomas Bednorz
  */
 
-import assets.Global;
-
-import models.studentComponent.TeamDatabaseConnector;
-import net.unikit.database.external.interfaces.Course;
+import assets.Utils;
+import models.studentComponent.FormModels.TeamStateChangeFormModel;
+import models.studentComponent.TeamDatabaseUtils;
 import net.unikit.database.external.interfaces.Student;
-import net.unikit.database.unikit_.interfaces.CourseRegistration;
 
 import controllers.courseComponent.CourseController;
 import net.unikit.database.unikit_.interfaces.Team;
-import net.unikit.database.unikit_.interfaces.TeamApplication;
-import net.unikit.database.unikit_.interfaces.TeamInvitation;
+import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 
@@ -22,62 +19,99 @@ import views.html.*;
 
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class TeamController extends Controller {
 
      public static Result addMember() {
-        /*  
-         *  TODO:
-         *      persist student to team
-         *      send mail to new member
-         *      send mail to other team members
-        */
+         Form<TeamStateChangeFormModel> addStudentToTeam =
+                 Form.form(TeamStateChangeFormModel.class)
+                         .bindFromRequest();
+         TeamStateChangeFormModel teamStateChange = addStudentToTeam.get();
 
-        Team teamToDisplay = null;
+         //TODO: actual form validation
+         checkNotNull(teamStateChange.studentNumber);
+         checkNotNull(teamStateChange.teamID);
 
-        return showEditTeam(teamToDisplay);
+         TeamDatabaseUtils.addStudentToTeam(teamStateChange.studentNumber,teamStateChange.teamID);
+
+         //TODO: send mail to all team members
+
+         return showEditTeam(teamStateChange.teamID);
     }
 
     public static Result removeMember(){
-        /* TODO:
-         *      delete student from team
-         *      send mail to former member
-         *      send mail to other members
-         */
-        Team teamToDisplay = null;
+        Form<TeamStateChangeFormModel> removeStudentFromTeam =
+                Form.form(TeamStateChangeFormModel.class)
+                        .bindFromRequest();
+        TeamStateChangeFormModel teamStateChange = removeStudentFromTeam.get();
 
-        return showEditTeam(teamToDisplay);
+        //TODO: actual form validation
+        checkNotNull(teamStateChange.studentNumber);
+        checkNotNull(teamStateChange.teamID);
+
+        TeamDatabaseUtils.removeStudentFromTeam(teamStateChange.studentNumber,teamStateChange.teamID);
+
+        //TODO send mail to all team members
+
+        return showEditTeam(teamStateChange.teamID);
     }
 
     public static Result inviteStudent(){
-        /* TODO:
-         *      persist invitation to database
-         *      send mail to student
-         *      send mail to teammembers
-         */
+        Form<TeamStateChangeFormModel> inviteStudentToTeam =
+                Form.form(TeamStateChangeFormModel.class)
+                        .bindFromRequest();
+        TeamStateChangeFormModel teamStateChange = inviteStudentToTeam.get();
 
-        Team teamToDisplay = null;
+        //TODO: actual form validation
+        checkNotNull(teamStateChange.studentNumber);
+        checkNotNull(teamStateChange.teamID);
 
-        return showEditTeam(teamToDisplay);
+        //If team is not full and can invite more students, the invitation is sent
+        if(!TeamDatabaseUtils.isTeamFull(teamStateChange.teamID) && TeamDatabaseUtils.hasInvitationSlots(teamStateChange.teamID)){
+            TeamDatabaseUtils.storeInvitation(teamStateChange.studentNumber,teamStateChange.teamID, Utils.getCurrentUser(session()));
+            //TODO: send mail to all team members
+        }else{
+            //TODO: feedback if team is full or max invitations reached
+        }
+
+        return showEditTeam(teamStateChange.teamID);
     }
 
     public static Result cancelInvitation(){
-        /*
-        *   TODO:
-        *       delete invitation from database
-        *       send mail to invited student
-        *       send mail to team members
-        */
-        Team teamToDisplay = null;
+        Form<TeamStateChangeFormModel> cancelInvitation =
+                Form.form(TeamStateChangeFormModel.class)
+                        .bindFromRequest();
+        TeamStateChangeFormModel teamStateChange = cancelInvitation.get();
 
-        return showEditTeam(teamToDisplay);
+        //TODO: actual form validation
+        checkNotNull(teamStateChange.studentNumber);
+        checkNotNull(teamStateChange.teamID);
+
+        TeamDatabaseUtils.deleteInvitation(teamStateChange.studentNumber,teamStateChange.teamID, Utils.getCurrentUser(session()));
+
+        //TODO send mail to all team members
+
+        return showEditTeam(teamStateChange.teamID);
     }
 
     public static Result acceptMembershipRequest(){
-        /*
-        */
-        Team teamToDisplay = null;
+        Form<TeamStateChangeFormModel> acceptMembershipRequest =
+                Form.form(TeamStateChangeFormModel.class)
+                        .bindFromRequest();
+        TeamStateChangeFormModel teamStateChange = acceptMembershipRequest.get();
 
-        return showEditTeam(teamToDisplay);
+        //TODO: actual form validation
+        checkNotNull(teamStateChange.studentNumber);
+        checkNotNull(teamStateChange.teamID);
+
+        TeamDatabaseUtils.addStudentToTeam(teamStateChange.studentNumber,teamStateChange.teamID);
+
+        //TODO: delete membership request from database
+
+        //TODO send mail to all team members
+
+        return showEditTeam(teamStateChange.teamID);
     }
 
     public static Result declineMembershipRequest(){
@@ -106,7 +140,7 @@ public class TeamController extends Controller {
     /**
      *   Displays the details for a team
      **/
-    public static Result showEditTeam(Team teamToDispay){
+    public static Result showEditTeam(int teamID){
         /**
         *   TODO:
         *       get all members of the current team
@@ -114,7 +148,11 @@ public class TeamController extends Controller {
         *       get all pending membership requests for the team
         **/
 
-        List<Student> allStudentsForTeam = TeamDatabaseConnector.getAllStudents(teamToDispay);
+        Team teamToDispay = null;
+
+        teamToDispay = TeamDatabaseUtils.getTeamByID(teamID);
+
+        List<Student> allStudentsForTeam = TeamDatabaseUtils.getAllStudents(teamToDispay);
 
         return ok(showEditTeam.render(allStudentsForTeam,teamToDispay.getTeamApplications(),teamToDispay.getTeamInvitations()));
 }
