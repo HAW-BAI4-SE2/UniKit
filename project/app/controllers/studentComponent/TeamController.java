@@ -99,8 +99,9 @@ public class TeamController extends Controller {
         Student currentUser = SessionUtils.getCurrentUser(session());
         Date sessionTimeout = SessionUtils.getSessionTimeout(session());
         Team teamToDisplay = Global.getTeamManager().getTeam(teamID);
+        Course course = Global.getCourseManager().getCourse(teamToDisplay.getCourseId());
 
-        return ok(showTeamDetails.render(teamToDisplay, currentUser, sessionTimeout));
+        return ok(showTeamDetails.render(teamToDisplay, course, currentUser, sessionTimeout));
     }
 
     /**
@@ -117,8 +118,9 @@ public class TeamController extends Controller {
         Student currentUser = SessionUtils.getCurrentUser(session());
         Date sessionTimeout = SessionUtils.getSessionTimeout(session());
         Team teamToDisplay = Global.getTeamManager().getTeam(teamID);
+        Course course = Global.getCourseManager().getCourse(teamToDisplay.getCourseId());
 
-        return ok(showTeamDetails.render(teamToDisplay, currentUser, sessionTimeout));
+        return ok(showTeamDetails.render(teamToDisplay, course, currentUser, sessionTimeout));
 }
 
 

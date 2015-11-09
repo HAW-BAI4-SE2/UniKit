@@ -1,7 +1,289 @@
-@import helper._
+@import snippets._
 
-@(team: net.unikit.database.unikit_.interfaces.Team, currentUser: net.unikit.database.external.interfaces.Student, sessionTimeout: java.util.Date)
+@(team: net.unikit.database.unikit_.interfaces.Team, course: net.unikit.database.external.interfaces.Course, currentUser: net.unikit.database.external.interfaces.Student, sessionTimeout: java.util.Date)
 
-<body>
-Test
-</body>
+@getTeamMember() = @{
+    var result = scala.collection.mutable.MutableList[net.unikit.database.external.interfaces.Student]()
+
+    for(registration <- team.getTeamRegistrations) {
+        if(!result && registration != null && registration.getStudentNumber() != null) {
+            result += assets.Global.getStudentManager().getStudent(registration.getStudentNumber())
+        }
+    }
+
+    result
+}
+
+@getInvitedStudents() = @{
+    var result = scala.collection.mutable.MutableList[net.unikit.database.external.interfaces.Student]()
+
+    for(invitation <- team.getTeamInvitations()) {
+        if(!result && invitation != null && invitation.getInviteeStudentNumber() != null) {
+            result += assets.Global.getStudentManager().getStudent(invitation.getInviteeStudentNumber())
+        }
+    }
+
+    result
+}
+
+@getStudentsWhichRequested() = @{
+    var result = scala.collection.mutable.MutableList[net.unikit.database.external.interfaces.Student]()
+
+    for(application <- team.getTeamApplications()) {
+        if(!result && application != null && application.getApplicantStudentNumber() != null) {
+            result += assets.Global.getStudentManager().getStudent(application.getApplicantStudentNumber())
+        }
+    }
+
+    result
+}
+
+@currentUserIsMember() = @{
+    var result = false
+
+    for(registration <- team.getTeamRegistrations) {
+        if(!result && registration != null && registration.getStudentNumber() != null) {
+            if(registration.getStudentNumber().equals(currentUser.getStudentNumber)) {
+                result = true
+            }
+        }
+    }
+
+    result
+}
+
+@getRegisteredStudents() = @{
+    val allRegistrations = assets.Global.getCourseRegistrationManager().getAllCourseRegistrations()
+    var courseRegistrations = scala.collection.mutable.MutableList[net.unikit.database.external.interfaces.Student]()
+
+    for (registration <- allRegistrations) {
+        if (registration != null && registration.getStudentNumber() != null && registration.getCourseId() != null) {
+            if (registration.getCourseId() == course.getId()) {
+                courseRegistrations += assets.Global.getStudentManager().getStudent(registration.getStudentNumber())
+            }
+        }
+    }
+
+    courseRegistrations
+}
+
+@currentUserIsInvited() = @{
+    var result = false
+
+    for(invitation <- team.getTeamInvitations) {
+        if(!result && invitation != null && invitation.getInviteeStudentNumber() != null) {
+            if(invitation.getInviteeStudentNumber().equals(currentUser.getStudentNumber)) {
+                result = true
+            }
+        }
+    }
+
+    result
+}
+
+@currentUserRequested() = @{
+    var result = false
+
+    for(application <- team.getTeamApplications()) {
+        if(!result && application != null && application.getApplicantStudentNumber() != null) {
+            if(application.getApplicantStudentNumber().equals(currentUser.getStudentNumber)) {
+                result = true
+            }
+        }
+    }
+
+    result
+}
+
+@teamIsFull() = @{
+    val courseMaxTeamSize = assets.Global.getCourseManager.getCourse(team.getCourseId()).getMaxTeamSize()
+    val currentSize = team.getTeamInvitations().size() + team.getTeamRegistrations().size()
+
+    (currentSize >= courseMaxTeamSize)
+}
+
+@main("Team T" + String.format("%03d", team.getId()) + " (" + course.getName() + ")", assets.NavigationItem.REGISTRATIONS, currentUser, sessionTimeout) {
+    @evidence(605) {
+        <span class="thick">@("Team T" + String.format("%03d", team.getId()) + " (" + course.getName() + ")")</span>
+    }
+
+    @space()
+
+    @if(!getTeamMember().isEmpty) {
+        @listSection("Aktuelle Mitglieder", 605) {
+            @for((member, index) <- getTeamMember().view.zipWithIndex) {
+                @if(index % 2 == 0) {
+                    @listItemDark() {
+                        @member.getFirstName() @member.getLastName() (@member.getEmail())
+                    } {
+                        @if(currentUserIsMember()) {
+                            @buttonRight("Entfernen") {
+                                @controllers.studentComponent.routes.TeamController.removeMember(member.getStudentNumber(), team.getId())
+                            }
+                        } else {
+                            &nbsp;
+                        }
+                    }
+                } else {
+                    @listItemLight() {
+                        @member.getFirstName() @member.getLastName() (@member.getEmail())
+                    } {
+                        @if(currentUserIsMember()) {
+                            @buttonRight("Entfernen") {
+                                @controllers.studentComponent.routes.TeamController.removeMember(member.getStudentNumber(), team.getId())
+                            }
+                        } else {
+                            &nbsp;
+                        }
+                    }
+                }
+            }
+        }
+
+        @space()
+    }
+
+    @if(currentUserIsMember()) {
+        @if(!getStudentsWhichRequested().isEmpty) {
+            @listSection("Anfragende Studenten", 605) {
+                @for((member, index) <- getStudentsWhichRequested().view.zipWithIndex) {
+                    @if(index % 2 == 0) {
+                        @listItemDark() {
+                            @member.getFirstName() @member.getLastName() (@member.getEmail())
+                        } {
+                            @buttonRight("In Team aufnehmen") {
+                                <!-- TODO: Change call! -->
+                                @controllers.studentComponent.routes.TeamController.removeMember(member.getStudentNumber(), team.getId())
+                            }
+
+                            @buttonRight("Anfrage ablehnen") {
+                                <!-- TODO: Change call! -->
+                                @controllers.studentComponent.routes.TeamController.removeMember(member.getStudentNumber(), team.getId())
+                            }
+                        }
+                    } else {
+                        @listItemLight() {
+                            @member.getFirstName() @member.getLastName() (@member.getEmail())
+                        } {
+                            @buttonRight("In Team aufnehmen") {
+                                <!-- TODO: Change call! -->
+                                @controllers.studentComponent.routes.TeamController.removeMember(member.getStudentNumber(), team.getId())
+                            }
+
+                            @buttonRight("Anfrage ablehnen") {
+                                <!-- TODO: Change call! -->
+                                @controllers.studentComponent.routes.TeamController.removeMember(member.getStudentNumber(), team.getId())
+                            }
+                        }
+                    }
+                }
+            }
+
+            @space()
+        }
+
+        @if(!getInvitedStudents().isEmpty) {
+            @listSection("Eingeladene Studenten", 605) {
+                @for((member, index) <- getInvitedStudents().view.zipWithIndex) {
+                    @if(index % 2 == 0) {
+                        @listItemDark() {
+                            @member.getFirstName() @member.getLastName() (@member.getEmail())
+                        } {
+                            @buttonRight("Einladung zurueckziehen") {
+                                <!-- TODO: Change call! -->
+                                @controllers.studentComponent.routes.TeamController.removeMember(member.getStudentNumber(), team.getId())
+                            }
+                        }
+                    } else {
+                        @listItemLight() {
+                            @member.getFirstName() @member.getLastName() (@member.getEmail())
+                        } {
+                            @buttonRight("Einladung zurueckziehen") {
+                                <!-- TODO: Change call! -->
+                                @controllers.studentComponent.routes.TeamController.removeMember(member.getStudentNumber(), team.getId())
+                            }
+                        }
+                    }
+                }
+            }
+
+            @space()
+        }
+
+        <!-- TODO: Check if team is full! -->
+        @if(!teamIsFull()) {
+            @listSection("Verfuegbare Studenten", 605) {
+                @for((student, index) <- getRegisteredStudents().view.zipWithIndex) {
+                    @if(index % 2 == 0) {
+                        @listItemDark() {
+                            @student.getFirstName() @student.getLastName() (@student.getEmail())
+                        } {
+                            @buttonRight("Einladen") {
+                                <!-- TODO: Change call! -->
+                                @controllers.studentComponent.routes.TeamController.removeMember(student.getStudentNumber(), team.getId())
+                            }
+                        }
+                    } else {
+                        @listItemLight() {
+                            @student.getFirstName() @student.getLastName() (@student.getEmail())
+                        } {
+                            @buttonRight("Einladen") {
+                                <!-- TODO: Change call! -->
+                                @controllers.studentComponent.routes.TeamController.removeMember(student.getStudentNumber(), team.getId())
+                            }
+                        }
+                    }
+                }
+            }
+
+            @space()
+        }
+    } else {
+        @if(currentUserIsInvited()) {
+            <table width="605">
+                <tr>
+                    <td>
+                        <table width="605">
+                            @buttonRight("Einladung annehmen") {
+                                    <!-- TODO: Change call! -->
+                                @controllers.studentComponent.routes.TeamController.removeMember(currentUser.getStudentNumber(), team.getId())
+                                }
+
+                            @buttonRight("Einladung ablehnen") {
+                                <!-- TODO: Change call! -->
+                                @controllers.studentComponent.routes.TeamController.removeMember(currentUser.getStudentNumber(), team.getId())
+                            }
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        }
+
+        @if(currentUserRequested()) {
+            <table width="605">
+                <tr>
+                    <td>
+                        <table width="605">
+                            @buttonRight("Anfrage zurueckziehen") {
+                                    <!-- TODO: Change call! -->
+                                @controllers.studentComponent.routes.TeamController.removeMember(currentUser.getStudentNumber(), team.getId())
+                            }
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        }
+    }
+
+    <table width="605">
+        <tr>
+            <td>
+                <table width="605">
+                @buttonRight("Zurueck") {
+                    javascript:history.back()
+                }
+                </table>
+            </td>
+        </tr>
+    </table>
+}
