@@ -36,9 +36,9 @@ public class LoginFormModel {
         if (username == null || username.isEmpty())
             errors.add(new ValidationError("", "Username wurde nicht angegeben!"));
 
-        // Check if password is missing
-        if (password == null || password.isEmpty())
-            errors.add(new ValidationError("", "Password wurde nicht angegeben!"));
+        // TODO: Comment-In: Check if password is missing
+        //if (password == null || password.isEmpty())
+        //    errors.add(new ValidationError("", "Password wurde nicht angegeben!"));
 
         // If errors occurred, return them
         if (!errors.isEmpty())
@@ -52,7 +52,7 @@ public class LoginFormModel {
 
         // Check if password is wrong
         String hashed = BCrypt.hashpw("test", BCrypt.gensalt()); // TODO: Load hashed password from DB!
-        boolean passwordWrong = !BCrypt.checkpw(password, hashed);
+        boolean passwordWrong = false; //TODO: Change to: !BCrypt.checkpw(password, hashed);
 
         // Return error if username is unknown or password is wrong
         if (usernameUnknown || passwordWrong)

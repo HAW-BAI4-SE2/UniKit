@@ -199,9 +199,15 @@ public class TeamController extends Controller {
         Date sessionTimeout = SessionUtils.getSessionTimeout(session());
 
         Course course = Global.getCourseManager().getCourse(courseID);
-
-        // TODO: Fill
         List<Team> availableTeams = new ArrayList<>();
+
+        List<Team> allTeams = Global.getTeamManager().getAllTeams();
+        for (Team team : allTeams) {
+            if (team.getCourseId() == course.getId()) {
+                // TODO: Check if team is full
+                availableTeams.add(team);
+            }
+        }
 
         return ok(showAvailableTeams.render(availableTeams, course, currentUser, sessionTimeout));
     }

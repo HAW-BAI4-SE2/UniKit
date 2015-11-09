@@ -221,6 +221,19 @@
                     </td>
                 </tr>
             </table>
+        } else {
+            <table width="605">
+                <tr>
+                    <td>
+                        <table width="605">
+                        @buttonRight("Beitrittsanfrage versenden") {
+                                <!-- TODO: Change call! -->
+                            @controllers.studentComponent.routes.TeamController.removeMember(currentUser.getStudentNumber(), team.getId())
+                        }
+                        </table>
+                    </td>
+                </tr>
+            </table>
         }
     }
 
@@ -229,7 +242,11 @@
             <td>
                 <table width="605">
                 @buttonRight("Zurueck") {
-                    @request.getHeader("referer")
+                    @if(request.getHeader("referer").contains("remove_member") || request.getHeader("referer").contains("create")) {
+                        @controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId())
+                    } else {
+                        @request.getHeader("referer")
+                    }
                 }
                 </table>
             </td>
