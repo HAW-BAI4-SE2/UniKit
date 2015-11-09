@@ -83,21 +83,16 @@ public class StudentController extends Controller {
      *  The student requests the membership with the team. The relevant data is retrived using a TeamStateChangeForm-object
      *  @return showCourseDetails-page
     **/
-    public static Result requestMembership(){
-        Form<TeamStateChangeFormModel> requestMembershipForm =
-                Form.form(TeamStateChangeFormModel.class)
-                        .bindFromRequest();
-        TeamStateChangeFormModel teamStateChange = requestMembershipForm.get();
+    public static Result requestMembership(int teamID){
+        if(teamID < 0) throw new NullPointerException();
 
-        //TODO: form validation
-        checkNotNull(teamStateChange.studentNumber);
-        checkNotNull(teamStateChange.teamID);
+        Student currentUser = SessionUtils.getCurrentUser(session());
 
-        StudentDatabaseUtils.storeMembershipRequest(teamStateChange.studentNumber, teamStateChange.teamID);
+        StudentDatabaseUtils.storeMembershipRequest(currentUser.getStudentNumber(), teamID);
 
         //TODO: send mail to team members & student
 
-        int courseToDispay = StudentDatabaseUtils.getTeamByID(teamStateChange.teamID).getCourseId();
+        int courseToDispay = StudentDatabaseUtils.getTeamByID(teamID).getCourseId();
 
         return CourseController.showCourseDetails(courseToDispay);
     }
@@ -106,26 +101,17 @@ public class StudentController extends Controller {
      *  The student cancels his membership request with the team. The relevant data is retrived using a TeamStateChangeForm-object
      *  @return showCourseDetails-page
     **/
-    public static Result cancelMembershipRequest(){
-        /* TODO:
-         *      delete membership request from database
-         *      send mail to team members
-         *      send mail to student
-         */
-        Form<TeamStateChangeFormModel> cancelMembershipForm =
-                Form.form(TeamStateChangeFormModel.class)
-                        .bindFromRequest();
-        TeamStateChangeFormModel teamStateChange = cancelMembershipForm.get();
+    public static Result cancelMembershipRequest(int teamID){
+        if(teamID < 0) throw new NullPointerException();
 
-        //TODO: form validation
-        checkNotNull(teamStateChange.studentNumber);
-        checkNotNull(teamStateChange.teamID);
+        Student currentUser = SessionUtils.getCurrentUser(session());
 
-        StudentDatabaseUtils.deleteMembershipRequest(teamStateChange.studentNumber,teamStateChange.teamID);
+
+        StudentDatabaseUtils.deleteMembershipRequest(currentUser.getStudentNumber(),teamID);
 
         //TODO: send mail to student
 
-        int courseToDispay = StudentDatabaseUtils.getTeamByID(teamStateChange.teamID).getCourseId();
+        int courseToDispay = StudentDatabaseUtils.getTeamByID(teamID).getCourseId();
         return CourseController.showCourseDetails(courseToDispay);
     }
 }

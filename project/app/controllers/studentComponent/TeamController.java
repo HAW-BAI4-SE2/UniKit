@@ -92,31 +92,26 @@ public class TeamController extends Controller {
         return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
     }
 
-    public static Result acceptMembershipRequest(){
-        Form<TeamStateChangeFormModel> acceptMembershipRequest =
-                Form.form(TeamStateChangeFormModel.class)
-                        .bindFromRequest();
-        TeamStateChangeFormModel teamStateChange = acceptMembershipRequest.get();
+    public static Result acceptMembershipRequest(String studentNumber, int teamID){
+        checkNotNull(studentNumber);
+        if(teamID < 0) throw new NullPointerException();
 
-        //TODO: actual form validation
-        checkNotNull(teamStateChange.studentNumber);
-        checkNotNull(teamStateChange.teamID);
-
-        TeamDatabaseUtils.addStudentToTeam(teamStateChange.studentNumber, teamStateChange.teamID);
-        TeamDatabaseUtils.deleteMembershipRequest(teamStateChange.studentNumber, teamStateChange.teamID);
+        TeamDatabaseUtils.addStudentToTeam(studentNumber, teamID);
+        TeamDatabaseUtils.deleteMembershipRequest(studentNumber, teamID);
 
         //TODO send mail to all team members
 
-        return showEditTeam(teamStateChange.teamID);
+        return showEditTeam(teamID);
     }
 
-    public static Result declineMembershipRequest(){
-        Form<TeamStateChangeFormModel> declineMembershipRequest =
-                Form.form(TeamStateChangeFormModel.class)
-                        .bindFromRequest();
-        TeamStateChangeFormModel teamStateChange = declineMembershipRequest.get();
+    public static Result declineMembershipRequest(String studentNumber, int teamID){
+       checkNotNull(studentNumber);
+        if(teamID < 0) throw new NullPointerException();
 
-        TeamDatabaseUtils.deleteMembershipRequest(teamStateChange.studentNumber,teamStateChange.teamID);
+        Student currentUser = SessionUtils.getCurrentUser(session());
+
+
+        TeamDatabaseUtils.deleteMembershipRequest(studentNumber,teamID);
 
         //TODO: send mail to student
 
