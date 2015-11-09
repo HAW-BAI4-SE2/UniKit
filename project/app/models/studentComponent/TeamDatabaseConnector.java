@@ -8,6 +8,7 @@ import assets.Global;
 import net.unikit.database.external.interfaces.Student;
 import net.unikit.database.external.interfaces.StudentManager;
 import net.unikit.database.unikit_.interfaces.Team;
+import net.unikit.database.unikit_.interfaces.TeamApplication;
 import net.unikit.database.unikit_.interfaces.TeamRegistration;
 
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class TeamDatabaseConnector {
     }
 
     public static List<Student> getAllStudents(Team teamToDispay) {
-        List<Student> allStudentsInTeam = new ArrayList<>();
+        List<Student> allStudentsInTeam = null;
 
         List<Team> allTeams =  Global.getTeamManager().getAllTeams();
         List<TeamRegistration> allRegistrationsForTeam = null;

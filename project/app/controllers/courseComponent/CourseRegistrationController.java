@@ -8,9 +8,9 @@ package controllers.courseComponent;
  */
 
 import assets.Global;
-import assets.SessionUtils;
 import models.courseComponent.CourseDatabaseConnector;
 import models.courseComponent.FormModels.CourseRegistrationFormModel;
+import models.courseComponent.FormModels.OverviewCourseRegistrationModel;
 import net.unikit.database.external.interfaces.Course;
 import net.unikit.database.external.interfaces.Student;
 import net.unikit.database.unikit_.interfaces.CourseRegistration;
@@ -20,33 +20,34 @@ import play.mvc.Result;
 import views.html.*;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class CourseRegistrationController extends Controller {
+    private static Student currentUser;
+
+    static {
+        currentUser = Global.getStudentManager().getStudent("2055120");
+    }
+
     /**
     *Displays the registered courses for the current user
     *@pre currentUser: a logged in user
     *@return showCourseOverview page displaying all course registrations for the user
      **/
     public static Result showCourseOverview() {
-        Student currentUser = SessionUtils.getCurrentUser(session());
-        Date sessionTimeout = SessionUtils.getSessionTimeout(session());
-
-        String studentNumber = currentUser.getStudentNumber();
-        List<Course> registeredCourses = new ArrayList<>();
+        OverviewCourseRegistrationModel allRegistrationsCurrentUser = new OverviewCourseRegistrationModel(currentUser.getStudentNumber());
 
         List<CourseRegistration> allCourseRegistrations = Global.getCourseRegistrationManager().getAllCourseRegistrations();
 
         //If entry in the table of all registered courses matches student number of the current user and isn't already in the list, the course name is added the the OverviewList
         for(CourseRegistration cr : allCourseRegistrations){
             Course currentCourse = Global.getCourseManager().getCourse(cr.getCourseId());
-            if(cr.getStudentNumber().equals(studentNumber) && !registeredCourses.contains(currentCourse)){
-                registeredCourses.add(currentCourse);
+            if(cr.getStudentNumber().equals(allRegistrationsCurrentUser.getStudentNumber()) && !allRegistrationsCurrentUser.getRegisteredCourses().contains(currentCourse)){
+                allRegistrationsCurrentUser.getRegisteredCourses().add(currentCourse);
             }
         }
 
-        return ok(showCourseOverview.render(registeredCourses, currentUser, sessionTimeout));
+        return ok(showCourseOverview.render(allRegistrationsCurrentUser));
     }
 
     /**
@@ -55,24 +56,18 @@ public class CourseRegistrationController extends Controller {
     *@return showRegisterCourses page displaying all available courses for regsitration
      **/
     public static Result showRegisterCourses() {
-        Student currentUser = SessionUtils.getCurrentUser(session());
-        Date sessionTimeout = SessionUtils.getSessionTimeout(session());
-
         List<Course> availableCourses = new ArrayList<>(Global.getCourseManager().getAllCourses());
         availableCourses.removeAll(currentUser.getCompletedCourses());
 
 
         Form<CourseRegistrationFormModel> courseRegistration =
                 Form.form(CourseRegistrationFormModel.class)
-                        .fill(new CourseRegistrationFormModel(availableCourses));
+                        .fill(new CourseRegistrationFormModel(currentUser.getStudentNumber(), availableCourses));
 
-        return ok(showCourseRegister.render(courseRegistration, currentUser, sessionTimeout));
+        return ok(showRegisterCourses.render(courseRegistration));
     }
 
     public static Result showCancelRegistration(){
-        Student currentUser = SessionUtils.getCurrentUser(session());
-        Date sessionTimeout = SessionUtils.getSessionTimeout(session());
-
         List<Course> allCourseRegistrations = new ArrayList<>();
 
         for(CourseRegistration courseRegistration : Global.getCourseRegistrationManager().getAllCourseRegistrations()){
@@ -83,9 +78,9 @@ public class CourseRegistrationController extends Controller {
 
         Form<CourseRegistrationFormModel> courseRegistration =
                 Form.form(CourseRegistrationFormModel.class)
-                        .fill(new CourseRegistrationFormModel(allCourseRegistrations));
+                        .fill(new CourseRegistrationFormModel(currentUser.getStudentNumber(), allCourseRegistrations));
 
-        return ok(showCourseUnregister.render(courseRegistration, currentUser, sessionTimeout));
+        return ok(showCancelRegistration.render(courseRegistration));
     }
     /**
     *Redirects to the overview of all registered courses for the current user.
@@ -102,8 +97,6 @@ public class CourseRegistrationController extends Controller {
     *@return showCourseOverview page displaying all course registrations for the user
      **/
     public static Result registerCourses(){
-        Student currentUser = SessionUtils.getCurrentUser(session());
-
         //Bind Form-object to Model
         Form<CourseRegistrationFormModel> courseRegistrationForm =
                 Form.form(CourseRegistrationFormModel.class)
@@ -115,7 +108,7 @@ public class CourseRegistrationController extends Controller {
         if(crfm.registeredCourses != null){
             for(String course : crfm.registeredCourses){
                 CourseRegistration dbEntry = Global.getCourseRegistrationManager().createCourseRegistration();
-                dbEntry.setStudentNumber(currentUser.getStudentNumber());
+                dbEntry.setStudentNumber(crfm.studentNumber);
                 dbEntry.setCourseId(Integer.parseInt(course));
                 Global.getCourseRegistrationManager().addCourseRegistration(dbEntry);
             }
@@ -130,8 +123,6 @@ public class CourseRegistrationController extends Controller {
     *@return showCourseOverview page displaying all course registrations for the user
      **/
     public static Result cancelCourseRegistration(){
-        Student currentUser = SessionUtils.getCurrentUser(session());
-
         //Bind Form-object to Model
         Form<CourseRegistrationFormModel> courseRegistrationForm =
                 Form.form(CourseRegistrationFormModel.class)
@@ -143,14 +134,14 @@ public class CourseRegistrationController extends Controller {
         if(crfm.registeredCourses != null){
             List<CourseRegistration> allCourseRegistrations = Global.getCourseRegistrationManager().getAllCourseRegistrations();
             CourseRegistration dbEntry = Global.getCourseRegistrationManager().createCourseRegistration();
-            dbEntry.setStudentNumber(currentUser.getStudentNumber());
+            dbEntry.setStudentNumber(crfm.studentNumber);
 
             for(String course : crfm.registeredCourses){
 
                 dbEntry.setCourseId(Integer.parseInt(course));
 
                 for(CourseRegistration cr : allCourseRegistrations ){
-                    if(currentUser.getStudentNumber().equals(cr.getStudentNumber()) && Integer.parseInt(course) == cr.getCourseId()){
+                    if(crfm.studentNumber.equals(cr.getStudentNumber()) && Integer.parseInt(course) == cr.getCourseId()){
                         Global.getCourseRegistrationManager().deleteCourseRegistration(cr);
                     }
                 }

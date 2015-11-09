@@ -5,18 +5,21 @@ package controllers.studentComponent;
  */
 
 import assets.Global;
-import assets.SessionUtils;
-import controllers.courseComponent.CourseController;
+
+import models.studentComponent.TeamDatabaseConnector;
 import net.unikit.database.external.interfaces.Course;
 import net.unikit.database.external.interfaces.Student;
+import net.unikit.database.unikit_.interfaces.CourseRegistration;
+
+import controllers.courseComponent.CourseController;
 import net.unikit.database.unikit_.interfaces.Team;
+import net.unikit.database.unikit_.interfaces.TeamApplication;
+import net.unikit.database.unikit_.interfaces.TeamInvitation;
 import play.mvc.Controller;
 import play.mvc.Result;
-import views.html.showTeamAvailable;
-import views.html.showTeamDetails;
 
-import java.util.ArrayList;
-import java.util.Date;
+import views.html.*;
+
 import java.util.List;
 
 public class TeamController extends Controller {
@@ -31,10 +34,10 @@ public class TeamController extends Controller {
 
         Team teamToDisplay = null;
 
-        return showEditTeam(teamToDisplay.getId());
+        return showEditTeam(teamToDisplay);
     }
 
-    public static Result removeMember(String studentNumber, int teamID){
+    public static Result removeMember(){
         /* TODO:
          *      delete student from team
          *      send mail to former member
@@ -42,7 +45,7 @@ public class TeamController extends Controller {
          */
         Team teamToDisplay = null;
 
-        return showEditTeam(teamToDisplay.getId());
+        return showEditTeam(teamToDisplay);
     }
 
     public static Result inviteStudent(){
@@ -54,7 +57,7 @@ public class TeamController extends Controller {
 
         Team teamToDisplay = null;
 
-        return showEditTeam(teamToDisplay.getId());
+        return showEditTeam(teamToDisplay);
     }
 
     public static Result cancelInvitation(){
@@ -66,7 +69,7 @@ public class TeamController extends Controller {
         */
         Team teamToDisplay = null;
 
-        return showEditTeam(teamToDisplay.getId());
+        return showEditTeam(teamToDisplay);
     }
 
     public static Result acceptMembershipRequest(){
@@ -74,7 +77,7 @@ public class TeamController extends Controller {
         */
         Team teamToDisplay = null;
 
-        return showEditTeam(teamToDisplay.getId());
+        return showEditTeam(teamToDisplay);
     }
 
     public static Result declineMembershipRequest(){
@@ -96,18 +99,14 @@ public class TeamController extends Controller {
          *      get all pending invites
          */
 
-        Student currentUser = SessionUtils.getCurrentUser(session());
-        Date sessionTimeout = SessionUtils.getSessionTimeout(session());
-        Team teamToDisplay = Global.getTeamManager().getTeam(teamID);
-        Course course = Global.getCourseManager().getCourse(teamToDisplay.getCourseId());
-
-        return ok(showTeamDetails.render(teamToDisplay, course, currentUser, sessionTimeout));
+        Team teamToDisplay = null;
+        return ok(showTeamOverview.render(teamToDisplay));
     }
 
     /**
      *   Displays the details for a team
      **/
-    public static Result showEditTeam(int teamID){
+    public static Result showEditTeam(Team teamToDispay){
         /**
         *   TODO:
         *       get all members of the current team
@@ -115,12 +114,9 @@ public class TeamController extends Controller {
         *       get all pending membership requests for the team
         **/
 
-        Student currentUser = SessionUtils.getCurrentUser(session());
-        Date sessionTimeout = SessionUtils.getSessionTimeout(session());
-        Team teamToDisplay = Global.getTeamManager().getTeam(teamID);
-        Course course = Global.getCourseManager().getCourse(teamToDisplay.getCourseId());
+        List<Student> allStudentsForTeam = TeamDatabaseConnector.getAllStudents(teamToDispay);
 
-        return ok(showTeamDetails.render(teamToDisplay, course, currentUser, sessionTimeout));
+        return ok(showEditTeam.render(allStudentsForTeam,teamToDispay.getTeamApplications(),teamToDispay.getTeamInvitations()));
 }
 
 
@@ -128,18 +124,11 @@ public class TeamController extends Controller {
      *  Displays the teams for this course for which the student can request membership
      *  @return
      **/ 
-    public static Result showAvailableTeams(int courseID){
+    public static Result showAvailableTeams(){
         /*
          *  TODO:
          *      get all teams which are not full for a given course
         */
-
-        Student currentUser = SessionUtils.getCurrentUser(session());
-        Date sessionTimeout = SessionUtils.getSessionTimeout(session());
-
-        List<Team> teamForCourse = new ArrayList<>();
-        Course course = Global.getCourseManager().getCourse(courseID);
-
-        return ok(showTeamAvailable.render(teamForCourse, course, currentUser, sessionTimeout));
+        return ok(showAvailableTeams.render());
     }
 }
