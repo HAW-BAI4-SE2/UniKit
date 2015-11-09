@@ -107,16 +107,20 @@ public class UnikitDatabaseUtils {
     }
 
     public static void removeStudentFromTeam(String studentNumber, int teamID) {
-        TeamRegistrationManager registrationManager = Global.getTeamRegistrationManager();
-        TeamRegistration newTeamRegistration = registrationManager.createTeamRegistration();
-        Team teamByID = UnikitDatabaseUtils.getTeamByID(teamID);
+        TeamRegistration teamRegistration = null;
 
-        newTeamRegistration.setStudentNumber(studentNumber);
-        newTeamRegistration.setTeam(teamByID);
+        List<TeamRegistration> allTeamRegistrations = Global.getTeamRegistrationManager().getAllTeamRegistrations();
+        for (TeamRegistration currentTeamRegistration : allTeamRegistrations) {
+            System.out.println("searching: " + studentNumber + "  " + teamID);
+            System.out.println(currentTeamRegistration + "  " + currentTeamRegistration.getTeam());
+            if (currentTeamRegistration.getStudentNumber().equals(studentNumber) && currentTeamRegistration.getTeam().getId().equals(teamID)) {
+                teamRegistration = currentTeamRegistration;
+                break;
+            }
+        }
 
-        checkNotNull(newTeamRegistration);
-
-        registrationManager.deleteTeamRegistration(newTeamRegistration);
+        checkNotNull(teamRegistration);
+        Global.getTeamRegistrationManager().deleteTeamRegistration(teamRegistration);
     }
 
     public static void changeTeamRegistrationStatus(String studentNumber, int courseID, boolean status){
