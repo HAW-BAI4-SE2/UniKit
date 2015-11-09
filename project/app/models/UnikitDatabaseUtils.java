@@ -109,6 +109,7 @@ public class UnikitDatabaseUtils {
     public static void removeStudentFromTeam(String studentNumber, int teamID) {
         TeamRegistration teamRegistration = null;
 
+        // Get registration
         List<TeamRegistration> allTeamRegistrations = Global.getTeamRegistrationManager().getAllTeamRegistrations();
         for (TeamRegistration currentTeamRegistration : allTeamRegistrations) {
             if (currentTeamRegistration.getStudentNumber().equals(studentNumber) && currentTeamRegistration.getTeam().getId().equals(teamID)) {
@@ -117,6 +118,7 @@ public class UnikitDatabaseUtils {
             }
         }
 
+        //Delete registration from database
         checkNotNull(teamRegistration);
         Global.getTeamRegistrationManager().deleteTeamRegistration(teamRegistration);
     }

@@ -71,21 +71,20 @@ public class TeamDatabaseUtils {
     }
 
     public static void deleteInvitation(String studentNumber, int teamID, Student currentUser) {
-        TeamInvitationManager invitationManager = Global.getTeamInvitationManager();
-        TeamInvitation deletedInvitation = invitationManager.createTeamInvitation();
+        TeamInvitation teamInvitation = null;
 
-        //Gets the team for the invitation
-        Team invitationForTeam = null;
-        invitationForTeam = UnikitDatabaseUtils.getTeamByID(teamID);
-        checkNotNull(invitationForTeam);
-
-        //Fill new invitation
-        deletedInvitation.setInviteeStudentNumber(studentNumber);
-        deletedInvitation.setTeam(invitationForTeam);
-        deletedInvitation.setCreatedByStudentNumber(currentUser.getStudentNumber());
+        // Get invitation
+        List<TeamInvitation> allTeamInvitations = Global.getTeamInvitationManager().getAllTeamInvitations();
+        for (TeamInvitation currentTeamInvitation : allTeamInvitations) {
+            if (currentTeamInvitation.getInviteeStudentNumber().equals(studentNumber) && currentTeamInvitation.getTeam().getId().equals(teamID)) {
+                teamInvitation = currentTeamInvitation;
+                break;
+            }
+        }
 
         //Delete invitation from database
-        invitationManager.deleteTeamInvitation(deletedInvitation);
+        checkNotNull(teamInvitation);
+        Global.getTeamInvitationManager().deleteTeamInvitation(teamInvitation);
     }
 
     public static List<Student> getAllStudents(Team team) {

@@ -139,8 +139,7 @@
                             @member.getFirstName() @member.getLastName() (@member.getEmail())
                         } {
                             @buttonRight("Einladung zurueckziehen") {
-                                <!-- TODO: Change call! -->
-                                @controllers.studentComponent.routes.TeamController.removeMember(member.getStudentNumber(), team.getId())
+                                @controllers.studentComponent.routes.TeamController.cancelInvitation(member.getStudentNumber(), team.getId())
                             }
                         }
                     } else {
@@ -148,8 +147,7 @@
                             @member.getFirstName() @member.getLastName() (@member.getEmail())
                         } {
                             @buttonRight("Einladung zurueckziehen") {
-                                <!-- TODO: Change call! -->
-                                @controllers.studentComponent.routes.TeamController.removeMember(member.getStudentNumber(), team.getId())
+                                @controllers.studentComponent.routes.TeamController.cancelInvitation(member.getStudentNumber(), team.getId())
                             }
                         }
                     }

@@ -85,21 +85,21 @@ public class TeamController extends Controller {
         return showEditTeam(teamID);
     }
 
-    public static Result cancelInvitation(){
-        Form<TeamStateChangeFormModel> cancelInvitation =
-                Form.form(TeamStateChangeFormModel.class)
-                        .bindFromRequest();
-        TeamStateChangeFormModel teamStateChange = cancelInvitation.get();
+    public static Result cancelInvitation(String studentNumber, int teamID){
+//        Form<TeamStateChangeFormModel> cancelInvitation =
+//                Form.form(TeamStateChangeFormModel.class)
+//                        .bindFromRequest();
+//        TeamStateChangeFormModel teamStateChange = cancelInvitation.get();
 
         //TODO: actual form validation
-        checkNotNull(teamStateChange.studentNumber);
-        checkNotNull(teamStateChange.teamID);
+        checkNotNull(studentNumber);
+        checkNotNull(teamID);
 
-        TeamDatabaseUtils.deleteInvitation(teamStateChange.studentNumber, teamStateChange.teamID, SessionUtils.getCurrentUser(session()));
+        TeamDatabaseUtils.deleteInvitation(studentNumber, teamID, SessionUtils.getCurrentUser(session()));
 
         //TODO send mail to all team members
 
-        return showEditTeam(teamStateChange.teamID);
+        return showEditTeam(teamID);
     }
 
     public static Result acceptMembershipRequest(){
