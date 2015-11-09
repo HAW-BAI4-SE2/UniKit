@@ -183,6 +183,8 @@
 
             @space()
         }
+
+
     } else {
         @if(currentUserIsInvited()) {
             <table width="605">
@@ -238,10 +240,7 @@
             <td>
                 <table width="605">
                     @buttonRight("Zurueck") {
-                        @if(request.getHeader("referer").contains("/team/remove_member") ||
-                                request.getHeader("referer").contains("/team/create") ||
-                                request.getHeader("referer").contains("/team/invite_student") ||
-                                request.getHeader("referer").contains("/team/uninvite_student")) {
+                        @if(request.getHeader("referer") == null || request.getHeader("referer").contains("/team/details")) {
                             @controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId())
                         } else {
                             @request.getHeader("referer")

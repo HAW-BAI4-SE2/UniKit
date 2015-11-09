@@ -57,27 +57,16 @@ public class TeamDatabaseUtils {
 
         //TODO: what if team has no registrations?
 
-        List<Student> allStudentsInTeam = new ArrayList<>();
-
-        List<Team> allTeams =  Global.getTeamManager().getAllTeams();
-        List<TeamRegistration> allRegistrationsForTeam = null;
-        StudentManager studentManager = Global.getStudentManager();
-
         //Get all registrations for team
-        for(Team currentTeam : allTeams){
-            if(currentTeam.getId().equals(team.getId())){
-                allRegistrationsForTeam = currentTeam.getTeamRegistrations();
-                break;
-            }
-        }
+        List<TeamRegistration> allRegistrationsForTeam = team.getTeamRegistrations();
 
         //Get all registered students
+        List<Student> allStudentsInTeam = new ArrayList<>();
         for(TeamRegistration currentRegistration : allRegistrationsForTeam){
-            allStudentsInTeam.add(studentManager.getStudent(currentRegistration.getStudentNumber()));
+            allStudentsInTeam.add(Global.getStudentManager().getStudent(currentRegistration.getStudentNumber()));
         }
 
         checkNotNull(allStudentsInTeam);
-
         return allStudentsInTeam;
     }
 
@@ -86,13 +75,15 @@ public class TeamDatabaseUtils {
     }
 
     public static void addStudentToTeam(String studentNumber, int teamID) {
-        UnikitDatabaseUtils.addStudentToTeam(studentNumber,teamID);
-        UnikitDatabaseUtils.changeTeamRegistrationStatus(studentNumber,teamID,true);
+        UnikitDatabaseUtils.addStudentToTeam(studentNumber, teamID);
+        Team team = TeamDatabaseUtils.getTeamByID(teamID);
+        UnikitDatabaseUtils.changeTeamRegistrationStatus(studentNumber, team.getCourseId(), true);
     }
 
     public static void removeStudentFromTeam(String studentNumber, int teamID) {
-        UnikitDatabaseUtils.removeStudentFromTeam(studentNumber,teamID);
-        UnikitDatabaseUtils.changeTeamRegistrationStatus(studentNumber,teamID,false);
+        Team team = TeamDatabaseUtils.getTeamByID(teamID);
+        UnikitDatabaseUtils.changeTeamRegistrationStatus(studentNumber, team.getCourseId(), false);
+        UnikitDatabaseUtils.removeStudentFromTeam(studentNumber, teamID);
     }
 
     public static boolean teamCanInvite(int teamID) {

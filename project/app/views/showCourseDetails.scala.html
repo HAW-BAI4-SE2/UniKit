@@ -122,7 +122,11 @@
             <td>
                 <table width="605">
                     @buttonRight("Zurueck") {
-                        @request.getHeader("referer")
+                        @if(request.getHeader("referer") == null || request.getHeader("referer").contains("/courses/details")) {
+                            @controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview()
+                        } else {
+                            @request.getHeader("referer")
+                        }
                     }
                 </table>
             </td>

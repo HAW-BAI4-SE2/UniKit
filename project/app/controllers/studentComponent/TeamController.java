@@ -108,8 +108,8 @@ public class TeamController extends Controller {
         checkNotNull(teamStateChange.studentNumber);
         checkNotNull(teamStateChange.teamID);
 
-        TeamDatabaseUtils.addStudentToTeam(teamStateChange.studentNumber,teamStateChange.teamID);
-        TeamDatabaseUtils.deleteMembershipRequest(teamStateChange.studentNumber,teamStateChange.teamID);
+        TeamDatabaseUtils.addStudentToTeam(teamStateChange.studentNumber, teamStateChange.teamID);
+        TeamDatabaseUtils.deleteMembershipRequest(teamStateChange.studentNumber, teamStateChange.teamID);
 
         //TODO send mail to all team members
 
@@ -160,10 +160,12 @@ public class TeamController extends Controller {
         List<CourseRegistration> allCourseRegistrations = Global.getCourseRegistrationManager().getAllCourseRegistrations();
         for (CourseRegistration courseRegistration : allCourseRegistrations) {
             if (courseRegistration.getCourseId() == course.getId()) {
-                // TODO: Remove students which are already in team
                 courseRegistrees.add(Global.getStudentManager().getStudent(courseRegistration.getStudentNumber()));
             }
         }
+
+        // Remove members of team from registered students
+        courseRegistrees.removeAll(allStudentsForTeam);
 
         // Get applicants for team
         List<Student> applicants = new ArrayList<>();
