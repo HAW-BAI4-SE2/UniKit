@@ -111,8 +111,6 @@ public class UnikitDatabaseUtils {
 
         List<TeamRegistration> allTeamRegistrations = Global.getTeamRegistrationManager().getAllTeamRegistrations();
         for (TeamRegistration currentTeamRegistration : allTeamRegistrations) {
-            System.out.println("searching: " + studentNumber + "  " + teamID);
-            System.out.println(currentTeamRegistration + "  " + currentTeamRegistration.getTeam());
             if (currentTeamRegistration.getStudentNumber().equals(studentNumber) && currentTeamRegistration.getTeam().getId().equals(teamID)) {
                 teamRegistration = currentTeamRegistration;
                 break;
