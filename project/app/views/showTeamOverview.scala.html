@@ -101,12 +101,10 @@
                             @member.getFirstName() @member.getLastName() (@member.getEmail())
                         } {
                             @buttonRight("In Team aufnehmen") {
-                                <!-- TODO: Change call! -->
                                 @controllers.studentComponent.routes.TeamController.acceptMembershipRequest(member.getStudentNumber(), team.getId())
                             }
 
                             @buttonRight("Anfrage ablehnen") {
-                                <!-- TODO: Change call! -->
                                 @controllers.studentComponent.routes.TeamController.declineMembershipRequest(member.getStudentNumber(), team.getId())
                             }
                         }
@@ -115,12 +113,10 @@
                             @member.getFirstName() @member.getLastName() (@member.getEmail())
                         } {
                             @buttonRight("In Team aufnehmen") {
-                                <!-- TODO: Change call! -->
                                 @controllers.studentComponent.routes.TeamController.acceptMembershipRequest(member.getStudentNumber(), team.getId())
                             }
 
                             @buttonRight("Anfrage ablehnen") {
-                                <!-- TODO: Change call! -->
                                 @controllers.studentComponent.routes.TeamController.declineMembershipRequest(member.getStudentNumber(), team.getId())
                             }
                         }
