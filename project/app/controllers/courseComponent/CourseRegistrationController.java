@@ -27,12 +27,6 @@ import java.util.List;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class CourseRegistrationController extends Controller {
-    private static Student currentUser;
-
-    static {
-        currentUser = Global.getStudentManager().getStudent("2055120");
-    }
-
     /**
     *Displays the registered courses for the current user
     *@pre currentUser: a logged in user
@@ -110,6 +104,9 @@ public class CourseRegistrationController extends Controller {
     *@return showCourseOverview page displaying all course registrations for the user
      **/
     public static Result registerCourses(){
+        Student currentUser = SessionUtils.getCurrentUser(session());
+        Date sessionTimeout = SessionUtils.getSessionTimeout(session());
+
         //Bind Form-object to Model
         Form<CourseRegistrationFormModel> courseRegistrationForm =
                 Form.form(CourseRegistrationFormModel.class)
