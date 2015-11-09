@@ -137,18 +137,8 @@ public class TeamController extends Controller {
         Student currentUser = SessionUtils.getCurrentUser(session());
         Date sessionTimeout = SessionUtils.getSessionTimeout(session());
 
-        // =================================== TESTDATA =====================================================
-        List<Team> allTeams = Global.getTeamManager().getAllTeams();
-
-        Course course = Global.getCourseManager().getCourse(courseID);
         List<Team> teamForCourse = new ArrayList<>();
-
-        for (Team team : allTeams) {
-            if (team.getCourseId() == courseID) {
-                teamForCourse.add(team);
-            }
-        }
-        // =================================== TESTDATA =====================================================
+        Course course = Global.getCourseManager().getCourse(courseID);
 
         return ok(showTeamAvailable.render(teamForCourse, course, currentUser, sessionTimeout));
     }

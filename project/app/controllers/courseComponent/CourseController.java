@@ -33,20 +33,6 @@ public class CourseController extends Controller {
         List<Team> currentInvitations = new ArrayList<>();
         List<Team> currentMembershipRequests = new ArrayList<>();
 
-        // =================================== TESTDATA =====================================================
-        boolean isInTeam = currentUser.getStudentNumber().equals("2055120");
-        Team team = Global.getTeamManager().createTeam();
-        team.setCourseId(course.getId());
-        team.setCreatedByStudentNumber(currentUser.getStudentNumber());
-        Global.getTeamManager().addTeam(team);
-
-        if (isInTeam) {
-            currentTeam = team;
-        } else {
-            currentInvitations.add(team);
-        }
-        // =================================== TESTDATA =====================================================
-
         return ok(showCourseDetails.render(currentTeam, currentInvitations, currentMembershipRequests, course, currentUser, sessionTimeout));
     }
 }
