@@ -60,32 +60,7 @@ public class StudentDatabaseUtils {
     *  @return courseForTeam the course for which the team was associated
     */
     public static int deleteTeam(int teamID){
-        TeamManager teamManager = Global.getTeamManager();
-
-        Team teamToBeDeleted = null;
-
-        List<Team> allTeams = teamManager.getAllTeams();
-
-        for(Team currentTeam : allTeams){
-            if(currentTeam.getId() == teamID){
-                teamToBeDeleted = currentTeam;
-            }
-        }
-
-        //TODO: better logic if team doestn exist
-        checkNotNull(teamToBeDeleted);
-        int courseForTeamID = courseForTeamID = teamToBeDeleted.getCourseId();
-
-        //Update status of students to single registration
-        for(TeamRegistration currentRegistration : teamToBeDeleted.getTeamRegistrations()){
-            CourseRegistrationController.changeTeamRegistrationStatus(
-                    currentRegistration.getStudentNumber(), currentRegistration.getTeam().getCourseId(),false);
-        }
-
-        //Delete team
-        teamManager.deleteTeam(teamToBeDeleted);
-
-        return courseForTeamID;
+        return UnikitDatabaseUtils.deleteTeam(teamID);
     }
 
     /**

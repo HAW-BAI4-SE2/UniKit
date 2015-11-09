@@ -142,4 +142,8 @@ public class TeamDatabaseUtils {
         checkNotNull(membershipRequestToBeDeleted);
         membershipRequestManager.deleteTeamApplication(membershipRequestToBeDeleted);
     }
+
+    public static void deleteTeam(int teamID) {
+        UnikitDatabaseUtils.deleteTeam(teamID);
+    }
 }

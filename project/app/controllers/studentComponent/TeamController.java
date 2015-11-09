@@ -49,10 +49,6 @@ public class TeamController extends Controller {
     }
 
     public static Result removeMember(String studentNumber, int teamID){
-//        Form<TeamStateChangeFormModel> removeStudentFromTeam =
-//                Form.form(TeamStateChangeFormModel.class)
-//                        .bindFromRequest();
-//        TeamStateChangeFormModel teamStateChange = removeStudentFromTeam.get();
 
         //TODO: actual form validation
         checkNotNull(studentNumber);
@@ -65,6 +61,7 @@ public class TeamController extends Controller {
         Team alteredTeam = TeamDatabaseUtils.getTeamByID(teamID);
 
         if(alteredTeam.getTeamRegistrations().isEmpty()){
+            TeamDatabaseUtils.deleteTeam(teamID);
             return redirect(controllers.courseComponent.routes.CourseController.showCourseDetails(alteredTeam.getCourseId()));
         }else{
             return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
@@ -72,10 +69,6 @@ public class TeamController extends Controller {
     }
 
     public static Result inviteStudent(String studentNumber, int teamID) {
-//        Form<TeamStateChangeFormModel> inviteStudentToTeam =
-//                Form.form(TeamStateChangeFormModel.class)
-//                        .bindFromRequest();
-//        TeamStateChangeFormModel teamStateChange = inviteStudentToTeam.get();
 
         //TODO: actual form validation
         checkNotNull(studentNumber);
@@ -93,10 +86,6 @@ public class TeamController extends Controller {
     }
 
     public static Result cancelInvitation(String studentNumber, int teamID){
-//        Form<TeamStateChangeFormModel> cancelInvitation =
-//                Form.form(TeamStateChangeFormModel.class)
-//                        .bindFromRequest();
-//        TeamStateChangeFormModel teamStateChange = cancelInvitation.get();
 
         //TODO: actual form validation
         checkNotNull(studentNumber);
