@@ -64,25 +64,25 @@ public class TeamController extends Controller {
         return showEditTeam(teamID);
     }
 
-    public static Result inviteStudent(){
-        Form<TeamStateChangeFormModel> inviteStudentToTeam =
-                Form.form(TeamStateChangeFormModel.class)
-                        .bindFromRequest();
-        TeamStateChangeFormModel teamStateChange = inviteStudentToTeam.get();
+    public static Result inviteStudent(String studentNumber, int teamID) {
+//        Form<TeamStateChangeFormModel> inviteStudentToTeam =
+//                Form.form(TeamStateChangeFormModel.class)
+//                        .bindFromRequest();
+//        TeamStateChangeFormModel teamStateChange = inviteStudentToTeam.get();
 
         //TODO: actual form validation
-        checkNotNull(teamStateChange.studentNumber);
-        checkNotNull(teamStateChange.teamID);
+        checkNotNull(studentNumber);
+        checkNotNull(teamID);
 
         //If team is not full and can invite more students, the invitation is sent
-        if(!TeamDatabaseUtils.isTeamFull(teamStateChange.teamID) && TeamDatabaseUtils.hasInvitationSlots(teamStateChange.teamID)){
-            TeamDatabaseUtils.storeInvitation(teamStateChange.studentNumber, teamStateChange.teamID, SessionUtils.getCurrentUser(session()));
+        if(!TeamDatabaseUtils.isTeamFull(teamID) && TeamDatabaseUtils.hasInvitationSlots(teamID)){
+            TeamDatabaseUtils.storeInvitation(studentNumber, teamID, SessionUtils.getCurrentUser(session()));
             //TODO: send mail to all team members
         }else{
             //TODO: feedback if team is full or max invitations reached
         }
 
-        return showEditTeam(teamStateChange.teamID);
+        return showEditTeam(teamID);
     }
 
     public static Result cancelInvitation(){

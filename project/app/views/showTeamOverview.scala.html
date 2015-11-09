@@ -168,8 +168,7 @@
                             @student.getFirstName() @student.getLastName() (@student.getEmail())
                         } {
                             @buttonRight("Einladen") {
-                                <!-- TODO: Change call! -->
-                                @controllers.studentComponent.routes.TeamController.removeMember(student.getStudentNumber(), team.getId())
+                                @controllers.studentComponent.routes.TeamController.inviteStudent(student.getStudentNumber(), team.getId())
                             }
                         }
                     } else {
@@ -177,8 +176,7 @@
                             @student.getFirstName() @student.getLastName() (@student.getEmail())
                         } {
                             @buttonRight("Einladen") {
-                                <!-- TODO: Change call! -->
-                                @controllers.studentComponent.routes.TeamController.removeMember(student.getStudentNumber(), team.getId())
+                                @controllers.studentComponent.routes.TeamController.inviteStudent(student.getStudentNumber(), team.getId())
                             }
                         }
                     }
@@ -241,13 +239,13 @@
         <tr>
             <td>
                 <table width="605">
-                @buttonRight("Zurueck") {
-                    @if(request.getHeader("referer").contains("remove_member") || request.getHeader("referer").contains("create")) {
-                        @controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId())
-                    } else {
-                        @request.getHeader("referer")
+                    @buttonRight("Zurueck") {
+                        @if(request.getHeader("referer").contains("/team/remove_member") || request.getHeader("referer").contains("/team/create")) {
+                            @controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId())
+                        } else {
+                            @request.getHeader("referer")
+                        }
                     }
-                }
                 </table>
             </td>
         </tr>

@@ -37,9 +37,13 @@
         <tr>
             <td>
                 <table width="605">
-                @buttonRight("Zurueck") {
-                    @request.getHeader("referer")
-                }
+                    @buttonRight("Zurueck") {
+                        @if(request.getHeader("referer").contains("/team/details")) {
+                            @controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId())
+                        } else {
+                            @request.getHeader("referer")
+                        }
+                    }
                 </table>
             </td>
         </tr>
