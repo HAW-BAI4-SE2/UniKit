@@ -6,6 +6,7 @@ package controllers.studentComponent;
 
 import assets.Global;
 
+import assets.SessionUtils;
 import models.studentComponent.TeamDatabaseConnector;
 import net.unikit.database.external.interfaces.Course;
 import net.unikit.database.external.interfaces.Student;
@@ -20,6 +21,8 @@ import play.mvc.Result;
 
 import views.html.*;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class TeamController extends Controller {
@@ -126,11 +129,28 @@ public class TeamController extends Controller {
      *  Displays the teams for this course for which the student can request membership
      *  @return
      **/ 
-    public static Result showAvailableTeams(){
+    public static Result showAvailableTeams(int courseID){
         /*
          *  TODO:
          *      get all teams which are not full for a given course
         */
-        return ok(showTeamAvailable.render());
+
+        Student currentUser = SessionUtils.getCurrentUser(session());
+        Date sessionTimeout = SessionUtils.getSessionTimeout(session());
+
+        // =================================== TESTDATA =====================================================
+        List<Team> allTeams = Global.getTeamManager().getAllTeams();
+
+        Course course = Global.getCourseManager().getCourse(courseID);
+        List<Team> teamForCourse = new ArrayList<>();
+
+        for (Team team : allTeams) {
+            if (team.getCourseId() == courseID) {
+                teamForCourse.add(team);
+            }
+        }
+        // =================================== TESTDATA =====================================================
+
+        return ok(showTeamAvailable.render(teamForCourse, course, currentUser, sessionTimeout));
     }
 }

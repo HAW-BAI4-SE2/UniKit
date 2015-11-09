@@ -1,1 +1,35 @@
-@()
+@import snippets._
+
+@(availableTeams: List[net.unikit.database.unikit_.interfaces.Team], course: net.unikit.database.external.interfaces.Course, currentUser: net.unikit.database.external.interfaces.Student, sessionTimeout: java.util.Date)
+
+@main("Anmeldungen", assets.NavigationItem.REGISTRATIONS, currentUser, sessionTimeout) {
+    @evidence(605) {
+        <span class="thick">@course.getName()</span>
+    }
+
+    @if(!availableTeams.isEmpty) {
+        @space()
+
+        @listSection("Verfuegbare Teams", 605) {
+            @for((team, index) <- availableTeams.view.zipWithIndex) {
+                @if(index % 2 == 0) {
+                    @listItemDark() {
+                        Team T@(String.format("%03d", team.getId()))
+                    } {
+                        @buttonRight("Team betrachten") {
+                            @controllers.studentComponent.routes.TeamController.showEditTeam(team.getId())
+                        }
+                    }
+                } else {
+                    @listItemLight() {
+                        Team T@(String.format("%03d", team.getId()))
+                    } {
+                        @buttonRight("Team betrachten") {
+                            @controllers.studentComponent.routes.TeamController.showEditTeam(team.getId())
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
