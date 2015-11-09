@@ -18,40 +18,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class TeamDatabaseUtils {
 
-//    public static Team getTeam(String studentNumber, int courseID) throws NullPointerException{
-//        //Get all registered teams
-//        List<Team> allTeams = Global.getTeamManager().getAllTeams();
-//        List<Team> allTeamsForCourse = new ArrayList<Team>();
-//        List<TeamRegistration> registrationsInTeam;
-//        Team teamForCourse = null;
-//
-//        // Get all teams for this course
-//        for(Team currentTeam : allTeams){
-//            if(currentTeam.getCourseId() == courseID){
-//                allTeamsForCourse.add(currentTeam);
-//            }
-//        }
-//
-//        // Get all registrations in the team
-//        for(Team currentTeam : allTeamsForCourse){
-//            registrationsInTeam = currentTeam.getTeamRegistrations();
-//
-//            // Get the team for which the student is a member
-//            for(TeamRegistration teamRegistration : registrationsInTeam){
-//                if(teamRegistration.getStudentNumber().equals(studentNumber)){
-//                    teamForCourse = currentTeam;
-//                }
-//            }
-//        }
-//
-//        checkNotNull(teamForCourse);
-//        return teamForCourse;
-//    }
-
-
-
-
-
     public static void storeInvitation(String studentNumber, int teamID, Student currentUser) {
         TeamInvitationManager invitationManager = Global.getTeamInvitationManager();
         TeamInvitation newInvitation = invitationManager.createTeamInvitation();
@@ -70,7 +36,7 @@ public class TeamDatabaseUtils {
         invitationManager.addTeamInvitation(newInvitation);
     }
 
-    public static void deleteInvitation(String studentNumber, int teamID, Student currentUser) {
+    public static void deleteInvitation(String studentNumber, int teamID) {
         TeamInvitation teamInvitation = null;
 
         // Get invitation
@@ -120,13 +86,19 @@ public class TeamDatabaseUtils {
 
     public static void addStudentToTeam(String studentNumber, int teamID) {
         UnikitDatabaseUtils.addStudentToTeam(studentNumber,teamID);
+        UnikitDatabaseUtils.changeTeamRegistrationStatus(studentNumber,teamID,true);
     }
 
     public static void removeStudentFromTeam(String studentNumber, int teamID) {
         UnikitDatabaseUtils.removeStudentFromTeam(studentNumber,teamID);
+        UnikitDatabaseUtils.changeTeamRegistrationStatus(studentNumber,teamID,false);
     }
 
-    public static boolean isTeamFull(int teamID) {
+    public static boolean teamCanInvite(int teamID) {
+        return (!isTeamFull(teamID) && hasInvitationSlots(teamID));
+    }
+
+    private static boolean isTeamFull(int teamID) {
         Team currentTeam = UnikitDatabaseUtils.getTeamByID(teamID);
         Course associatedCourse = UnikitDatabaseUtils.getCourseByID(currentTeam.getCourseId());
 
@@ -137,7 +109,7 @@ public class TeamDatabaseUtils {
         }
     }
 
-    public static boolean hasInvitationSlots(int teamID) {
+    private static boolean hasInvitationSlots(int teamID) {
         Team currentTeam = UnikitDatabaseUtils.getTeamByID(teamID);
         Course associatedCourse = UnikitDatabaseUtils.getCourseByID(currentTeam.getCourseId());
 
@@ -146,5 +118,26 @@ public class TeamDatabaseUtils {
         }else{
             return false;
         }
+    }
+
+    public static void deleteMembershipRequest(String studentNumber, int teamID) {
+        checkNotNull(studentNumber);
+        TeamApplicationManager membershipRequestManager = Global.getTeamApplicationManager();
+
+        List<TeamApplication> allMembershipRequests = membershipRequestManager.getAllTeamApplications();
+
+        //Get membership request to be deleted
+        TeamApplication membershipRequestToBeDeleted = null;
+        for(TeamApplication currentMembershipRequest : allMembershipRequests){
+            if(currentMembershipRequest.getTeam().getId() == teamID &&
+                    currentMembershipRequest.getApplicantStudentNumber().equals(studentNumber)){
+                        membershipRequestToBeDeleted = currentMembershipRequest;
+                        break;
+            }
+        }
+
+        //Delete membership request from database
+        checkNotNull(membershipRequestToBeDeleted);
+        membershipRequestManager.deleteTeamApplication(membershipRequestToBeDeleted);
     }
 }

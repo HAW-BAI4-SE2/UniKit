@@ -75,7 +75,7 @@ public class TeamController extends Controller {
         checkNotNull(teamID);
 
         //If team is not full and can invite more students, the invitation is sent
-        if(!TeamDatabaseUtils.isTeamFull(teamID) && TeamDatabaseUtils.hasInvitationSlots(teamID)){
+        if(TeamDatabaseUtils.teamCanInvite(teamID)){
             TeamDatabaseUtils.storeInvitation(studentNumber, teamID, SessionUtils.getCurrentUser(session()));
             //TODO: send mail to all team members
         }else{
@@ -95,7 +95,7 @@ public class TeamController extends Controller {
         checkNotNull(studentNumber);
         checkNotNull(teamID);
 
-        TeamDatabaseUtils.deleteInvitation(studentNumber, teamID, SessionUtils.getCurrentUser(session()));
+        TeamDatabaseUtils.deleteInvitation(studentNumber, teamID);
 
         //TODO send mail to all team members
 
@@ -113,8 +113,7 @@ public class TeamController extends Controller {
         checkNotNull(teamStateChange.teamID);
 
         TeamDatabaseUtils.addStudentToTeam(teamStateChange.studentNumber,teamStateChange.teamID);
-
-        //TODO: delete membership request from database
+        TeamDatabaseUtils.deleteMembershipRequest(teamStateChange.studentNumber,teamStateChange.teamID);
 
         //TODO send mail to all team members
 
@@ -122,13 +121,16 @@ public class TeamController extends Controller {
     }
 
     public static Result declineMembershipRequest(){
-        /*
-         *  TODO:
-         *      delete membership request from database
-         *      send mail to student
-         *      send mail to all team members
-        */
-        int courseID = -1;
+        Form<TeamStateChangeFormModel> declineMembershipRequest =
+                Form.form(TeamStateChangeFormModel.class)
+                        .bindFromRequest();
+        TeamStateChangeFormModel teamStateChange = declineMembershipRequest.get();
+
+        TeamDatabaseUtils.deleteMembershipRequest(teamStateChange.studentNumber,teamStateChange.teamID);
+
+        //TODO: send mail to student
+
+        int courseID = TeamDatabaseUtils.getTeamByID(teamStateChange.teamID).getCourseId();
 
         return CourseController.showCourseDetails(courseID);
     }

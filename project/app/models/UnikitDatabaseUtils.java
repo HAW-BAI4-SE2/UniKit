@@ -5,11 +5,10 @@ package models;
  */
 
 import assets.Global;
-import controllers.courseComponent.CourseRegistrationController;
+
 import net.unikit.database.external.interfaces.Course;
 import net.unikit.database.unikit_.interfaces.*;
 
-import javax.swing.text.TabableView;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -24,13 +23,7 @@ public class UnikitDatabaseUtils {
     public static Course getCourseByID(int courseId) {
         Course course = null;
 
-        List<Course> allCourses = Global.getCourseManager().getAllCourses();
-
-        for(Course currentCourse : allCourses){
-            if(currentCourse.getId() == courseId){
-                course = currentCourse;
-            }
-        }
+        Global.getCourseManager().getCourse(courseId);
 
         checkNotNull(course);
         return course;
@@ -42,16 +35,16 @@ public class UnikitDatabaseUtils {
      * @return the Team-object for the given ID
      */
     public static Team getTeamByID(int teamID) {
-        Team queriedTeam = null;
+        Team team = null;
         List<Team> allTeams = Global.getTeamManager().getAllTeams();
 
         for(Team currentTeam : allTeams){
             if(currentTeam.getId() == teamID){
-                queriedTeam = currentTeam;
+                team = currentTeam;
             }
         }
-        checkNotNull(queriedTeam);
-        return queriedTeam;
+        checkNotNull(team);
+        return team;
     }
 
     /**
@@ -107,10 +100,12 @@ public class UnikitDatabaseUtils {
     }
 
     public static void removeStudentFromTeam(String studentNumber, int teamID) {
-        TeamRegistration teamRegistration = null;
+        checkNotNull(studentNumber);
+        TeamRegistrationManager registrationManager = Global.getTeamRegistrationManager();
 
         // Get registration
-        List<TeamRegistration> allTeamRegistrations = Global.getTeamRegistrationManager().getAllTeamRegistrations();
+        TeamRegistration teamRegistration = null;
+        List<TeamRegistration> allTeamRegistrations = registrationManager.getAllTeamRegistrations();
         for (TeamRegistration currentTeamRegistration : allTeamRegistrations) {
             if (currentTeamRegistration.getStudentNumber().equals(studentNumber) && currentTeamRegistration.getTeam().getId().equals(teamID)) {
                 teamRegistration = currentTeamRegistration;
@@ -129,13 +124,13 @@ public class UnikitDatabaseUtils {
         CourseRegistrationManager courseRegistrationManager = Global.getCourseRegistrationManager();
         List<CourseRegistration> allCourseRegistrations = courseRegistrationManager.getAllCourseRegistrations();
 
-        CourseRegistration courseRegistrationToBUpdated = null;
-
         //Finds the registration for the student and the course ID
+        CourseRegistration courseRegistrationToBUpdated = null;
         for(CourseRegistration currentCourseRegistration : allCourseRegistrations){
             if(currentCourseRegistration.getCourseId() == courseID && currentCourseRegistration.getStudentNumber().equals(studentNumber)){
                 courseRegistrationToBUpdated = currentCourseRegistration;
                 courseRegistrationToBUpdated.setCurrentlyAssignedToTeam(status);
+                break;
             }
         }
 
