@@ -102,12 +102,12 @@
                         } {
                             @buttonRight("In Team aufnehmen") {
                                 <!-- TODO: Change call! -->
-                                @controllers.studentComponent.routes.TeamController.removeMember(member.getStudentNumber(), team.getId())
+                                @controllers.studentComponent.routes.TeamController.acceptMembershipRequest(member.getStudentNumber(), team.getId())
                             }
 
                             @buttonRight("Anfrage ablehnen") {
                                 <!-- TODO: Change call! -->
-                                @controllers.studentComponent.routes.TeamController.removeMember(member.getStudentNumber(), team.getId())
+                                @controllers.studentComponent.routes.TeamController.declineMembershipRequest(member.getStudentNumber(), team.getId())
                             }
                         }
                     } else {
@@ -116,12 +116,12 @@
                         } {
                             @buttonRight("In Team aufnehmen") {
                                 <!-- TODO: Change call! -->
-                                @controllers.studentComponent.routes.TeamController.removeMember(member.getStudentNumber(), team.getId())
+                                @controllers.studentComponent.routes.TeamController.acceptMembershipRequest(member.getStudentNumber(), team.getId())
                             }
 
                             @buttonRight("Anfrage ablehnen") {
                                 <!-- TODO: Change call! -->
-                                @controllers.studentComponent.routes.TeamController.removeMember(member.getStudentNumber(), team.getId())
+                                @controllers.studentComponent.routes.TeamController.declineMembershipRequest(member.getStudentNumber(), team.getId())
                             }
                         }
                     }
@@ -192,13 +192,11 @@
                     <td>
                         <table width="605">
                             @buttonRight("Einladung annehmen") {
-                                    <!-- TODO: Change call! -->
-                                @controllers.studentComponent.routes.TeamController.removeMember(currentUser.getStudentNumber(), team.getId())
-                                }
+                                @controllers.studentComponent.routes.StudentController.acceptInvitation(team.getId())
+                            }
 
                             @buttonRight("Einladung ablehnen") {
-                                <!-- TODO: Change call! -->
-                                @controllers.studentComponent.routes.TeamController.removeMember(currentUser.getStudentNumber(), team.getId())
+                                @controllers.studentComponent.routes.StudentController.declineInvitation(team.getId())
                             }
                         </table>
                     </td>
@@ -212,8 +210,7 @@
                     <td>
                         <table width="605">
                             @buttonRight("Anfrage zurueckziehen") {
-                                    <!-- TODO: Change call! -->
-                                @controllers.studentComponent.routes.TeamController.removeMember(currentUser.getStudentNumber(), team.getId())
+                                @controllers.studentComponent.routes.StudentController.cancelMembershipRequest(team.getId())
                             }
                         </table>
                     </td>
@@ -225,8 +222,7 @@
                     <td>
                         <table width="605">
                         @buttonRight("Beitrittsanfrage versenden") {
-                                <!-- TODO: Change call! -->
-                            @controllers.studentComponent.routes.TeamController.removeMember(currentUser.getStudentNumber(), team.getId())
+                            @controllers.studentComponent.routes.StudentController.requestMembership(team.getId())
                         }
                         </table>
                     </td>
