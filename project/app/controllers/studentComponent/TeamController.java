@@ -115,7 +115,7 @@ public class TeamController extends Controller {
 
         //TODO: send mail to student
 
-        int courseID = TeamDatabaseUtils.getTeamByID(teamStateChange.teamID).getCourseId();
+        int courseID = TeamDatabaseUtils.getTeamByID(teamID).getCourseId();
 
         return CourseController.showCourseDetails(courseID);
     }
