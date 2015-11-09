@@ -134,9 +134,6 @@ public class StudentDatabaseUtils {
     }
 
     public static Team getTeamByID(int teamID) {
-        Team team = null;
-        UnikitDatabaseUtils.getTeamByID(teamID);
-        checkNotNull(team);
-        return team;
+       return UnikitDatabaseUtils.getTeamByID(teamID);
     }
 }
