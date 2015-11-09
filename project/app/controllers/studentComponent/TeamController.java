@@ -49,10 +49,8 @@ public class TeamController extends Controller {
     }
 
     public static Result removeMember(String studentNumber, int teamID){
-
-        //TODO: actual form validation
         checkNotNull(studentNumber);
-        checkNotNull(teamID);
+        if(teamID < 0) throw new NullPointerException();
 
         TeamDatabaseUtils.removeStudentFromTeam(studentNumber, teamID);
 
@@ -69,10 +67,8 @@ public class TeamController extends Controller {
     }
 
     public static Result inviteStudent(String studentNumber, int teamID) {
-
-        //TODO: actual form validation
         checkNotNull(studentNumber);
-        checkNotNull(teamID);
+        if(teamID < 0) throw new NullPointerException();
 
         //If team is not full and can invite more students, the invitation is sent
         if(TeamDatabaseUtils.teamCanInvite(teamID)){
@@ -86,10 +82,8 @@ public class TeamController extends Controller {
     }
 
     public static Result cancelInvitation(String studentNumber, int teamID){
-
-        //TODO: actual form validation
         checkNotNull(studentNumber);
-        checkNotNull(teamID);
+        if(teamID < 0) throw new NullPointerException();
 
         TeamDatabaseUtils.deleteInvitation(studentNumber, teamID);
 

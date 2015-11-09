@@ -26,17 +26,13 @@ public class StudentController extends Controller {
      *  @return showEditTeam-page
      */
     public static Result createTeam(int courseID){
-//        Form<CreateTeamFormModel> createTeamForm =
-//                Form.form(CreateTeamFormModel.class)
-//                        .bindFromRequest();
-//        CreateTeamFormModel createTeam = createTeamForm.get();
 
         Student currentUser = SessionUtils.getCurrentUser(session());
         Date sessionTimeout = SessionUtils.getSessionTimeout(session());
 
         //TODO: form validation
         checkNotNull(currentUser.getStudentNumber());
-        checkNotNull(courseID);
+        if(courseID < 0) throw new NullPointerException();
 
         int newTeam = StudentDatabaseUtils.createTeam(currentUser.getStudentNumber(), courseID);
 
@@ -56,18 +52,13 @@ public class StudentController extends Controller {
         return CourseController.showCourseDetails(courseForTeam);
     }
 
-    public static Result acceptInvitation(){
-        Form<TeamStateChangeFormModel> acceptInvitation =
-                Form.form(TeamStateChangeFormModel.class)
-                        .bindFromRequest();
-        TeamStateChangeFormModel teamStateChange = acceptInvitation.get();
+    public static Result acceptInvitation(int teamID){
+        if(teamID < 0) throw new NullPointerException();
 
-        //TODO: actual form validation
-        checkNotNull(teamStateChange.studentNumber);
-        checkNotNull(teamStateChange.teamID);
+        Student currentUser = SessionUtils.getCurrentUser(session());
 
         //Add the student to the team and updates registration status
-        StudentDatabaseUtils.acceptInvitation(teamStateChange.studentNumber, teamStateChange.teamID);
+        StudentDatabaseUtils.acceptInvitation(currentUser.getStudentNumber(), teamID);
 
         //TODO: send mail to team members
 
@@ -77,21 +68,16 @@ public class StudentController extends Controller {
     /**
      *   Declines (deletes) the invitation for the student by the team. The relevant data is retrived using a TeamStateChangeForm-object
      **/
-    public static Result declineInvitation(){
-        Form<TeamStateChangeFormModel> declinedInvitationForm =
-                Form.form(TeamStateChangeFormModel.class)
-                        .bindFromRequest();
-        TeamStateChangeFormModel declinedInvitation = declinedInvitationForm.get();
+    public static Result declineInvitation(int teamID){
+        if(teamID < 0) throw new NullPointerException();
 
-        //TODO: actual form validation
-        checkNotNull(declinedInvitation.studentNumber);
-        checkNotNull(declinedInvitation.teamID);
+        Student currentUser = SessionUtils.getCurrentUser(session());
 
-        StudentDatabaseUtils.deleteInvitation(declinedInvitation.studentNumber,declinedInvitation.teamID);
+        StudentDatabaseUtils.deleteInvitation(currentUser.getStudentNumber(),teamID);
 
         //TODO: send mail to teammembers & student
 
-        return TeamController.showEditTeam(declinedInvitation.teamID);
+        return TeamController.showEditTeam(teamID);
     }
     /**
      *  The student requests the membership with the team. The relevant data is retrived using a TeamStateChangeForm-object
