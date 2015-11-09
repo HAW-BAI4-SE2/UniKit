@@ -108,12 +108,8 @@ public class StudentController extends Controller {
 
         Student currentUser = SessionUtils.getCurrentUser(session());
 
-        try{
-            StudentDatabaseUtils.deleteMembershipRequest(currentUser.getStudentNumber(),teamID);
-        }catch(NullPointerException npl){
-            System.out.println("Error deleting membershiprequest");;
-        }
-
+        StudentDatabaseUtils.deleteMembershipRequest(currentUser.getStudentNumber(),teamID);
+        
         //TODO: send mail to student
 
         int courseToDispay = StudentDatabaseUtils.getTeamByID(teamID).getCourseId();
