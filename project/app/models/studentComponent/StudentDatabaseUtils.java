@@ -72,14 +72,19 @@ public class StudentDatabaseUtils {
         //Add student to team
         UnikitDatabaseUtils.addStudentToTeam(studentNumber, teamID);
 
-        //Delete invitation
-        UnikitDatabaseUtils.deleteInvitation(studentNumber, teamID);
-
         //Get course associated with the team
         int associatedCourse = UnikitDatabaseUtils.getTeamByID(teamID).getCourseId();
 
         //Update registration status to team registration
         UnikitDatabaseUtils.changeTeamRegistrationStatus(studentNumber, associatedCourse, true);
+
+        //Delete invitation
+        UnikitDatabaseUtils.deleteInvitation(studentNumber, teamID);
+        try{
+            UnikitDatabaseUtils.deleteMembershipRequest(studentNumber,teamID);
+        }catch(NullPointerException n){
+
+        }
     }
 
     /**
@@ -114,7 +119,7 @@ public class StudentDatabaseUtils {
      * @param studentNumber the student number of the student who requests membership
      * @param teamID the ID of the team that gets the membership request
      */
-    public static void deleteMembershipRequest(String studentNumber, int teamID) {
+    public static void deleteMembershipRequest(String studentNumber, int teamID) throws NullPointerException {
         checkNotNull(studentNumber);
         TeamApplicationManager membershipRequestManager = Global.getTeamApplicationManager();
 
@@ -131,6 +136,8 @@ public class StudentDatabaseUtils {
         }
 
         checkNotNull(membershipRequestToBeDeleted);
+
+        membershipRequestManager.deleteTeamApplication(membershipRequestToBeDeleted);
     }
 
     public static Team getTeamByID(int teamID) {

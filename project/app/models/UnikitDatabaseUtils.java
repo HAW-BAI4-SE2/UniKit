@@ -33,6 +33,7 @@ public class UnikitDatabaseUtils {
 
     public static void addStudentToTeam(String studentNumber, int teamID) {
         TeamRegistrationManager registrationManager = Global.getTeamRegistrationManager();
+
         TeamRegistration newTeamRegistration = registrationManager.createTeamRegistration();
         Team teamByID = UnikitDatabaseUtils.getTeamByID(teamID);
 
@@ -137,14 +138,14 @@ public class UnikitDatabaseUtils {
         List<Team> allTeams = teamManager.getAllTeams();
 
         for(Team currentTeam : allTeams){
-            if(currentTeam.getId() == teamID){
+            if(currentTeam.getId().equals(teamID)){
                 teamToBeDeleted = currentTeam;
             }
         }
 
         //TODO: better logic if team doestn exist
         checkNotNull(teamToBeDeleted);
-        int courseForTeamID = courseForTeamID = teamToBeDeleted.getCourseId();
+        int courseForTeamID = teamToBeDeleted.getCourseId();
 
         //Update status of students to single registration
         for(TeamRegistration currentRegistration : teamToBeDeleted.getTeamRegistrations()){
@@ -153,8 +154,30 @@ public class UnikitDatabaseUtils {
         }
 
         //Delete team
+        checkNotNull(teamToBeDeleted);
         teamManager.deleteTeam(teamToBeDeleted);
 
         return courseForTeamID;
+    }
+
+    public static void deleteMembershipRequest(String studentNumber, int teamID) {
+        checkNotNull(studentNumber);
+        TeamApplicationManager membershipRequestManager = Global.getTeamApplicationManager();
+
+        List<TeamApplication> allMembershipRequests = membershipRequestManager.getAllTeamApplications();
+
+        //Get membership request to be deleted
+        TeamApplication membershipRequestToBeDeleted = null;
+        for(TeamApplication currentMembershipRequest : allMembershipRequests){
+            if(currentMembershipRequest.getTeam().getId().equals(teamID) &&
+                    currentMembershipRequest.getApplicantStudentNumber().equals(studentNumber)){
+                membershipRequestToBeDeleted = currentMembershipRequest;
+                break;
+            }
+        }
+
+        //Delete membership request from database
+        checkNotNull(membershipRequestToBeDeleted);
+        membershipRequestManager.deleteTeamApplication(membershipRequestToBeDeleted);
     }
 }

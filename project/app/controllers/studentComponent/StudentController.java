@@ -5,12 +5,14 @@ package controllers.studentComponent;
  */
 
 import assets.SessionUtils;
+import com.typesafe.config.ConfigException;
 import models.studentComponent.FormModels.TeamStateChangeFormModel;
 import models.studentComponent.StudentDatabaseUtils;
 
 import controllers.courseComponent.CourseController;
 
 import net.unikit.database.external.interfaces.Student;
+import play.api.mvc.Flash;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -106,8 +108,11 @@ public class StudentController extends Controller {
 
         Student currentUser = SessionUtils.getCurrentUser(session());
 
-
-        StudentDatabaseUtils.deleteMembershipRequest(currentUser.getStudentNumber(),teamID);
+        try{
+            StudentDatabaseUtils.deleteMembershipRequest(currentUser.getStudentNumber(),teamID);
+        }catch(NullPointerException npl){
+            System.out.println("Error deleting membershiprequest");;
+        }
 
         //TODO: send mail to student
 

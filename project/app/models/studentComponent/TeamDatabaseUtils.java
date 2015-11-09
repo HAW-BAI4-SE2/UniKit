@@ -113,27 +113,23 @@ public class TeamDatabaseUtils {
     }
 
     public static void deleteMembershipRequest(String studentNumber, int teamID) {
-        checkNotNull(studentNumber);
-        TeamApplicationManager membershipRequestManager = Global.getTeamApplicationManager();
-
-        List<TeamApplication> allMembershipRequests = membershipRequestManager.getAllTeamApplications();
-
-        //Get membership request to be deleted
-        TeamApplication membershipRequestToBeDeleted = null;
-        for(TeamApplication currentMembershipRequest : allMembershipRequests){
-            if(currentMembershipRequest.getTeam().getId().equals(teamID) &&
-                    currentMembershipRequest.getApplicantStudentNumber().equals(studentNumber)){
-                        membershipRequestToBeDeleted = currentMembershipRequest;
-                        break;
-            }
-        }
-
-        //Delete membership request from database
-        checkNotNull(membershipRequestToBeDeleted);
-        membershipRequestManager.deleteTeamApplication(membershipRequestToBeDeleted);
+        UnikitDatabaseUtils.deleteMembershipRequest(studentNumber,teamID);
     }
 
     public static void deleteTeam(int teamID) {
         UnikitDatabaseUtils.deleteTeam(teamID);
+    }
+
+    public static boolean isMembershipRequested(String studentNumber, int teamID) {
+        boolean isMembershipRequested = false;
+        TeamApplicationManager membershipRequestManager = Global.getTeamApplicationManager();
+        List<TeamApplication> allMembershipRequests = membershipRequestManager.getAllTeamApplications();
+
+        for(TeamApplication currentMembershipRequest : allMembershipRequests){
+            if(currentMembershipRequest.getApplicantStudentNumber().equals(studentNumber) && currentMembershipRequest.getTeam().getId().equals(teamID)){
+                isMembershipRequested = true;
+            }
+        }
+        return isMembershipRequested;
     }
 }
