@@ -4,20 +4,18 @@ package controllers.studentComponent;
  * @author Thomas Bednorz
  */
 
+import assets.Global;
 import assets.SessionUtils;
-import com.typesafe.config.ConfigException;
-import models.studentComponent.FormModels.TeamStateChangeFormModel;
-import models.studentComponent.StudentDatabaseUtils;
-
 import controllers.courseComponent.CourseController;
-
+import models.studentComponent.StudentDatabaseUtils;
 import net.unikit.database.external.interfaces.Student;
-import play.api.mvc.Flash;
-import play.data.Form;
+import net.unikit.database.unikit_.interfaces.TeamInvitation;
+import net.unikit.database.unikit_.interfaces.TeamInvitationManager;
 import play.mvc.Controller;
 import play.mvc.Result;
 
 import java.util.Date;
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -75,7 +73,7 @@ public class StudentController extends Controller {
 
         Student currentUser = SessionUtils.getCurrentUser(session());
 
-        StudentDatabaseUtils.deleteInvitation(currentUser.getStudentNumber(),teamID);
+        StudentDatabaseUtils.deleteInvitation(currentUser.getStudentNumber(), teamID);
 
         //TODO: send mail to teammembers & student
 
@@ -90,13 +88,32 @@ public class StudentController extends Controller {
 
         Student currentUser = SessionUtils.getCurrentUser(session());
 
-        StudentDatabaseUtils.storeMembershipRequest(currentUser.getStudentNumber(), teamID);
+        if (isInvited(teamID)) {
+            acceptInvitation(teamID);
+        } else {
+            StudentDatabaseUtils.storeMembershipRequest(currentUser.getStudentNumber(), teamID);
+        }
 
         //TODO: send mail to team members & student
 
         int courseToDispay = StudentDatabaseUtils.getTeamByID(teamID).getCourseId();
 
         return CourseController.showCourseDetails(courseToDispay);
+    }
+
+    private static boolean isInvited(int teamID) {
+        Student currentUser = SessionUtils.getCurrentUser(session());
+
+        TeamInvitationManager invitationManager = Global.getTeamInvitationManager();
+        List<TeamInvitation> allTeamInvitations = invitationManager.getAllTeamInvitations();
+
+        for(TeamInvitation currentInvitation : allTeamInvitations){
+            if(currentInvitation.getTeam().getId().equals(teamID) && currentInvitation.getInviteeStudentNumber().equals(currentUser.getStudentNumber())){
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
