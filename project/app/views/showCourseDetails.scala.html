@@ -1,299 +1,113 @@
-@import helper._
+@import snippets._
 
 @(currentTeam: net.unikit.database.unikit_.interfaces.Team, currentInvitations: List[net.unikit.database.unikit_.interfaces.Team], currentMembershipRequests: List[net.unikit.database.unikit_.interfaces.Team], course: net.unikit.database.external.interfaces.Course, currentUser: net.unikit.database.external.interfaces.Student, sessionTimeout: java.util.Date)
 
 @main(course.getName(), assets.NavigationItem.REGISTRATIONS, currentUser, sessionTimeout) {
-<table width="705" >
- <tr>
-	<td><span class="thick">@(course.getName())</span></td>
- </tr>
-</table>
+    @evidence(705) {
+        <span class="thick">@(course.getName())</span>
+    }
 
-<tr><td>&nbsp;</td></tr>
+    @listSection("Ihr aktueller Status", 705) {
+        @if(currentTeam == null) {
+            @listItemWhite() {
+                <div style="margin-left: 30px;">
+                    Sie sind keinem Team zugeordnet!
+                </div>
+            } {&nbsp;}
 
+            @listItemWhite() {
+                <div style="margin-left: 30px;">
+                    @buttonLeft("Team erstellen") {
+                        @controllers.studentComponent.routes.StudentController.createTeam(course.getId())
+                    }
+                </div>
+            } {&nbsp;}
 
+            @listItemWhite() {
+                <div style="margin-left: 30px;">
+                    @buttonLeft("Beitrittsanfrage versenden") {
+                        @controllers.studentComponent.routes.TeamController.showTeamOverview(course.getId())
+                    }
+                </div>
+            } {&nbsp;}
+        } else {
+            @listItemWhite() {
+                <div style="margin-left: 30px;">
+                    Sie sind dem Team 'T@(String.format("%03d", currentTeam.getId()))' zugeordnet!
+                </div>
+            } {&nbsp;}
 
+            @listItemWhite() {
+                <div style="margin-left: 30px;">
+                    @buttonLeft("Team bearbeiten") {
+                        @controllers.studentComponent.routes.TeamController.showEditTeam(currentTeam.getId())
+                    }
+                </div>
+            } {&nbsp;}
 
+            @listItemWhite() {
+                <div style="margin-left: 30px;">
+                    @buttonLeft("Team verlassen") {
+                        @controllers.studentComponent.routes.TeamController.removeMember(currentUser.getStudentNumber(), currentTeam.getId())
+                    }
+                </div>
+            } {&nbsp;}
+        }
+    }
 
+    @if(currentTeam == null && !currentInvitations.isEmpty) {
+        @space()
 
-
-<table width="705" cellspacing="0" cellpadding="0" >
-
-	<tr>
-		<td valign="top"/>
-            <!-- TABLE_HEADER_START -->
-		    <table width="705"  cellspacing="0" cellpadding="0" class="tableframe">
-	 		 <tr>
-				<td>&nbsp;&nbsp;Ihr aktueller Status
-					<td align="right"><a href="javascript:openWin('getHelp.do?keyword=prtQut','200','300','help');">Hilfe</a>&nbsp; </td>
-				</td>
-			 </tr>
-		    </table>
-            <!-- TABLE_HEADER_END -->
-            
-            
-            
-            <!-- TABLE_CONTENT_START -->
-		    <table width="705" cellspacing="0" cellpadding="0" class="tablecontent">
-			    @if(currentTeam == null) {
-			      <tr><td>&nbsp;</td></tr>
-                  
-                  <!-- TEXT_START -->
-                  <tr>
-			  	    <td align="left" style="padding-left: 50px;"><span class="thick">Sie sind keinem Team zugeordnet!</span></td>
-				    <td align="right"></td>
-				  </tr>
-                  <!-- TEXT_END -->
-                  
-				  <tr><td>&nbsp;</td></tr>
-                  
-                  <!-- BUTTON_START -->
-                  <tr>
-				  	<td align="left" style="padding-left: 50px;">
-                    <div class="button button_active" >
-                        <div class="button_a_left" >&nbsp;</div>
-                        
-                        <div class="button_a_center">
-                            <a href='@controllers.studentComponent.routes.StudentController.createTeam(course.getId())' class="button_link">Team erstellen</a>
-                        </div>
-                        
-                        <div class="button_a_right"/>&nbsp;</div>
-                    </div>
-                    </td>
-					<td align="right"></td>
-				  </tr>
-                  <!-- BUTTON_END -->
-                  
-                  
-                  
-                  
-                  <!-- BUTTON_START -->
-                  <tr>
-				  	<td align="left" style="padding-left: 50px;">
-                    <div class="button button_active" >
-                        <div class="button_a_left" >&nbsp;</div>
-                        
-                        <div class="button_a_center">
-                            <a href='@controllers.studentComponent.routes.TeamController.showTeamOverview(course.getId())' class="button_link">Beitrittsanfrage versenden</a>
-                        </div>
-                        
-                        <div class="button_a_right"/>&nbsp;</div>
-                    </div>
-                    </td>
-					<td align="right"></td>
-				  </tr>
-                  <!-- BUTTON_END -->
-                  
-                  <tr><td>&nbsp;</td></tr>
-				} else {
-                  <tr><td>&nbsp;</td></tr>
-                  
-                  <tr>
-			  	    <td align="left" style="padding-left: 50px;"><span class="thick">Sie sind dem Team 'T@(String.format("%03d", currentTeam.getId()))' zugeordnet!</span></td>
-				    <td align="right"></td>
-				  </tr>
-                  
-				  <tr><td>&nbsp;</td></tr>
-                  
-                  <!-- BUTTON_START -->
-                  <tr>
-				  	<td align="left" style="padding-left: 50px;">
-                    <div class="button button_active" >
-                        <div class="button_a_left" >&nbsp;</div>
-                        
-                        <div class="button_a_center">
-                            <a href='@controllers.studentComponent.routes.TeamController.showEditTeam(currentTeam.getId())' class="button_link">Team bearbeiten</a>
-                        </div>
-                        
-                        <div class="button_a_right"/>&nbsp;</div>
-                    </div>
-                    </td>
-					<td align="right"></td>
-				  </tr>
-                  <!-- BUTTON_END -->
-                  
-                  
-                  
-                  
-                  
-                  <!-- BUTTON_START -->
-                  <tr>
-				  	<td align="left" style="padding-left: 50px;">
-                    <div class="button button_active" >
-                        <div class="button_a_left" >&nbsp;</div>
-                        
-                        <div class="button_a_center">
-                            <a href='@controllers.studentComponent.routes.TeamController.removeMember(currentUser.getStudentNumber(), currentTeam.getId())' class="button_link">Team verlassen</a>
-                        </div>
-                        
-                        <div class="button_a_right"/>&nbsp;</div>
-                    </div>
-                    </td>
-					<td align="right"></td>
-				  </tr>
-                  <!-- BUTTON_END -->
-                  
-                  <tr><td>&nbsp;</td></tr>
+        @listSection("Erhaltene Teameinladungen", 705) {
+            @for((team, index) <- currentInvitations.view.zipWithIndex) {
+                @if(index % 2 == 0) {
+                    @listItemDark() {
+                        Team T@(String.format("%03d", team.getId()))
+                    } {
+                        @buttonRight("Team betrachten") {
+                            @controllers.studentComponent.routes.TeamController.showEditTeam(team.getId())
+                        }
+                    }
+                } else {
+                    @listItemLight() {
+                        Team T@(String.format("%03d", team.getId()))
+                    } {
+                        @buttonRight("Team betrachten") {
+                            @controllers.studentComponent.routes.TeamController.showEditTeam(team.getId())
+                        }
+                    }
                 }
-			</table>
-            <!-- TABLE_CONTENT_END -->
-	</td>
-  </tr>
-</table>
+            }
+        }
+    }
 
-<br>
+    @if(currentTeam == null && !currentMembershipRequests.isEmpty) {
+        @space()
 
+        @listSection("Versendete Beitrittsanfragen", 705) {
+            @for((team, index) <- currentMembershipRequests.view.zipWithIndex) {
+                @if(index % 2 == 0) {
+                    @listItemDark() {
+                        Team T@(String.format("%03d", team.getId()))
+                    } {
+                        @buttonRight("Team betrachten") {
+                            @controllers.studentComponent.routes.TeamController.showEditTeam(team.getId())
+                        }
+                    }
+                } else {
+                    @listItemLight() {
+                        Team T@(String.format("%03d", team.getId()))
+                    } {
+                        @buttonRight("Team betrachten") {
+                            @controllers.studentComponent.routes.TeamController.showEditTeam(team.getId())
+                        }
+                    }
+                }
+            }
+        }
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-@if(currentTeam == null && !currentInvitations.isEmpty()) {
-<table width="705">
-  <tr>
-    <td> 
-	   <table width="705" cellspacing="0" cellpadding="0" class="tableframe">
-		  <tr>
-			<td align="left">&nbsp;&nbsp;Erhaltene Teameinladungen</td>
-			<td align="right"><a href="javascript:openWin('getHelp.do?keyword=persDat','200','300','help');">Hilfe</a>&nbsp;</td>
-		  </tr>
-	   </table>
-       
-	   <table width="705" cellspacing="0" cellpadding="0" class="tablecontent">
-          @for((team, index) <- currentInvitations.view.zipWithIndex) {
-              <tr class="@if(index % 2 == 0) {tablecontentbackdark} else {tablecontentbacklight}">
-                <td align="left"><span class="thick">Team T@(String.format("%03d", team.getId()))</span></td>
-                <td align="right">
-                    <!-- BUTTON_START -->
-                    <div class="button button_active button_right" >
-                        <div class="button_a_left" >&nbsp;</div>
-                        
-                        <div class="button_a_center">
-                            <a href='@controllers.studentComponent.routes.TeamController.showEditTeam(team.getId())' class="button_link">Team betrachten</a>
-                        </div>
-                        
-                        <div class="button_a_right"/>&nbsp;</div>
-                    </div>
-                    <!-- BUTTON_END -->
-                </td>
-              </tr>
-              
-              <tr>
-                <td colspan="2" height="1"></td>
-              </tr>
-          }
-          
-		</table>
- 
-<br>
-}
- 
- 
- 
- 
- 
- 
- 
-@if(currentTeam == null && !currentMembershipRequests.isEmpty()) {
- <table width="705">
-  <tr>
-    <td> 
-	   <table width="705" cellspacing="0" cellpadding="0" class="tableframe">
-		  <tr>
-			<td align="left">&nbsp;&nbsp;Versendete Beitrittsanfragen</td>
-			<td align="right"><a href="javascript:openWin('getHelp.do?keyword=persDat','200','300','help');">Hilfe</a>&nbsp;</td>
-		  </tr>
-	   </table>
-				
-	   <table width="705" cellspacing="0" cellpadding="0" class="tablecontent">
-		  @for((team, index) <- currentMembershipRequests.view.zipWithIndex) {
-              <tr class="@if(index % 2 == 0) {tablecontentbackdark} else {tablecontentbacklight}">
-                <td align="left"><span class="thick">Team T@(String.format("%03d", team.getId()))</span></td>
-                <td align="right">
-                    <!-- BUTTON_START -->
-                    <div class="button button_active button_right" >
-                        <div class="button_a_left" >&nbsp;</div>
-                        
-                        <div class="button_a_center">
-                            <a href='@controllers.studentComponent.routes.TeamController.showEditTeam(team.getId())' class="button_link">Team betrachten</a>
-                        </div>
-                        
-                        <div class="button_a_right"/>&nbsp;</div>
-                    </div>
-                    <!-- BUTTON_END -->
-                </td>
-              </tr>
-              
-              <tr>
-                <td colspan="2" height="1"></td>
-              </tr>
-          }
-          
-		</table>
-
- 
- <br>
- 
-}
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-<table width="705" cellspacing="0" cellpadding="0" >
-
-	<tr>
-		<td valign="top"/>	 <!-- Printquoten -->
-
-		
-		
-		 
-		 
-		    <table width="705"  cellspacing="0" cellpadding="0" class="tableframe">
-	 		 <tr>
-				<td>&nbsp;&nbsp;Modulbeschreibung
-					<td align="right"><a href="javascript:openWin('getHelp.do?keyword=prtQut','200','300','help');">Hilfe</a>&nbsp; </td>
-				</td>
-			 </tr>
-		    </table>
-
-		    <img src='@routes.Assets.at("images/descriptions/" + course.getAbbreviation() + ".png")' width="705">
-			
-			
-		
-
-	</td>
-  </tr>
-</table>
+    @listSection("Modulbeschreibung", 705) {
+        <img src='@routes.Assets.at("images/descriptions/" + course.getAbbreviation() + ".png")' width="705">
+    }
 }
