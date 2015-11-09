@@ -21,7 +21,7 @@ public class UnikitDatabaseUtils {
         TeamInvitation invitationToBeDeleted = null;
 
         for(TeamInvitation currentInvitation : allTeamInvitations){
-            if(currentInvitation.getId() == teamID && currentInvitation.getInviteeStudentNumber().equals(studentNumber)){
+            if(currentInvitation.getId().equals(teamID) && currentInvitation.getInviteeStudentNumber().equals(studentNumber)){
                invitationToBeDeleted = currentInvitation;
             }
         }
@@ -90,7 +90,7 @@ public class UnikitDatabaseUtils {
     public static Course getCourseByID(int courseId) {
         Course course = null;
 
-        Global.getCourseManager().getCourse(courseId);
+        course = Global.getCourseManager().getCourse(courseId);
 
         checkNotNull(course);
         return course;
@@ -104,7 +104,7 @@ public class UnikitDatabaseUtils {
     public static Team getTeamByID(int teamID) {
         Team team = null;
 
-        Global.getTeamManager().getTeam(teamID);
+        team = Global.getTeamManager().getTeam(teamID);
 
         checkNotNull(team);
         return team;

@@ -65,7 +65,7 @@ public class TeamDatabaseUtils {
 
         //Get all registrations for team
         for(Team currentTeam : allTeams){
-            if(currentTeam.getId() == team.getId()){
+            if(currentTeam.getId().equals(team.getId())){
                 allRegistrationsForTeam = currentTeam.getTeamRegistrations();
             }
         }
@@ -129,7 +129,7 @@ public class TeamDatabaseUtils {
         //Get membership request to be deleted
         TeamApplication membershipRequestToBeDeleted = null;
         for(TeamApplication currentMembershipRequest : allMembershipRequests){
-            if(currentMembershipRequest.getTeam().getId() == teamID &&
+            if(currentMembershipRequest.getTeam().getId().equals(teamID) &&
                     currentMembershipRequest.getApplicantStudentNumber().equals(studentNumber)){
                         membershipRequestToBeDeleted = currentMembershipRequest;
                         break;
