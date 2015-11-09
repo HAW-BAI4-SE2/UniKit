@@ -51,7 +51,6 @@ public class StudentController extends Controller {
      *  @return showCourseDetails-page for the course the team was associated with
      */
     public static Result deleteTeam(int teamID){
-        //TODO: send mail to all teammembers
 
         int courseForTeam = StudentDatabaseUtils.deleteTeam(teamID);
         return CourseController.showCourseDetails(courseForTeam);
@@ -99,10 +98,6 @@ public class StudentController extends Controller {
      *  @return showCourseDetails-page
     **/
     public static Result requestMembership(){
-        /* TODO:
-         *      persist membershiprequest from a student to database
-         *      send mail to student and potential teammembers
-         */
         Form<TeamStateChangeFormModel> requestMembershipForm =
                 Form.form(TeamStateChangeFormModel.class)
                         .bindFromRequest();
