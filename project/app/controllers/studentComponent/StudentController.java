@@ -47,7 +47,7 @@ public class StudentController extends Controller {
 
         //TODO send mail to student
 
-        return TeamController.showEditTeam(newTeam);
+        return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(newTeam));
     }
 
     /**

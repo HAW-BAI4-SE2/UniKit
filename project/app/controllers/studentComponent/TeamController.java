@@ -44,7 +44,7 @@ public class TeamController extends Controller {
 
          //TODO: send mail to all team members
 
-         return showEditTeam(teamStateChange.teamID);
+         return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamStateChange.teamID));
     }
 
     public static Result removeMember(String studentNumber, int teamID){
@@ -57,11 +57,11 @@ public class TeamController extends Controller {
         checkNotNull(studentNumber);
         checkNotNull(teamID);
 
-        TeamDatabaseUtils.removeStudentFromTeam(studentNumber,teamID);
+        TeamDatabaseUtils.removeStudentFromTeam(studentNumber, teamID);
 
         //TODO send mail to all team members
 
-        return showEditTeam(teamID);
+        return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
     }
 
     public static Result inviteStudent(String studentNumber, int teamID) {
@@ -82,7 +82,7 @@ public class TeamController extends Controller {
             //TODO: feedback if team is full or max invitations reached
         }
 
-        return showEditTeam(teamID);
+        return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
     }
 
     public static Result cancelInvitation(String studentNumber, int teamID){
@@ -99,7 +99,7 @@ public class TeamController extends Controller {
 
         //TODO send mail to all team members
 
-        return showEditTeam(teamID);
+        return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
     }
 
     public static Result acceptMembershipRequest(){
