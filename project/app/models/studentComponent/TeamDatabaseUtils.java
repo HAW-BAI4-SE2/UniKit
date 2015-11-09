@@ -142,7 +142,7 @@ public class TeamDatabaseUtils {
         Team currentTeam = UnikitDatabaseUtils.getTeamByID(teamID);
         Course associatedCourse = UnikitDatabaseUtils.getCourseByID(currentTeam.getCourseId());
 
-        if(currentTeam.getTeamInvitations().size() >= associatedCourse.getMaxTeamSize()){
+        if(currentTeam.getTeamInvitations().size() <= associatedCourse.getMaxTeamSize()){
             return true;
         }else{
             return false;
