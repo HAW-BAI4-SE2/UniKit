@@ -74,8 +74,7 @@ public class TeamController extends Controller {
         if(TeamDatabaseUtils.teamCanInvite(teamID)){
             //If student already requested membership, he is automatically added to the team
             if(TeamDatabaseUtils.isMembershipRequested(studentNumber,teamID)){
-                TeamDatabaseUtils.addStudentToTeam(studentNumber,teamID);
-                TeamDatabaseUtils.deleteMembershipRequest(studentNumber,teamID);
+                acceptMembershipRequest(studentNumber,teamID);
             }else{
                 TeamDatabaseUtils.storeInvitation(studentNumber, teamID, SessionUtils.getCurrentUser(session()));
             }
