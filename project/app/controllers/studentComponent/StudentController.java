@@ -62,7 +62,7 @@ public class StudentController extends Controller {
 
         //TODO: send mail to team members
 
-        return TeamController.addMember();
+        return TeamController.addMember(currentUser.getStudentNumber(), teamID);
     }
 
     /**

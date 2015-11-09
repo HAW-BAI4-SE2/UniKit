@@ -31,21 +31,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class TeamController extends Controller {
 
-     public static Result addMember() {
-         Form<TeamStateChangeFormModel> addStudentToTeam =
-                 Form.form(TeamStateChangeFormModel.class)
-                         .bindFromRequest();
-         TeamStateChangeFormModel teamStateChange = addStudentToTeam.get();
+     public static Result addMember(String studentNumber, int teamID) {
+         checkNotNull(studentNumber);
+         if(teamID < 0) throw new NullPointerException();
 
-         //TODO: actual form validation
-         checkNotNull(teamStateChange.studentNumber);
-         checkNotNull(teamStateChange.teamID);
-
-         TeamDatabaseUtils.addStudentToTeam(teamStateChange.studentNumber,teamStateChange.teamID);
+         TeamDatabaseUtils.addStudentToTeam(studentNumber,teamID);
 
          //TODO: send mail to all team members
 
-         return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamStateChange.teamID));
+         return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
     }
 
     public static Result removeMember(String studentNumber, int teamID){
