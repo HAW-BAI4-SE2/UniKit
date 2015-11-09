@@ -17,7 +17,7 @@
                         Team T@(String.format("%03d", team.getId()))
                     } {
                         @buttonRight("Team betrachten") {
-                            @controllers.studentComponent.routes.TeamController.showEditTeam(team.getId())
+                            @controllers.studentComponent.routes.TeamController.showTeamOverview(team.getId())
                         }
                     }
                 } else {
@@ -25,7 +25,7 @@
                         Team T@(String.format("%03d", team.getId()))
                     } {
                         @buttonRight("Team betrachten") {
-                            @controllers.studentComponent.routes.TeamController.showEditTeam(team.getId())
+                            @controllers.studentComponent.routes.TeamController.showTeamOverview(team.getId())
                         }
                     }
                 }

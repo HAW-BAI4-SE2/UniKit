@@ -8,6 +8,7 @@ package controllers.courseComponent;
  */
 
 import assets.Global;
+import assets.SessionUtils;
 import models.courseComponent.CourseDatabaseUtils;
 import models.courseComponent.FormModels.CourseRegistrationFormModel;
 import models.courseComponent.FormModels.OverviewCourseRegistrationModel;
@@ -20,6 +21,7 @@ import play.mvc.Result;
 import views.html.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class CourseRegistrationController extends Controller {
@@ -35,6 +37,9 @@ public class CourseRegistrationController extends Controller {
     *@return showCourseOverview page displaying all course registrations for the user
      **/
     public static Result showCourseOverview() {
+        Student currentUser = SessionUtils.getCurrentUser(session());
+        Date sessionTimeout = SessionUtils.getSessionTimeout(session());
+
         OverviewCourseRegistrationModel allRegistrationsCurrentUser = new OverviewCourseRegistrationModel(currentUser.getStudentNumber());
 
         List<CourseRegistration> allCourseRegistrations = Global.getCourseRegistrationManager().getAllCourseRegistrations();
@@ -47,7 +52,7 @@ public class CourseRegistrationController extends Controller {
             }
         }
 
-        return ok(showCourseOverview.render(allRegistrationsCurrentUser));
+        return ok(showCourseOverview.render(allRegistrationsCurrentUser.getRegisteredCourses(), currentUser, sessionTimeout));
     }
 
     /**
@@ -56,6 +61,9 @@ public class CourseRegistrationController extends Controller {
     *@return showRegisterCourses page displaying all available courses for regsitration
      **/
     public static Result showRegisterCourses() {
+        Student currentUser = SessionUtils.getCurrentUser(session());
+        Date sessionTimeout = SessionUtils.getSessionTimeout(session());
+
         List<Course> availableCourses = Global.getCourseManager().getAllCourses();
         availableCourses.removeAll(currentUser.getCompletedCourses());
 
@@ -64,10 +72,13 @@ public class CourseRegistrationController extends Controller {
                 Form.form(CourseRegistrationFormModel.class)
                         .fill(new CourseRegistrationFormModel(currentUser.getStudentNumber(), availableCourses));
 
-        return ok(showRegisterCourses.render(courseRegistration));
+        return ok(showRegisterCourses.render(courseRegistration, currentUser, sessionTimeout));
     }
 
     public static Result showCancelRegistration(){
+        Student currentUser = SessionUtils.getCurrentUser(session());
+        Date sessionTimeout = SessionUtils.getSessionTimeout(session());
+
         List<Course> allCourseRegistrations = new ArrayList<>();
 
         for(CourseRegistration courseRegistration : Global.getCourseRegistrationManager().getAllCourseRegistrations()){
@@ -80,7 +91,7 @@ public class CourseRegistrationController extends Controller {
                 Form.form(CourseRegistrationFormModel.class)
                         .fill(new CourseRegistrationFormModel(currentUser.getStudentNumber(), allCourseRegistrations));
 
-        return ok(showCancelRegistration.render(courseRegistration));
+        return ok(showCancelRegistration.render(courseRegistration, currentUser, sessionTimeout));
     }
     /**
     *Redirects to the overview of all registered courses for the current user.

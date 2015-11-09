@@ -1,42 +1,6 @@
 @import snippets._
 
-@(team: net.unikit.database.unikit_.interfaces.Team, course: net.unikit.database.external.interfaces.Course, currentUser: net.unikit.database.external.interfaces.Student, sessionTimeout: java.util.Date)
-
-@getTeamMember() = @{
-    var result = scala.collection.mutable.MutableList[net.unikit.database.external.interfaces.Student]()
-
-    for(registration <- team.getTeamRegistrations) {
-        if(!result && registration != null && registration.getStudentNumber() != null) {
-            result += assets.Global.getStudentManager().getStudent(registration.getStudentNumber())
-        }
-    }
-
-    result
-}
-
-@getInvitedStudents() = @{
-    var result = scala.collection.mutable.MutableList[net.unikit.database.external.interfaces.Student]()
-
-    for(invitation <- team.getTeamInvitations()) {
-        if(!result && invitation != null && invitation.getInviteeStudentNumber() != null) {
-            result += assets.Global.getStudentManager().getStudent(invitation.getInviteeStudentNumber())
-        }
-    }
-
-    result
-}
-
-@getStudentsWhichRequested() = @{
-    var result = scala.collection.mutable.MutableList[net.unikit.database.external.interfaces.Student]()
-
-    for(application <- team.getTeamApplications()) {
-        if(!result && application != null && application.getApplicantStudentNumber() != null) {
-            result += assets.Global.getStudentManager().getStudent(application.getApplicantStudentNumber())
-        }
-    }
-
-    result
-}
+@(team: net.unikit.database.unikit_.interfaces.Team, members: List[net.unikit.database.external.interfaces.Student], applicants: List[net.unikit.database.external.interfaces.Student], invitees: List[net.unikit.database.external.interfaces.Student], course: net.unikit.database.external.interfaces.Course, courseRegistrees: List[net.unikit.database.external.interfaces.Student], currentUser: net.unikit.database.external.interfaces.Student, sessionTimeout: java.util.Date)
 
 @currentUserIsMember() = @{
     var result = false
@@ -50,21 +14,6 @@
     }
 
     result
-}
-
-@getRegisteredStudents() = @{
-    val allRegistrations = assets.Global.getCourseRegistrationManager().getAllCourseRegistrations()
-    var courseRegistrations = scala.collection.mutable.MutableList[net.unikit.database.external.interfaces.Student]()
-
-    for (registration <- allRegistrations) {
-        if (registration != null && registration.getStudentNumber() != null && registration.getCourseId() != null) {
-            if (registration.getCourseId() == course.getId()) {
-                courseRegistrations += assets.Global.getStudentManager().getStudent(registration.getStudentNumber())
-            }
-        }
-    }
-
-    courseRegistrations
 }
 
 @currentUserIsInvited() = @{
@@ -109,9 +58,9 @@
 
     @space()
 
-    @if(!getTeamMember().isEmpty) {
+    @if(!members.isEmpty) {
         @listSection("Aktuelle Mitglieder", 605) {
-            @for((member, index) <- getTeamMember().view.zipWithIndex) {
+            @for((member, index) <- members.view.zipWithIndex) {
                 @if(index % 2 == 0) {
                     @listItemDark() {
                         @member.getFirstName() @member.getLastName() (@member.getEmail())
@@ -144,9 +93,9 @@
     }
 
     @if(currentUserIsMember()) {
-        @if(!getStudentsWhichRequested().isEmpty) {
+        @if(!applicants.isEmpty) {
             @listSection("Anfragende Studenten", 605) {
-                @for((member, index) <- getStudentsWhichRequested().view.zipWithIndex) {
+                @for((member, index) <- applicants.view.zipWithIndex) {
                     @if(index % 2 == 0) {
                         @listItemDark() {
                             @member.getFirstName() @member.getLastName() (@member.getEmail())
@@ -182,9 +131,9 @@
             @space()
         }
 
-        @if(!getInvitedStudents().isEmpty) {
+        @if(!invitees.isEmpty) {
             @listSection("Eingeladene Studenten", 605) {
-                @for((member, index) <- getInvitedStudents().view.zipWithIndex) {
+                @for((member, index) <- invitees.view.zipWithIndex) {
                     @if(index % 2 == 0) {
                         @listItemDark() {
                             @member.getFirstName() @member.getLastName() (@member.getEmail())
@@ -213,7 +162,7 @@
         <!-- TODO: Check if team is full! -->
         @if(!teamIsFull()) {
             @listSection("Verfuegbare Studenten", 605) {
-                @for((student, index) <- getRegisteredStudents().view.zipWithIndex) {
+                @for((student, index) <- courseRegistrees.view.zipWithIndex) {
                     @if(index % 2 == 0) {
                         @listItemDark() {
                             @student.getFirstName() @student.getLastName() (@student.getEmail())

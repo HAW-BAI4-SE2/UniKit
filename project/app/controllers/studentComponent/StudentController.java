@@ -26,7 +26,7 @@ public class StudentController extends Controller {
      *  Creates a team associated with the studentNumber and courseID from the CreateTeamForm-object
      *  @return showEditTeam-page
      */
-    public static Result createTeam(){
+    public static Result createTeam(int courseID){
         Form<CreateTeamFormModel> createTeamForm =
                 Form.form(CreateTeamFormModel.class)
                         .bindFromRequest();

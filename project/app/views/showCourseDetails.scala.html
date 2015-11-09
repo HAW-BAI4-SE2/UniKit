@@ -1,6 +1,6 @@
 @import snippets._
 
-@(currentTeam: net.unikit.database.unikit_.interfaces.Team, currentInvitations: List[net.unikit.database.unikit_.interfaces.Team], currentMembershipRequests: List[net.unikit.database.unikit_.interfaces.Team], course: net.unikit.database.external.interfaces.Course, currentUser: net.unikit.database.external.interfaces.Student, sessionTimeout: java.util.Date)
+@(currentTeam: net.unikit.database.unikit_.interfaces.Team, currentInvitations: List[net.unikit.database.unikit_.interfaces.TeamInvitation], currentMembershipRequests: List[net.unikit.database.unikit_.interfaces.TeamApplication], course: net.unikit.database.external.interfaces.Course, currentUser: net.unikit.database.external.interfaces.Student, sessionTimeout: java.util.Date)
 
 @main(course.getName(), assets.NavigationItem.REGISTRATIONS, currentUser, sessionTimeout) {
     @evidence(605) {
@@ -48,7 +48,7 @@
             @listItemWhite() {
                 <div style="margin-left: 30px;">
                     @buttonLeft("Team bearbeiten") {
-                        @controllers.studentComponent.routes.TeamController.showEditTeam(currentTeam.getId())
+                        @controllers.studentComponent.routes.TeamController.showTeamOverview(currentTeam.getId())
                     }
                 </div>
             } {&nbsp;}
@@ -69,21 +69,21 @@
         @space()
 
         @listSection("Erhaltene Teameinladungen", 605) {
-            @for((team, index) <- currentInvitations.view.zipWithIndex) {
+            @for((teamInvitation, index) <- currentInvitations.view.zipWithIndex) {
                 @if(index % 2 == 0) {
                     @listItemDark() {
-                        Team T@(String.format("%03d", team.getId()))
+                        Team T@(String.format("%03d", teamInvitation.getTeam().getId()))
                     } {
                         @buttonRight("Team betrachten") {
-                            @controllers.studentComponent.routes.TeamController.showEditTeam(team.getId())
+                            @controllers.studentComponent.routes.TeamController.showTeamOverview(teamInvitation.getTeam().getId())
                         }
                     }
                 } else {
                     @listItemLight() {
-                        Team T@(String.format("%03d", team.getId()))
+                        Team T@(String.format("%03d", teamInvitation.getTeam().getId()))
                     } {
                         @buttonRight("Team betrachten") {
-                            @controllers.studentComponent.routes.TeamController.showEditTeam(team.getId())
+                            @controllers.studentComponent.routes.TeamController.showTeamOverview(teamInvitation.getTeam().getId())
                         }
                     }
                 }
@@ -95,21 +95,21 @@
         @space()
 
         @listSection("Versendete Beitrittsanfragen", 605) {
-            @for((team, index) <- currentMembershipRequests.view.zipWithIndex) {
+            @for((membershipRequest, index) <- currentMembershipRequests.view.zipWithIndex) {
                 @if(index % 2 == 0) {
                     @listItemDark() {
-                        Team T@(String.format("%03d", team.getId()))
+                        Team T@(String.format("%03d", membershipRequest.getTeam().getId()))
                     } {
                         @buttonRight("Team betrachten") {
-                            @controllers.studentComponent.routes.TeamController.showEditTeam(team.getId())
+                            @controllers.studentComponent.routes.TeamController.showTeamOverview(membershipRequest.getTeam().getId())
                         }
                     }
                 } else {
                     @listItemLight() {
-                        Team T@(String.format("%03d", team.getId()))
+                        Team T@(String.format("%03d", membershipRequest.getTeam().getId()))
                     } {
                         @buttonRight("Team betrachten") {
-                            @controllers.studentComponent.routes.TeamController.showEditTeam(team.getId())
+                            @controllers.studentComponent.routes.TeamController.showTeamOverview(membershipRequest.getTeam().getId())
                         }
                     }
                 }
