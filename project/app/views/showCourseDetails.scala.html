@@ -28,7 +28,7 @@
             @listItemWhite() {
                 <div style="margin-left: 30px;">
                     @buttonLeft("Beitrittsanfrage versenden") {
-                        @controllers.studentComponent.routes.TeamController.showTeamOverview(course.getId())
+                        @controllers.studentComponent.routes.TeamController.showAvailableTeams(course.getId())
                     }
                 </div>
             } {&nbsp;}
@@ -109,7 +109,21 @@
         }
     }
 
+    @space()
+
     @listSection("Modulbeschreibung", 705) {
         <img src='@routes.Assets.at("images/descriptions/" + course.getAbbreviation() + ".png")' width="705">
     }
+
+    <table width="705">
+        <tr>
+            <td>
+                <table width="705">
+                @buttonRight("Zurueck") {
+                    @controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview()
+                }
+                </table>
+            </td>
+        </tr>
+    </table>
 }
