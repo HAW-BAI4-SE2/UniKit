@@ -5,17 +5,12 @@ package controllers.studentComponent;
  */
 
 import assets.SessionUtils;
-import models.UnikitDatabaseUtils;
-import models.courseComponent.CourseDatabaseUtils;
-import models.studentComponent.FormModels.CreateTeamFormModel;
 import models.studentComponent.FormModels.TeamStateChangeFormModel;
 import models.studentComponent.StudentDatabaseUtils;
 
 import controllers.courseComponent.CourseController;
 
-import models.studentComponent.TeamDatabaseUtils;
 import net.unikit.database.external.interfaces.Student;
-import net.unikit.database.unikit_.interfaces.Team;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -93,7 +88,7 @@ public class StudentController extends Controller {
         checkNotNull(declinedInvitation.studentNumber);
         checkNotNull(declinedInvitation.teamID);
 
-        StudentDatabaseUtils.declineInvitation(declinedInvitation.studentNumber,declinedInvitation.teamID);
+        StudentDatabaseUtils.deleteInvitation(declinedInvitation.studentNumber,declinedInvitation.teamID);
 
         //TODO: send mail to teammembers & student
 
@@ -108,7 +103,20 @@ public class StudentController extends Controller {
          *      persist membershiprequest from a student to database
          *      send mail to student and potential teammembers
          */
-        int courseToDispay = -1;
+        Form<TeamStateChangeFormModel> requestMembershipForm =
+                Form.form(TeamStateChangeFormModel.class)
+                        .bindFromRequest();
+        TeamStateChangeFormModel teamStateChange = requestMembershipForm.get();
+
+        //TODO: form validation
+        checkNotNull(teamStateChange.studentNumber);
+        checkNotNull(teamStateChange.teamID);
+
+        StudentDatabaseUtils.storeMembershipRequest(teamStateChange.studentNumber, teamStateChange.teamID);
+
+        //TODO: send mail to team members & student
+
+        int courseToDispay = StudentDatabaseUtils.getTeamByID(teamStateChange.teamID).getCourseId();
 
         return CourseController.showCourseDetails(courseToDispay);
     }
@@ -123,7 +131,20 @@ public class StudentController extends Controller {
          *      send mail to team members
          *      send mail to student
          */
-        int courseToDispay = -1;
+        Form<TeamStateChangeFormModel> cancelMembershipForm =
+                Form.form(TeamStateChangeFormModel.class)
+                        .bindFromRequest();
+        TeamStateChangeFormModel teamStateChange = cancelMembershipForm.get();
+
+        //TODO: form validation
+        checkNotNull(teamStateChange.studentNumber);
+        checkNotNull(teamStateChange.teamID);
+
+        StudentDatabaseUtils.deleteMembershipRequest(teamStateChange.studentNumber,teamStateChange.teamID);
+
+        //TODO: send mail to student
+
+        int courseToDispay = StudentDatabaseUtils.getTeamByID(teamStateChange.teamID).getCourseId();
         return CourseController.showCourseDetails(courseToDispay);
     }
 }

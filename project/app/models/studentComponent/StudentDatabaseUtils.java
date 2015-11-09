@@ -12,12 +12,11 @@ import models.UnikitDatabaseUtils;
 
 import models.courseComponent.CourseDatabaseUtils;
 
-import net.unikit.database.unikit_.interfaces.Team;
-import net.unikit.database.unikit_.interfaces.TeamManager;
-import net.unikit.database.unikit_.interfaces.TeamRegistration;
+import net.unikit.database.unikit_.interfaces.*;
 
 import java.util.List;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 
@@ -95,12 +94,16 @@ public class StudentDatabaseUtils {
      * @param teamID the ID of the team that the student will be added to
      */
     public static void acceptInvitation(String studentNumber, int teamID){
+        //Add student to team
         UnikitDatabaseUtils.addStudentToTeam(studentNumber, teamID);
+
+        //Delete invitation
         UnikitDatabaseUtils.deleteInvitation(studentNumber, teamID);
 
         //Get course associated with the team
         int associatedCourse = UnikitDatabaseUtils.getTeamByID(teamID).getCourseId();
 
+        //Update registration status to team registration
         UnikitDatabaseUtils.changeTeamRegistrationStatus(studentNumber, associatedCourse, true);
     }
 
@@ -109,27 +112,56 @@ public class StudentDatabaseUtils {
      * @param studentNumber the student number of the student who accepted the invitation and will be added to the team
      * @param teamID the ID of the team that the student will be added to
      */
-    public static void declineInvitation(String studentNumber, int teamID){
+    public static void deleteInvitation(String studentNumber, int teamID){
         UnikitDatabaseUtils.deleteInvitation(studentNumber,teamID);
     }
 
     /**
-     *  The student requests the membership with the team
-     *  @param studentNumber the student who wants to join the team
-     *  @param teamID the ID for which the students requests membership
-     *  @return showCourseDetails-page
-     **/
-     public static void requestMembership(String studentNumber, int teamID){
-        // TODO: store membershiprequest from a student to database
-     }
+     * Stores a membership request for the student and the team to the database
+     * @param studentNumber the student number of the student who requests membership
+     * @param teamID the ID of the team that gets the membership request
+     */
+    public static void storeMembershipRequest(String studentNumber, int teamID) {
+        TeamApplicationManager membershipRequestManager = Global.getTeamApplicationManager();
+        TeamApplication newMembershipRequest = membershipRequestManager.createTeamApplication();
 
-     /**
-      *  The student cancels his membership request with the team
-      *  @param studentNumber the student who wants to cancel his membership request
-      *  @param teamID the ID of the team the students wants to cancel his request
-      *  @return showCourseDetails-page
-      **/
-    public static void cancelMembershipRequest(String studentNumber, int teamID){
-        // TODO: delete membership request from database
+        Team teamForRequest = UnikitDatabaseUtils.getTeamByID(teamID);
+        checkNotNull(teamForRequest);
+
+        newMembershipRequest.setApplicantStudentNumber(studentNumber);
+        newMembershipRequest.setTeam(teamForRequest);
+
+        membershipRequestManager.addTeamApplication(newMembershipRequest);
+    }
+
+    /**
+     * Deletes a membership request for the student and the team
+     * @param studentNumber the student number of the student who requests membership
+     * @param teamID the ID of the team that gets the membership request
+     */
+    public static void deleteMembershipRequest(String studentNumber, int teamID) {
+        checkNotNull(studentNumber);
+        TeamApplicationManager membershipRequestManager = Global.getTeamApplicationManager();
+
+        List<TeamApplication> allMembershipRequests = membershipRequestManager.getAllTeamApplications();
+
+        //Get membership request
+        TeamApplication membershipRequestToBeDeleted = null;
+        for(TeamApplication currentMembershipRequest : allMembershipRequests){
+            if(currentMembershipRequest.getApplicantStudentNumber().equals(studentNumber) &&
+                    currentMembershipRequest.getTeam().getId() == teamID){
+                membershipRequestToBeDeleted = currentMembershipRequest;
+                break;
+            }
+        }
+
+        checkNotNull(membershipRequestToBeDeleted);
+    }
+
+    public static Team getTeamByID(int teamID) {
+        Team team = null;
+        UnikitDatabaseUtils.getTeamByID(teamID);
+        checkNotNull(team);
+        return team;
     }
 }

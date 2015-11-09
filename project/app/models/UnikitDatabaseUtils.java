@@ -15,61 +15,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class UnikitDatabaseUtils {
 
-    /**
-     * Returns a Course-object associated with the courseID
-     * @param courseId the course ID for which the course is queried
-     * @return the Course-object for the given ID
-     */
-    public static Course getCourseByID(int courseId) {
-        Course course = null;
-
-        Global.getCourseManager().getCourse(courseId);
-
-        checkNotNull(course);
-        return course;
-    }
-
-    /**
-     * Returns the Team-object associated with the teamID
-     * @param teamID the ID of the queried team
-     * @return the Team-object for the given ID
-     */
-    public static Team getTeamByID(int teamID) {
-        Team team = null;
-        List<Team> allTeams = Global.getTeamManager().getAllTeams();
-
-        for(Team currentTeam : allTeams){
-            if(currentTeam.getId() == teamID){
-                team = currentTeam;
-            }
-        }
-        checkNotNull(team);
-        return team;
-    }
-
-    /**
-     * Returns the team for the student number and the course ID
-     * @param studentNumber the student number for the team
-     * @param courseID the course ID for the team
-     * @return the Team-object for the student number and course ID
-     */
-    public static Team getTeamByStudentAndCourse(String studentNumber, int courseID){
-        checkNotNull(studentNumber);
-        Team teamByStudentNumberAndCourseID = null;
-
-        List<TeamRegistration> allTeamRegistrations = Global.getTeamRegistrationManager().getAllTeamRegistrations();
-        List<TeamRegistration> allTeamRegistrationsForStudent = null;
-
-        for(TeamRegistration currentTeamRegistration : allTeamRegistrations){
-            if(currentTeamRegistration.getStudentNumber().equals(studentNumber) && currentTeamRegistration.getTeam().getCourseId() == courseID){
-                teamByStudentNumberAndCourseID = currentTeamRegistration.getTeam();
-            }
-        }
-
-        checkNotNull(teamByStudentNumberAndCourseID);
-        return teamByStudentNumberAndCourseID;
-    }
-
     public static void deleteInvitation(String studentNumber, int teamID){
         TeamInvitationManager invitationManager = Global.getTeamInvitationManager();
         List<TeamInvitation> allTeamInvitations = invitationManager.getAllTeamInvitations();
@@ -135,5 +80,56 @@ public class UnikitDatabaseUtils {
         }
 
         courseRegistrationManager.updateCourseRegistration(courseRegistrationToBUpdated);
+    }
+
+    /**
+     * Returns a Course-object associated with the courseID
+     * @param courseId the course ID for which the course is queried
+     * @return the Course-object for the given ID
+     */
+    public static Course getCourseByID(int courseId) {
+        Course course = null;
+
+        Global.getCourseManager().getCourse(courseId);
+
+        checkNotNull(course);
+        return course;
+    }
+
+    /**
+     * Returns the Team-object associated with the teamID
+     * @param teamID the ID of the queried team
+     * @return the Team-object for the given ID
+     */
+    public static Team getTeamByID(int teamID) {
+        Team team = null;
+
+        Global.getTeamManager().getTeam(teamID);
+
+        checkNotNull(team);
+        return team;
+    }
+
+    /**
+     * Returns the team for the student number and the course ID
+     * @param studentNumber the student number for the team
+     * @param courseID the course ID for the team
+     * @return the Team-object for the student number and course ID
+     */
+    public static Team getTeamByStudentAndCourse(String studentNumber, int courseID){
+        checkNotNull(studentNumber);
+        Team teamByStudentNumberAndCourseID = null;
+
+        List<TeamRegistration> allTeamRegistrations = Global.getTeamRegistrationManager().getAllTeamRegistrations();
+        List<TeamRegistration> allTeamRegistrationsForStudent = null;
+
+        for(TeamRegistration currentTeamRegistration : allTeamRegistrations){
+            if(currentTeamRegistration.getStudentNumber().equals(studentNumber) && currentTeamRegistration.getTeam().getCourseId() == courseID){
+                teamByStudentNumberAndCourseID = currentTeamRegistration.getTeam();
+            }
+        }
+
+        checkNotNull(teamByStudentNumberAndCourseID);
+        return teamByStudentNumberAndCourseID;
     }
 }
