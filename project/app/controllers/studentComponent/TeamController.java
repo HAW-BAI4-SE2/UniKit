@@ -5,21 +5,15 @@ package controllers.studentComponent;
  */
 
 import assets.Global;
-
 import assets.SessionUtils;
-import models.studentComponent.TeamDatabaseConnector;
+import controllers.courseComponent.CourseController;
 import net.unikit.database.external.interfaces.Course;
 import net.unikit.database.external.interfaces.Student;
-import net.unikit.database.unikit_.interfaces.CourseRegistration;
-
-import controllers.courseComponent.CourseController;
 import net.unikit.database.unikit_.interfaces.Team;
-import net.unikit.database.unikit_.interfaces.TeamApplication;
-import net.unikit.database.unikit_.interfaces.TeamInvitation;
 import play.mvc.Controller;
 import play.mvc.Result;
-
-import views.html.*;
+import views.html.showTeamAvailable;
+import views.html.showTeamDetails;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -95,15 +89,18 @@ public class TeamController extends Controller {
         return CourseController.showCourseDetails(courseID);
     }
 
-    public static Result showTeamOverview(int courseID){
+    public static Result showTeamOverview(int teamID){
         /* TODO:
          *      get all registered teams
          *      get all pending requests
          *      get all pending invites
          */
 
-        Team teamToDisplay = null;
-        return ok(showTeamOverview.render(teamToDisplay));
+        Student currentUser = SessionUtils.getCurrentUser(session());
+        Date sessionTimeout = SessionUtils.getSessionTimeout(session());
+        Team teamToDisplay = Global.getTeamManager().getTeam(teamID);
+
+        return ok(showTeamDetails.render(teamToDisplay, currentUser, sessionTimeout));
     }
 
     /**
@@ -117,11 +114,11 @@ public class TeamController extends Controller {
         *       get all pending membership requests for the team
         **/
 
-        Team teamToDispay = Global.getTeamManager().getTeam(teamID);
+        Student currentUser = SessionUtils.getCurrentUser(session());
+        Date sessionTimeout = SessionUtils.getSessionTimeout(session());
+        Team teamToDisplay = Global.getTeamManager().getTeam(teamID);
 
-        List<Student> allStudentsForTeam = TeamDatabaseConnector.getAllStudents(teamToDispay);
-
-        return ok(showTeamEdit.render(allStudentsForTeam,teamToDispay.getTeamApplications(),teamToDispay.getTeamInvitations()));
+        return ok(showTeamDetails.render(teamToDisplay, currentUser, sessionTimeout));
 }
 
 
