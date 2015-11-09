@@ -6,6 +6,7 @@ package controllers.studentComponent;
 
 import assets.Global;
 import assets.SessionUtils;
+import controllers.studentComponent.*;
 import models.studentComponent.FormModels.TeamStateChangeFormModel;
 import models.studentComponent.TeamDatabaseUtils;
 import net.unikit.database.external.interfaces.Course;
@@ -61,7 +62,13 @@ public class TeamController extends Controller {
 
         //TODO send mail to all team members
 
-        return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
+        Team alteredTeam = TeamDatabaseUtils.getTeamByID(teamID);
+
+        if(alteredTeam.getTeamRegistrations().isEmpty()){
+            return redirect(controllers.courseComponent.routes.CourseController.showCourseDetails(alteredTeam.getCourseId()));
+        }else{
+            return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
+        }
     }
 
     public static Result inviteStudent(String studentNumber, int teamID) {
