@@ -1,0 +1,11 @@
+Änderung an der externen Datenbank
+- Kurse können nun mehreren Studiengängen zugeordnet werden
+- Kurse besitzen nun auch Verlesungstermine (COURSE_LECTURE)
+    - durch Einsatz von Vererbung über DIDACTIC_UNIT
+- Kurse können nun einem Fachsemester zugeordnet werden (optionales Feld)
+- Die maximale Teilnehmerzahl wurde aus den Kursen entfernt, da sich diese aus den Kursgruppen ergibt
+
+Änderung an der internen Datenbank
+- Einladungen und Beitrittsanfragen wurden hingefügt
+- Erstellungs- und Bearbeitungsdaten werden zu Logging-Zwecken gespeichert
+- Kurs-Registrierung besitzt nun ein Flag, ob der entsprechende Student bereits in einem Team ist
