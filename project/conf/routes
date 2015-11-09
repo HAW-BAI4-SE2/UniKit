@@ -4,33 +4,40 @@
 
 # Home page
 
-GET         /                             controllers.loginComponent.LoginController.showLogin()
-GET         /login                        controllers.loginComponent.LoginController.showLogin()
-POST        /login                        controllers.loginComponent.LoginController.login()
-GET         /logout                       controllers.loginComponent.LoginController.logout()
+GET         /                                 controllers.loginComponent.LoginController.showLogin()
+GET         /login                            controllers.loginComponent.LoginController.showLogin()
+POST        /login                            controllers.loginComponent.LoginController.login()
+GET         /logout                           controllers.loginComponent.LoginController.logout()
 
-GET         /user                         controllers.userComponent.UserController.showUser()
-GET         /results                      controllers.userComponent.UserController.showResults()
-GET         /mailing_lists                controllers.userComponent.UserController.showMailingLists()
-GET         /print_jobs                   controllers.userComponent.UserController.showPrintHistory()
-GET         /print_credits                controllers.userComponent.UserController.showPrintCredits()
-GET         /print_credits/history        controllers.userComponent.UserController.showPrintCreditsHistory()
+GET         /user                             controllers.userComponent.UserController.showUser()
+GET         /results                          controllers.userComponent.UserController.showResults()
+GET         /mailing_lists                    controllers.userComponent.UserController.showMailingLists()
+GET         /print_jobs                       controllers.userComponent.UserController.showPrintHistory()
+GET         /print_credits                    controllers.userComponent.UserController.showPrintCredits()
+GET         /print_credits/history            controllers.userComponent.UserController.showPrintCreditsHistory()
 
-GET         /team/show_available          controllers.studentComponent.TeamController.showAvailableTeams(courseID: Integer)
-GET         /team/details                 controllers.studentComponent.TeamController.showTeamOverview(teamID: Integer)
+GET         /team/details                     controllers.studentComponent.TeamController.showTeamOverview(teamID: Integer)
+GET         /team/create                      controllers.studentComponent.StudentController.createTeam(courseID: Integer)
+GET         /team/show_available              controllers.studentComponent.TeamController.showAvailableTeams(courseID: Integer)
+GET         /team/remove_member               controllers.studentComponent.TeamController.removeMember(studentNumber: String, teamID: Integer)
 
-GET         /team/create                  controllers.studentComponent.StudentController.createTeam(courseID: Integer)
-GET         /team/remove_member           controllers.studentComponent.TeamController.removeMember(studentNumber: String, teamID: Integer)
+GET         /team/request_membership          controllers.studentComponent.StudentController.requestMembership(teamID: Integer)
+GET         /team/unrequest_membership        controllers.studentComponent.StudentController.cancelMembershipRequest(teamID: Integer)
+GET         /team/accept_request              controllers.studentComponent.TeamController.acceptMembershipRequest(studentNumber: String, teamID: Integer)
+GET         /team/decline_request             controllers.studentComponent.TeamController.declineMembershipRequest(studentNumber: String, teamID: Integer)
 
-GET         /team/invite_student          controllers.studentComponent.TeamController.inviteStudent(studentNumber: String, teamID: Integer)
-GET         /team/uninvite_student        controllers.studentComponent.TeamController.cancelInvitation(studentNumber: String, teamID: Integer)
+GET         /team/invite_student              controllers.studentComponent.TeamController.inviteStudent(studentNumber: String, teamID: Integer)
+GET         /team/uninvite_student            controllers.studentComponent.TeamController.cancelInvitation(studentNumber: String, teamID: Integer)
+GET         /team/accept_invitation           controllers.studentComponent.StudentController.acceptInvitation(teamID: Integer)
+GET         /team/decline_invitation          controllers.studentComponent.StudentController.declineInvitation(teamID: Integer)
 
-GET         /courses/details              controllers.courseComponent.CourseController.showCourseDetails(courseID: Integer)
-GET         /courses/overview             controllers.courseComponent.CourseRegistrationController.showCourseOverview()
-GET         /courses/register             controllers.courseComponent.CourseRegistrationController.showRegisterCourses()
-POST        /courses/register             controllers.courseComponent.CourseRegistrationController.registerCourses()
-GET         /courses/unregister           controllers.courseComponent.CourseRegistrationController.showCancelRegistration()
-POST        /courses/unregister           controllers.courseComponent.CourseRegistrationController.cancelCourseRegistration()
+GET         /courses/details                  controllers.courseComponent.CourseController.showCourseDetails(courseID: Integer)
+GET         /courses/overview                 controllers.courseComponent.CourseRegistrationController.showCourseOverview()
+
+GET         /courses/register                 controllers.courseComponent.CourseRegistrationController.showRegisterCourses()
+POST        /courses/register                 controllers.courseComponent.CourseRegistrationController.registerCourses()
+GET         /courses/unregister               controllers.courseComponent.CourseRegistrationController.showCancelRegistration()
+POST        /courses/unregister               controllers.courseComponent.CourseRegistrationController.cancelCourseRegistration()
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file                 controllers.Assets.at(path="/public", file)
+GET         /assets/*file                     controllers.Assets.at(path="/public", file)
