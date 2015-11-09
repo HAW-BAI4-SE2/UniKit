@@ -76,8 +76,9 @@ public class TeamController extends Controller {
             if(TeamDatabaseUtils.isMembershipRequested(studentNumber,teamID)){
                 TeamDatabaseUtils.addStudentToTeam(studentNumber,teamID);
                 TeamDatabaseUtils.deleteMembershipRequest(studentNumber,teamID);
+            }else{
+                TeamDatabaseUtils.storeInvitation(studentNumber, teamID, SessionUtils.getCurrentUser(session()));
             }
-            TeamDatabaseUtils.storeInvitation(studentNumber, teamID, SessionUtils.getCurrentUser(session()));
             //TODO: send mail to all team members
         }else{
             //TODO: feedback if team is full or max invitations reached
