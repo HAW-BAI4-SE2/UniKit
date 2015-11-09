@@ -38,6 +38,12 @@ public class StudentDatabaseUtils {
         newTeam.setCreatedByStudentNumber(studentNumber);
         teamManager.addTeam(newTeam);
 
+        // Register current user in team
+        TeamRegistration teamRegistration = Global.getTeamRegistrationManager().createTeamRegistration();
+        teamRegistration.setStudentNumber(studentNumber);
+        teamRegistration.setTeam(newTeam);
+        Global.getTeamRegistrationManager().addTeamRegistration(teamRegistration);
+
         //Gets the team that was just created
         Team createdTeam = null;
         createdTeam = UnikitDatabaseUtils.getTeamByStudentAndCourse(studentNumber,courseID);
