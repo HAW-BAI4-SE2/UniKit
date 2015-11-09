@@ -64,9 +64,9 @@ public class CourseRegistrationController extends Controller {
 
         Form<CourseRegistrationFormModel> courseRegistration =
                 Form.form(CourseRegistrationFormModel.class)
-                        .fill(new CourseRegistrationFormModel(currentUser.getStudentNumber(), availableCourses));
+                        .fill(new CourseRegistrationFormModel(availableCourses));
 
-        return ok(showCourseRegister.render(courseRegistration));
+        return ok(showCourseRegister.render(courseRegistration, currentUser, sessionTimeout));
     }
 
     public static Result showCancelRegistration(){
@@ -83,9 +83,9 @@ public class CourseRegistrationController extends Controller {
 
         Form<CourseRegistrationFormModel> courseRegistration =
                 Form.form(CourseRegistrationFormModel.class)
-                        .fill(new CourseRegistrationFormModel(currentUser.getStudentNumber(), allCourseRegistrations));
+                        .fill(new CourseRegistrationFormModel(allCourseRegistrations));
 
-        return ok(showCourseUnregister.render(courseRegistration));
+        return ok(showCourseUnregister.render(courseRegistration, currentUser, sessionTimeout));
     }
     /**
     *Redirects to the overview of all registered courses for the current user.
@@ -102,6 +102,8 @@ public class CourseRegistrationController extends Controller {
     *@return showCourseOverview page displaying all course registrations for the user
      **/
     public static Result registerCourses(){
+        Student currentUser = SessionUtils.getCurrentUser(session());
+
         //Bind Form-object to Model
         Form<CourseRegistrationFormModel> courseRegistrationForm =
                 Form.form(CourseRegistrationFormModel.class)
@@ -113,7 +115,7 @@ public class CourseRegistrationController extends Controller {
         if(crfm.registeredCourses != null){
             for(String course : crfm.registeredCourses){
                 CourseRegistration dbEntry = Global.getCourseRegistrationManager().createCourseRegistration();
-                dbEntry.setStudentNumber(crfm.studentNumber);
+                dbEntry.setStudentNumber(currentUser.getStudentNumber());
                 dbEntry.setCourseId(Integer.parseInt(course));
                 Global.getCourseRegistrationManager().addCourseRegistration(dbEntry);
             }
@@ -128,6 +130,8 @@ public class CourseRegistrationController extends Controller {
     *@return showCourseOverview page displaying all course registrations for the user
      **/
     public static Result cancelCourseRegistration(){
+        Student currentUser = SessionUtils.getCurrentUser(session());
+
         //Bind Form-object to Model
         Form<CourseRegistrationFormModel> courseRegistrationForm =
                 Form.form(CourseRegistrationFormModel.class)
@@ -139,14 +143,14 @@ public class CourseRegistrationController extends Controller {
         if(crfm.registeredCourses != null){
             List<CourseRegistration> allCourseRegistrations = Global.getCourseRegistrationManager().getAllCourseRegistrations();
             CourseRegistration dbEntry = Global.getCourseRegistrationManager().createCourseRegistration();
-            dbEntry.setStudentNumber(crfm.studentNumber);
+            dbEntry.setStudentNumber(currentUser.getStudentNumber());
 
             for(String course : crfm.registeredCourses){
 
                 dbEntry.setCourseId(Integer.parseInt(course));
 
                 for(CourseRegistration cr : allCourseRegistrations ){
-                    if(crfm.studentNumber.equals(cr.getStudentNumber()) && Integer.parseInt(course) == cr.getCourseId()){
+                    if(currentUser.getStudentNumber().equals(cr.getStudentNumber()) && Integer.parseInt(course) == cr.getCourseId()){
                         Global.getCourseRegistrationManager().deleteCourseRegistration(cr);
                     }
                 }

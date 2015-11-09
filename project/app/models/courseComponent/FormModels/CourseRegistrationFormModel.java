@@ -10,9 +10,6 @@ import java.util.List;
  * @author Thomas Bednorz
  **/
 public class CourseRegistrationFormModel {
-    //Accoridng to sources the fields of a data models to wrapped by a Form have to be public
-    public String studentNumber;
-
     //Attribute type must be List, otherwise Play bitches around
     public List<String> registeredCourses;
 
@@ -21,8 +18,7 @@ public class CourseRegistrationFormModel {
     //Default constructor needed, even if unused
     public CourseRegistrationFormModel(){}
 
-    public CourseRegistrationFormModel(String studentNumber, Collection<Course> courses){
-        this.studentNumber = studentNumber;
+    public CourseRegistrationFormModel(Collection<Course> courses){
         this.courses = courses;
     }
 }

@@ -1,0 +1,55 @@
+@(course: net.unikit.database.external.interfaces.Course)
+
+@getSemesterValue(course: net.unikit.database.external.interfaces.Course) = @{
+    var fieldOfStudy = ""
+    var semester = ""
+    var result = ""
+
+    if (!course.getFieldOfStudies().isEmpty()) {
+        fieldOfStudy = course.getFieldOfStudies().head.getAbbreviation()
+    }
+    if (course.getSemester != null) {
+        semester = course.getSemester().toString()
+    }
+
+    if (fieldOfStudy.isEmpty() && semester.isEmpty()) {
+        result = "-"
+    } else {
+        result = fieldOfStudy + "" + semester
+    }
+
+    result
+}
+
+<tr class="tablecontentbackdark">
+    <td>
+    </td>
+    
+    <td>
+        @(course.getName())&nbsp;<span class="thick">(@(course.getAbbreviation()))</span>
+    </td>
+    
+    <td class="thinline">
+        <img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0">
+    </td>
+    
+    <td>
+        {Zukunft}&nbsp;<span class="thick">({ZKN})</span>
+    </td>
+    
+    <td class="thinline">
+        <img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0">
+    </td>
+    
+    <td align="center" width="50">
+        @getSemesterValue(course)
+    </td>
+    
+    <td class="thinline">
+        <img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0">
+    </td>
+    
+    <td align="center">
+        <input type="checkbox" name="registeredCourses[]" value="@course.getId()">
+    </td>
+</tr>

@@ -1,27 +1,70 @@
-@import helper._
-@import models.courseComponent.FormModels.CourseRegistrationFormModel
-@(courseRegistrationForm: Form[CourseRegistrationFormModel])
+@import snippets._
 
-<h1>Cancel registrations:</h1>
-<body>
-    @form(controllers.courseComponent.routes.CourseRegistrationController.cancelCourseRegistration()){
-        <table border = "1">
-            Your student number: <input type="text" name="studentNumber" value=@courseRegistrationForm("studentNumber").value readonly>
-            <tr>
-                <td> Course name</td>
-                <td> Abbreviation</td>
-                <td> Course ID</td>
-                <td> Register</td>
-            </tr>
-            @for(course <- courseRegistrationForm.get().courses){
-                <tr>
-                    <td>@course.getName()</td>
-                    <td>@course.getAbbreviation()</td>
-                    <td>@course.getId()</td>
-                    <td><input type = "checkbox" name="registeredCourses[]" value=@course.getId()></td>
-                </tr>
+@import models.courseComponent.FormModels.CourseRegistrationFormModel
+@(courseRegistrationForm: Form[CourseRegistrationFormModel], currentUser: net.unikit.database.external.interfaces.Student, sessionTimeout: java.util.Date)
+
+@getSemesterValue(course: net.unikit.database.external.interfaces.Course) = @{
+    // TAKEN FROM SHOW_COURSE_OVERVIEW!
+    var fieldOfStudy = ""
+    var semester = ""
+    var result = ""
+
+    if (!course.getFieldOfStudies().isEmpty()) {
+        fieldOfStudy = course.getFieldOfStudies().head.getAbbreviation()
+    }
+    if (course.getSemester != null) {
+        semester = course.getSemester().toString()
+    }
+
+    if (fieldOfStudy.isEmpty() && semester.isEmpty()) {
+        result = "-"
+    } else {
+        result = fieldOfStudy + "" + semester
+    }
+
+    result
+}
+
+<script language="JavaScript">
+	function store() {
+		document.forms[0].submit();
+	}
+</script>
+
+@main("Abmelden", assets.NavigationItem.UNREGISTER, currentUser, sessionTimeout) {
+    @evidence(605) {
+        Hier melden Sie sich ab. <span class="red">Achtung:</span> Veranstaltungen wie GW'S, Praktika, und WP's etc. k&ouml;nnen nicht wieder angemeldet werden.
+    }
+
+    @space()
+
+    @listSection("Verbindliche Abmeldung fuer", 605) {
+        @listItemWhite() {
+            <select name="typ" onchange="javascript:submitNewChooserForm(typ.value);">
+                <option value="PRAK" selected="selected">Praktika</option>
+                <option value="VORL">Klausuren</option>
+            </select>
+        } {&nbsp;}
+    }
+
+    @space()
+
+    @listSection("Verbindliche Abmeldung fuer Praktika (aktuelles Semester)", 605) {
+        @helper.form(controllers.courseComponent.routes.CourseRegistrationController.cancelCourseRegistration()){
+            @for((course, index) <- courseRegistrationForm.get.courses.view.zipWithIndex) {
+                @if(index % 2 == 0) {
+                    @registerItemDark(course)
+                } else {
+                    @registerItemLight(course)
+                }
             }
-        </table>
-        <input type="submit" name="submitRegistrationButton" value="Cancel registration">
+
+            @listItemWhite() {&nbsp;} {
+                @buttonRight("speichern") {
+                    javascript:store();
+                }
+            }
         }
-</body>
+
+    }
+}
