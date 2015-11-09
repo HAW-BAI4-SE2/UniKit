@@ -229,7 +229,7 @@
             <td>
                 <table width="605">
                 @buttonRight("Zurueck") {
-                    javascript:history.back()
+                    @request.getHeader("referer")
                 }
                 </table>
             </td>
