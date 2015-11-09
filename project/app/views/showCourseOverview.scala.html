@@ -31,7 +31,7 @@
     @space()
 
     <!-- TODO: implement filter by semester -->
-    @if(true) {
+    @if(!registeredCourses.isEmpty) {
         @listSection("Verbindliche Anmeldungen im aktuellen Semester", 605) {
             <!-- TODO: implement filter by course type 'Verteilung unbenotete GW' -->
             @if(false) {
@@ -101,19 +101,20 @@
                 }
             }
         }
-    }
 
-    @space()
+        @space()
+    }
 
     <!-- TODO: implement filter by semester -->
     @if(false) {
         @listSection("Verbindliche Anmeldungen im kommenden Semester", 605) {
             <!-- TODO: Copy source code from above, but with semester filter -->
         }
+
+        @space()
     }
 
-    @space()
-    <hr>
+    <div id="navihr" style="width: 940px;"></div>
 
     <table width="300">
         <tr class="tableheadline">

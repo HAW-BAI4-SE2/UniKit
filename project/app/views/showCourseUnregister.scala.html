@@ -49,22 +49,30 @@
 
     @space()
 
-    @listSection("Verbindliche Abmeldung fuer Praktika (aktuelles Semester)", 605) {
+    @if(!courseRegistrationForm.get.courses.isEmpty) {
         @helper.form(controllers.courseComponent.routes.CourseRegistrationController.cancelCourseRegistration()){
-            @for((course, index) <- courseRegistrationForm.get.courses.view.zipWithIndex) {
-                @if(index % 2 == 0) {
-                    @registerItemDark(course)
-                } else {
-                    @registerItemLight(course)
+            @listSection("Verbindliche Abmeldung fuer Praktika (aktuelles Semester)", 605) {
+
+                @for((course, index) <- courseRegistrationForm.get.courses.view.zipWithIndex) {
+                    @if(index % 2 == 0) {
+                        @registerItemDark(course)
+                    } else {
+                        @registerItemLight(course)
+                    }
                 }
             }
 
-            @listItemWhite() {&nbsp;} {
-                @buttonRight("speichern") {
-                    javascript:store();
-                }
-            }
+            <table width="605">
+                <tr>
+                    <td>
+                        <table width="605">
+                        @buttonRight("speichern") {
+                            javascript:store();
+                        }
+                        </table>
+                    </td>
+                </tr>
+            </table>
         }
-
     }
 }
