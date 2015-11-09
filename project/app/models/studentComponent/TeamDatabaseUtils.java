@@ -92,7 +92,7 @@ public class TeamDatabaseUtils {
 
         //TODO: what if team has no registrations?
 
-        List<Student> allStudentsInTeam = null;
+        List<Student> allStudentsInTeam = new ArrayList<>();
 
         List<Team> allTeams =  Global.getTeamManager().getAllTeams();
         List<TeamRegistration> allRegistrationsForTeam = null;

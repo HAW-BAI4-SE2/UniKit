@@ -4,6 +4,7 @@ package controllers.studentComponent;
  * @author Thomas Bednorz
  */
 
+import assets.SessionUtils;
 import models.UnikitDatabaseUtils;
 import models.courseComponent.CourseDatabaseUtils;
 import models.studentComponent.FormModels.CreateTeamFormModel;
@@ -13,10 +14,13 @@ import models.studentComponent.StudentDatabaseUtils;
 import controllers.courseComponent.CourseController;
 
 import models.studentComponent.TeamDatabaseUtils;
+import net.unikit.database.external.interfaces.Student;
 import net.unikit.database.unikit_.interfaces.Team;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
+
+import java.util.Date;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -27,16 +31,19 @@ public class StudentController extends Controller {
      *  @return showEditTeam-page
      */
     public static Result createTeam(int courseID){
-        Form<CreateTeamFormModel> createTeamForm =
-                Form.form(CreateTeamFormModel.class)
-                        .bindFromRequest();
-        CreateTeamFormModel createTeam = createTeamForm.get();
+//        Form<CreateTeamFormModel> createTeamForm =
+//                Form.form(CreateTeamFormModel.class)
+//                        .bindFromRequest();
+//        CreateTeamFormModel createTeam = createTeamForm.get();
+
+        Student currentUser = SessionUtils.getCurrentUser(session());
+        Date sessionTimeout = SessionUtils.getSessionTimeout(session());
 
         //TODO: form validation
-        checkNotNull(createTeam.studentNumber);
-        checkNotNull(createTeam.courseID);
+        checkNotNull(currentUser.getStudentNumber());
+        checkNotNull(courseID);
 
-        int newTeam = StudentDatabaseUtils.createTeam(createTeam.studentNumber, createTeam.courseID);
+        int newTeam = StudentDatabaseUtils.createTeam(currentUser.getStudentNumber(), courseID);
 
         //TODO send mail to student
 

@@ -32,7 +32,13 @@ public class CourseController extends Controller {
         Course courseToDisplay = CourseDatabaseUtils.getCourseByID(courseID);
         //List<Team> availableTeamsForCourse = CourseDatabaseUtils.getAvailableTeamsForCourse(courseID);
 
-        Team team = UnikitDatabaseUtils.getTeamByStudentAndCourse(currentUser.getStudentNumber(), courseToDisplay.getId());
+        Team team = null;
+        try {
+            team = UnikitDatabaseUtils.getTeamByStudentAndCourse(currentUser.getStudentNumber(), courseToDisplay.getId());
+        } catch (NullPointerException e) {
+            // Student is not in team
+        }
+
         List<TeamApplication> teamApplications = null;
         List<TeamInvitation> teamInvitations = null;
 

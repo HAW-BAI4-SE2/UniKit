@@ -17,9 +17,9 @@ GET         /print_credits                controllers.userComponent.UserControll
 GET         /print_credits/history        controllers.userComponent.UserController.showPrintCreditsHistory()
 
 GET         /team/details                 controllers.studentComponent.TeamController.showTeamOverview(teamID: Integer)
-POST        /team/remove_member           controllers.studentComponent.TeamController.removeMember(studentNumber: String, teamID: Integer)
-POST        /team/create                  controllers.studentComponent.StudentController.createTeam(courseID: Integer)
-POST        /team/show_available          controllers.studentComponent.TeamController.showAvailableTeams(courseID: Integer)
+GET         /team/remove_member           controllers.studentComponent.TeamController.removeMember(studentNumber: String, teamID: Integer)
+GET         /team/create                  controllers.studentComponent.StudentController.createTeam(courseID: Integer)
+GET         /team/show_available          controllers.studentComponent.TeamController.showAvailableTeams(courseID: Integer)
 
 GET         /courses/details              controllers.courseComponent.CourseController.showCourseDetails(courseID: Integer)
 GET         /courses/overview             controllers.courseComponent.CourseRegistrationController.showCourseOverview()
