@@ -88,9 +88,7 @@ public class UnikitDatabaseUtils {
      * @return the Course-object for the given ID
      */
     public static Course getCourseByID(int courseId) {
-        Course course = null;
-
-        course = Global.getCourseManager().getCourse(courseId);
+        Course course = Global.getCourseManager().getCourse(courseId);
 
         checkNotNull(course);
         return course;
@@ -102,9 +100,7 @@ public class UnikitDatabaseUtils {
      * @return the Team-object for the given ID
      */
     public static Team getTeamByID(int teamID) {
-        Team team = null;
-
-        team = Global.getTeamManager().getTeam(teamID);
+        Team team = Global.getTeamManager().getTeam(teamID);
 
         checkNotNull(team);
         return team;

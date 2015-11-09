@@ -48,7 +48,6 @@ public class TeamDatabaseUtils {
             }
         }
 
-        //TODO: BUG: teamInvitation is null.
         //Delete invitation from database
         checkNotNull(teamInvitation);
         Global.getTeamInvitationManager().deleteTeamInvitation(teamInvitation);
