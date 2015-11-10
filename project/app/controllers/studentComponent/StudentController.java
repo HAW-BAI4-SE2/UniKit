@@ -62,7 +62,7 @@ public class StudentController extends Controller {
 
         //TODO: send mail to team members
 
-        return TeamController.addMember(currentUser.getStudentNumber(), teamID);
+        return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
     }
 
     /**
