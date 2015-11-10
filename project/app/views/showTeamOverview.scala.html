@@ -56,6 +56,24 @@
         <span class="thick">@("Team T" + String.format("%03d", team.getId()) + " (" + course.getName() + ")")</span>
     }
 
+    @if(currentUserIsMember()) {
+        @evidence(605) {
+            Hier haben Sie die M&ouml;glichkeit Ihr aktuelles Team zu betrachten und zu bearbeiten.<br/><br/>
+            Sie k&ouml;nnen Ihre aktuellen Teammitglieder betrachten und aus dem Team entfernen.<br/>
+            Sofern Ihr Team die maximale Teilnehmerzahl nicht erreicht hat, k&ouml;nnen Sie Student in Ihr Team einladen oder Beitrittsanfragen von Studenten beantworten.
+        }
+    } else {
+        @evidence(605) {
+            Hier haben Sie die M&ouml;glichkeit Ihr aktuelles Team zu betrachten.<br/><br/>
+            @if(!teamIsFull()) {
+                Sie k&ouml;nnen eine Beitrittsanfrage senden, die von dem Team beantwortet werden kann.
+            } else {
+                Da dieses Team die maximale Teilnehmerzahl erreicht hat, k&ouml;nnen Sie keine Beitrittsanfrage senden.
+            }
+
+        }
+    }
+
     @space()
 
     @if(!members.isEmpty) {
@@ -153,7 +171,6 @@
             @space()
         }
 
-        <!-- TODO: Check if team is full! -->
         @if(!teamIsFull()) {
             @listSection("Verfuegbare Studenten", 605) {
                 @for((student, index) <- courseRegistrees.view.zipWithIndex) {
