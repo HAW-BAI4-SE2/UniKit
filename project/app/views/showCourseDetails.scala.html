@@ -1,22 +1,145 @@
-@(course: net.unikit.database.external.interfaces.Course)
-<h1>Your courses:</h1>
-<body>
-    <table border = "1">
-        <tr>
-            <td> Course Name</td>
-            <td> Abbreviation</td>
-            <td> Field of Study</td>
-            <td> Semester</td>
-        </tr>
-        <tr>
-            <td>@course.getName</td>
-            <td>@course.getAbbreviation</td>
-            <td>N/A</td>
-            <td>N/A</td>
-        </tr>
+@import snippets._
 
+@(currentTeam: net.unikit.database.unikit_.interfaces.Team, currentInvitations: List[net.unikit.database.unikit_.interfaces.TeamInvitation], currentMembershipRequests: List[net.unikit.database.unikit_.interfaces.TeamApplication], course: net.unikit.database.external.interfaces.Course, currentUser: net.unikit.database.external.interfaces.Student, sessionTimeout: java.util.Date)
+
+@main(course.getName(), assets.NavigationItem.REGISTRATIONS, currentUser, sessionTimeout) {
+    @evidence(605) {
+        <span class="thick">@(course.getName())</span>
+    }
+
+    @evidence(605) {
+        Hier haben Sie die M&ouml;glichkeit ein Team f&uuml;r die Veranstaltung '@(course.getName())' zu erstellen, Beitrittsanfragen an ein bestehendes Team zu versenden oder erhaltene Einladung eines Teams anzunehmen.
+    }
+
+    @space()
+
+    @listSection("Ihr aktueller Status", 605) {
+        @if(currentTeam == null) {
+            @listItemWhite() {&nbsp;} {&nbsp;}
+
+            @listItemWhite() {
+                <div style="margin-left: 30px;">
+                    Sie sind keinem Team zugeordnet!
+                </div>
+            } {&nbsp;}
+
+            @listItemWhite() {
+                <div style="margin-left: 30px;">
+                    @buttonLeft("Team erstellen") {
+                        @controllers.studentComponent.routes.StudentController.createTeam(course.getId())
+                    }
+                </div>
+            } {&nbsp;}
+
+            @listItemWhite() {
+                <div style="margin-left: 30px;">
+                    @buttonLeft("Beitrittsanfrage versenden") {
+                        @controllers.studentComponent.routes.TeamController.showAvailableTeams(course.getId())
+                    }
+                </div>
+            } {&nbsp;}
+
+            @listItemWhite() {&nbsp;} {&nbsp;}
+        } else {
+            @listItemWhite() {&nbsp;} {&nbsp;}
+
+            @listItemWhite() {
+                <div style="margin-left: 30px;">
+                    Sie sind dem Team 'T@(String.format("%03d", currentTeam.getId()))' zugeordnet!
+                </div>
+            } {&nbsp;}
+
+            @listItemWhite() {
+                <div style="margin-left: 30px;">
+                    @buttonLeft("Team bearbeiten") {
+                        @controllers.studentComponent.routes.TeamController.showTeamOverview(currentTeam.getId())
+                    }
+                </div>
+            } {&nbsp;}
+
+            @listItemWhite() {
+                <div style="margin-left: 30px;">
+                    @buttonLeft("Team verlassen") {
+                        @controllers.studentComponent.routes.TeamController.removeMember(currentUser.getStudentNumber(), currentTeam.getId())
+                    }
+                </div>
+            } {&nbsp;}
+
+            @listItemWhite() {&nbsp;} {&nbsp;}
+        }
+    }
+
+    @if(currentTeam == null && !currentInvitations.isEmpty) {
+        @space()
+
+        @listSection("Erhaltene Teameinladungen", 605) {
+            @for((teamInvitation, index) <- currentInvitations.view.zipWithIndex) {
+                @if(index % 2 == 0) {
+                    @listItemDark() {
+                        Team T@(String.format("%03d", teamInvitation.getTeam().getId()))
+                    } {
+                        @buttonRight("Team betrachten") {
+                            @controllers.studentComponent.routes.TeamController.showTeamOverview(teamInvitation.getTeam().getId())
+                        }
+                    }
+                } else {
+                    @listItemLight() {
+                        Team T@(String.format("%03d", teamInvitation.getTeam().getId()))
+                    } {
+                        @buttonRight("Team betrachten") {
+                            @controllers.studentComponent.routes.TeamController.showTeamOverview(teamInvitation.getTeam().getId())
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @if(currentTeam == null && !currentMembershipRequests.isEmpty) {
+        @space()
+
+        @listSection("Versendete Beitrittsanfragen", 605) {
+            @for((membershipRequest, index) <- currentMembershipRequests.view.zipWithIndex) {
+                @if(index % 2 == 0) {
+                    @listItemDark() {
+                        Team T@(String.format("%03d", membershipRequest.getTeam().getId()))
+                    } {
+                        @buttonRight("Team betrachten") {
+                            @controllers.studentComponent.routes.TeamController.showTeamOverview(membershipRequest.getTeam().getId())
+                        }
+                    }
+                } else {
+                    @listItemLight() {
+                        Team T@(String.format("%03d", membershipRequest.getTeam().getId()))
+                    } {
+                        @buttonRight("Team betrachten") {
+                            @controllers.studentComponent.routes.TeamController.showTeamOverview(membershipRequest.getTeam().getId())
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    <table width="605">
+        <tr>
+            <td>
+                <table width="605">
+                    @buttonRight("Zurueck") {
+                        @if(request.getHeader("referer") == null || request.getHeader("referer").contains("/courses/details")) {
+                            @controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview()
+                        } else {
+                            @request.getHeader("referer")
+                        }
+                    }
+                </table>
+            </td>
+        </tr>
     </table>
-    <a href=@controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview()>
-        <button>Return to Overview</button>
-    </a>
-</body>
+
+    <!--
+    @listSection("Modulbeschreibung", 605) {
+        <img src='@routes.Assets.at("images/descriptions/" + course.getAbbreviation() + ".png")' width="605">
+    }
+    -->
+}

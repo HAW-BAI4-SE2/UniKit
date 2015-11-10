@@ -1,0 +1,122 @@
+@import snippets._
+
+@(currentUser: net.unikit.database.external.interfaces.Student, sessionTimeout: java.util.Date)
+
+@main("DruckHistory", assets.NavigationItem.PRINT_QUOTAS, currentUser, sessionTimeout) {
+<div class="navitem">
+    <div class="navbgleft">&nbsp;</div>
+    <div class="navbgcen"><a href="@controllers.userComponent.routes.UserController.showPrintHistory()" title="Hier sehe ich meine bereits abgearbeiteten Printjobs" class="navlink">Druckjobs</a></div>
+    <div class="navbgright">&nbsp;</div>
+</div>
+<div class="navitem">
+    <div class="navbgleft">&nbsp;</div>
+    <div class="navbgcen">Konto</div>
+    <div class="navbgright">&nbsp;</div>
+</div>
+<div class="navitem">
+    <div class="navbgleft">&nbsp;</div>
+    <div class="navbgcen"><a href="@controllers.userComponent.routes.UserController.showPrintCredits()" title="Hier sehe ich meinen aktuellen Konotstand" class="navlink">Kontostand</a></div>
+    <div class="navbgright">&nbsp;</div>
+</div>
+<div id="navihr" style="width: 940px;"></div>
+    
+<br>
+<font class="h_1">Job History</font>
+<br><br>
+
+<br>
+
+<table width="615" cellspacing="0" cellpadding="0" class="tableframe">
+	<tr>
+		<td>Druck Konto</td>
+	</tr>
+</table>
+
+<table width="615" cellspacing="0" cellpadding="0" class="tablecontent">
+	<td>
+		<center>
+		<table cellspacing="0" cellpadding="0" width="605">
+			<tr>
+			    <td width="40%">Datum</td>
+			    <td width="1" class="thinline"><img src="images/sizer.gif" alt="" width="1" height="1" border="0"></td>
+				<td width="20%">Betrag</td>
+				<td width="1" class="thinline"><img src="images/sizer.gif" alt="" width="1" height="1" border="0"></td>
+				<td width="40%">Grund</td>						
+
+			
+			</tr>
+
+
+			
+
+				
+					
+					<tr class="tablecontentbacklight">
+					
+
+				<!-- Datum -->
+				<td>	01.10.2013 00:00</td>
+
+
+				<!-- Betrag -->					
+				<td width="1" class="thinline"><img src="images/sizer.gif" alt="" width="1" height="1" border="0"></td>				
+				<td>	12.5</td>
+				
+				<!-- Grund -->
+				<td width="1" class="thinline"><img src="images/sizer.gif" alt="" width="1" height="1" border="0"></td>				
+				<td> WiSe1314</td>						
+
+
+				</tr>		
+							
+			
+
+				
+				
+					<tr class="tablecontentbackdark">			
+					
+
+				<!-- Datum -->
+				<td>	01.02.2014 00:00</td>
+
+
+				<!-- Betrag -->					
+				<td width="1" class="thinline"><img src="images/sizer.gif" alt="" width="1" height="1" border="0"></td>				
+				<td>	12.5</td>
+				
+				<!-- Grund -->
+				<td width="1" class="thinline"><img src="images/sizer.gif" alt="" width="1" height="1" border="0"></td>				
+				<td> SoSe2014</td>						
+
+
+				</tr>		
+							
+			
+
+				
+					
+					<tr class="tablecontentbacklight">
+					
+
+				<!-- Datum -->
+				<td>	01.10.2014 00:00</td>
+
+
+				<!-- Betrag -->					
+				<td width="1" class="thinline"><img src="images/sizer.gif" alt="" width="1" height="1" border="0"></td>				
+				<td>	12.5</td>
+				
+				<!-- Grund -->
+				<td width="1" class="thinline"><img src="images/sizer.gif" alt="" width="1" height="1" border="0"></td>				
+				<td> WiSe1415</td>						
+
+
+				</tr>		
+							
+			
+		</table>
+	</center>
+	</td>
+			
+</table>
+}

@@ -1,1 +1,57 @@
-@()
+@import snippets._
+
+@(availableTeams: List[net.unikit.database.unikit_.interfaces.Team], course: net.unikit.database.external.interfaces.Course, currentUser: net.unikit.database.external.interfaces.Student, sessionTimeout: java.util.Date)
+
+@main("Anmeldungen", assets.NavigationItem.REGISTRATIONS, currentUser, sessionTimeout) {
+    @evidence(605) {
+        <span class="thick">@course.getName()</span>
+    }
+
+    @evidence(605) {
+        Hier haben Sie die M&ouml;glichkeit ein bestehendes Team f&uuml;r die Veranstaltung @(course.getName()) zu betrachten, um eine Beitrittsanfragen an das entsprechende Team zu versenden.
+    }
+
+    @if(!availableTeams.isEmpty) {
+        @space()
+
+        @listSection("Verfuegbare Teams", 605) {
+            @for((team, index) <- availableTeams.view.zipWithIndex) {
+                @if(index % 2 == 0) {
+                    @listItemDark() {
+                        Team T@(String.format("%03d", team.getId()))
+                    } {
+                        @buttonRight("Team betrachten") {
+                            @controllers.studentComponent.routes.TeamController.showTeamOverview(team.getId())
+                        }
+                    }
+                } else {
+                    @listItemLight() {
+                        Team T@(String.format("%03d", team.getId()))
+                    } {
+                        @buttonRight("Team betrachten") {
+                            @controllers.studentComponent.routes.TeamController.showTeamOverview(team.getId())
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    <table width="605">
+        <tr>
+            <td>
+                <table width="605">
+                    @buttonRight("Zurueck") {
+                        @if(request.getHeader("referer") == null ||
+                                request.getHeader("referer").contains("/team/show_available") ||
+                                request.getHeader("referer").contains("/team/details")) {
+                            @controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId())
+                        } else {
+                            @request.getHeader("referer")
+                        }
+                    }
+                </table>
+            </td>
+        </tr>
+    </table>
+}

@@ -25,9 +25,6 @@
 
 
 <body bgcolor="white">
-
-	
-
 	<h1>
 		StISys (student information system)
 	</h1>
@@ -43,10 +40,9 @@
 			<td></td>
 		</tr>
 	</table>
-
-	
-
-	
+    
+    @formErrors(loginForm)
+    
 	@helper.form(controllers.loginComponent.routes.LoginController.login) {
 		<table cellspacing="5" cellpadding="0">
 			<tr>

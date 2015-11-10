@@ -1,31 +1,79 @@
-@import helper._
+@import snippets._
+
 @import models.courseComponent.FormModels.CourseRegistrationFormModel
-@(courseRegistrationForm: Form[CourseRegistrationFormModel])
+@(courseRegistrationForm: Form[CourseRegistrationFormModel], currentUser: net.unikit.database.external.interfaces.Student, sessionTimeout: java.util.Date)
 
-<h1>Available courses for registration:</h1>
-<body>
-    @form(controllers.courseComponent.routes.CourseRegistrationController.registerCourses()){
-        Your student number: <input type="text" name="studentNumber" value=@courseRegistrationForm("studentNumber").value readonly>
-        <table border = "1">
-            <tr>
-                <td> Course name</td>
-                <td> Abbreviation</td>
-                <td> Course ID</td>
-                <td> Register</td>
-            </tr>
-            @for(course <- courseRegistrationForm.get().courses){
-                <tr>
-                    <td>@course.getName()</td>
-                    <td>@course.getAbbreviation()</td>
-                    <td>@course.getId()</td>
-                    <td><input type = "checkbox" name="registeredCourses[]" value=@course.getId()></td>
-                </tr>
+@getSemesterValue(course: net.unikit.database.external.interfaces.Course) = @{
+    // TAKEN FROM SHOW_COURSE_OVERVIEW!
+    var fieldOfStudy = ""
+    var semester = ""
+    var result = ""
+
+    if (!course.getFieldOfStudies().isEmpty()) {
+        fieldOfStudy = course.getFieldOfStudies().head.getAbbreviation()
+    }
+    if (course.getSemester != null) {
+        semester = course.getSemester().toString()
+    }
+
+    if (fieldOfStudy.isEmpty() && semester.isEmpty()) {
+        result = "-"
+    } else {
+        result = fieldOfStudy + "" + semester
+    }
+
+    result
+}
+
+<script language="JavaScript">
+	function store() {
+		document.forms[0].submit();
+	}
+</script>
+
+@main("Anmelden", assets.NavigationItem.REGISTER, currentUser, sessionTimeout) {
+    @evidence(605) {
+        Bitte melden Sie sich zu  Veranstaltungen an und kontrollieren Sie die Anmeldungen abschlie&szlig;end!
+    }
+
+    @space()
+
+    @listSection("Verbindliche Anmeldung fuer", 605) {
+        @listItemWhite() {
+            <select name="typ" onchange="javascript:submitNewChooserForm(typ.value);">
+                <option value="PRAK" selected="selected">Praktika</option>
+                <option value="VORL">Klausuren</option>
+                <option value="ABS">Abschlussarbeit</option>
+            </select>
+        } {&nbsp;}
+    }
+
+    @space()
+
+    @if(!courseRegistrationForm.get.courses.isEmpty) {
+        @helper.form(controllers.courseComponent.routes.CourseRegistrationController.registerCourses()){
+            @listSection("Verbindliche Anmeldung fuer Praktika (aktuelles Semester)", 605) {
+
+                @for((course, index) <- courseRegistrationForm.get.courses.view.zipWithIndex) {
+                    @if(index % 2 == 0) {
+                        @registerItemDark(course)
+                    } else {
+                        @registerItemLight(course)
+                    }
+                }
             }
-        </table>
-        <input type="submit" name="submitRegistrationButton" value="Register course">
-        <a href=@controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview>
-            <button>Show overview</button>
-        </a>
-        }
 
-</body>
+            <table width="605">
+                <tr>
+                    <td>
+                        <table width="605">
+                            @buttonRight("speichern") {
+                                javascript:store();
+                            }
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        }
+    }
+}

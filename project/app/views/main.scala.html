@@ -1,0 +1,26 @@
+@(title: String, activeNavigationItem: assets.NavigationItem, currentUser: net.unikit.database.external.interfaces.Student, sessionTimeout: java.util.Date)(content: Html)
+
+<html>
+<head>
+	<title>StudentInformationSystem (StISys) - @title</title>
+    
+    <link href='@routes.Assets.at("css/fh.css")' rel="stylesheet" type="text/css">
+    <link rel="shortcut icon" href='@routes.Assets.at("images/favicon.ico")'>
+    
+    <script type="text/javascript" language="JavaScript" src='@routes.Assets.at("js/swl-app-base.js")'></script>
+</head>
+
+<body bgcolor="white" onload="NaviFenster(this)">
+    @header(currentUser, sessionTimeout)
+    
+    <div class="posRight"></div>
+    
+    @navigation(activeNavigationItem)
+    
+    <div class="data">
+        @content
+    </div>
+    
+    @footer()
+</body>
+</html>

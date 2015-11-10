@@ -1,0 +1,34 @@
+@import snippets._
+
+@(currentUser: net.unikit.database.external.interfaces.Student, sessionTimeout: java.util.Date)
+
+@main("DruckHistory", assets.NavigationItem.PRINT_QUOTAS, currentUser, sessionTimeout) {
+<div class="navitem">
+    <div class="navbgleft">&nbsp;</div>
+    <div class="navbgcen">Druckjobs</div>
+    <div class="navbgright">&nbsp;</div>
+</div>
+<div class="navitem">
+    <div class="navbgleft">&nbsp;</div>
+    <div class="navbgcen"><a href="@controllers.userComponent.routes.UserController.showPrintCreditsHistory()" title="Hier sehe ich, wie sich meine Druckquoten berechnen" class="navlink">Konto</a></div>
+    <div class="navbgright">&nbsp;</div>
+</div>
+<div class="navitem">
+    <div class="navbgleft">&nbsp;</div>
+    <div class="navbgcen"><a href="@controllers.userComponent.routes.UserController.showPrintCredits()" title="Hier sehe ich meinen aktuellen Konotstand" class="navlink">Kontostand</a></div>
+    <div class="navbgright">&nbsp;</div>
+</div>
+<div id="navihr" style="width: 940px;"></div>
+    
+<br>
+<font class="h_1">Job History</font>
+<br><br>
+
+<br>
+
+Nothing found to display.
+
+<br>
+<br>
+<br>
+}

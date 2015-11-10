@@ -1,0 +1,41 @@
+@(activeNavigationItem: assets.NavigationItem)
+
+<div id="navi">
+    <div class="navitem">
+        <div class="navbgleft">&nbsp;</div>
+        <div class="navbgcen">@if(activeNavigationItem != assets.NavigationItem.PROFILE) {<a href="@controllers.userComponent.routes.UserController.showUser()" title="Meine Benutzerdaten" class="navlink">Profil</a>} else {Profil}</div>
+        <div class="navbgright">&nbsp;</div>
+    </div>
+    <div class="navitem">
+        <div class="navbgleft">&nbsp;</div>
+        <div class="navbgcen">@if(activeNavigationItem != assets.NavigationItem.REGISTRATIONS) {<a href="@controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview()" title="Veranstaltungen, die ich angemeldet habe" class="navlink">Anmeldungen</a>} else {Anmeldungen}</div>
+        <div class="navbgright">&nbsp;</div>
+    </div>
+    <div class="navitem">
+        <div class="navbgleft">&nbsp;</div>
+        <div class="navbgcen">@if(activeNavigationItem != assets.NavigationItem.RESULTS) {<a href="@controllers.userComponent.routes.UserController.showResults()" title="Pr&uuml;fungsleistungen, die ich bis jetzt abgelegt habe" class="navlink">Ergebnisse</a>} else {Ergebnisse}</div>
+        <div class="navbgright">&nbsp;</div>
+    </div>
+    <div class="navitem">
+        <div class="navbgleft">&nbsp;</div>
+        <div class="navbgcen">@if(activeNavigationItem != assets.NavigationItem.REGISTER) {<a href="@controllers.courseComponent.routes.CourseRegistrationController.showRegisterCourses()" title="Hier kann ich mich f&uuml;r diverse Dinge anmelden" class="navlink">anmelden</a>} else {anmelden}</div>
+        <div class="navbgright">&nbsp;</div>
+    </div>
+    <div class="navitem">
+        <div class="navbgleft">&nbsp;</div>
+        <div class="navbgcen">@if(activeNavigationItem != assets.NavigationItem.UNREGISTER) {<a href="@controllers.courseComponent.routes.CourseRegistrationController.showCancelRegistration()" title="ACHTUNG!! Hier kann ich mich abmelden" class="navlink">abmelden</a>} else {abmelden}</div>
+        <div class="navbgright">&nbsp;</div>
+    </div>
+    <div class="navitem">
+        <div class="navbgleft">&nbsp;</div>
+        <div class="navbgcen">@if(activeNavigationItem != assets.NavigationItem.MAILING_LISTS) {<a href="@controllers.userComponent.routes.UserController.showMailingLists()" title="Eigene Mailinglisten" class="navlink">Mailinglisten</a>} else {Mailinglisten}</div>
+        <div class="navbgright">&nbsp;</div>
+    </div>
+    <div class="navitem">
+        <div class="navbgleft">&nbsp;</div>
+        <div class="navbgcen">@if(activeNavigationItem != assets.NavigationItem.PRINT_QUOTAS) {<a href="@controllers.userComponent.routes.UserController.showPrintHistory()" title="Hier kann ich mein Druckkonto und mein Druckjobs einsehen." class="navlink">Druckquoten</a>} else {Druckquoten}</div>
+        <div class="navbgright">&nbsp;</div>
+    </div>
+    
+	<div id="navihr"></div>
+</div>

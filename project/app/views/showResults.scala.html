@@ -1,0 +1,70 @@
+@import helper._
+
+@(currentUser: net.unikit.database.external.interfaces.Student, sessionTimeout: java.util.Date)
+
+@main("Pr&uuml;fungsergebnisse", assets.NavigationItem.RESULTS, currentUser, sessionTimeout) {
+<div>			
+    <font class="h_2">Hier sehen sie die Ergebnisse Ihrer bisher abgelegten Pr&uuml;fungen</font> 					
+</div>
+
+<div id="pdfergebnisuebersicht">
+    <div class="button button_right button_active" >
+        <div class="button_a_left" >&nbsp;</div>
+            <div class="button_a_center">
+                <a target="_blanc"  href="printPage.pdf?page=results" class="button_link">PDF Ergebnisübersicht </a>
+            </div>
+        <div class="button_a_right"/>&nbsp;</div>
+    </div>
+</div>
+
+<div id="ergebnisuebersicht">
+    <!-- TODO: implement better filter by semester -->
+    @for(semester <- (10 to 1 by -1)) {
+        <!-- TODO: implement better filter by semester -->
+        @if(!(currentUser.getCompletedCourses().filter{elem => (elem.getSemester() == semester)}).isEmpty()) {
+            <table width="605" cellspacing="0" cellpadding="0" class="tableframe">
+                <tr>
+                    <td>&nbsp;&nbsp;@(currentUser.getFieldOfStudy().getAbbreviation())@(semester)</td>
+                </tr>
+            </table>
+            
+            <table width="605" cellspacing="0" cellpadding="0" class="tablecontent">
+            <td>
+            <center>
+            
+            <table cellspacing="0" cellpadding="0" width="595">
+            <tr class="tableheadline">
+                <td width="5"><img src='@routes.Assets.at("images/sizer.gif")' width="1" height="1" border="0"></td>
+                <td width="342">Bez&nbsp;<span class="thick">(Fachkrz.)</span></td>
+                <td width="1" class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+                <td width="135">Prof&nbsp;<span class="thick">(Profkrz.)</span></td>
+                <td width="1" class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+                <td width="60"><span class="thick">Gepr. am</span></td>
+                <td width="1" class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+                <td width="50"><span class="thick">Ergebnis</span></td>
+            </tr>
+            
+            <!-- TODO: implement better filter by semester -->
+            @for((elem, index) <- (currentUser.getCompletedCourses().filter{elem => (elem.getSemester() == semester)}).view.zipWithIndex) {
+                <tr class="@if(index % 2 == 0) {tablecontentbacklight} else {tablecontentbackdark}">
+            
+                    <td></td>
+                    <td>@(elem.getName())&nbsp;<span class="thick">(CI)</span></td>
+                    <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+                    <td><!--DUMMY_VALUE-->{Zukunft}&nbsp;<span class="thick"><!--DUMMY_VALUE-->{ZKN}</span></td>
+                    <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+                    <td><!--DUMMY_VALUE-->{01.01.2015}</td>
+                    <td class="thinline"><img src='@routes.Assets.at("images/sizer.gif")' alt="" width="1" height="1" border="0"></td>
+                    <td align="right"><!--DUMMY_VALUE-->{10}</td>
+                </tr>
+            }
+            
+            </table>
+            </center>
+            </td>
+            </table>
+            <br>
+        }
+    }
+</div>
+}

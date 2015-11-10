@@ -1,17 +1,13 @@
 package controllers.loginComponent;
 
-import assets.Global;
-import controllers.routes;
 import models.loginComponent.LoginFormModel;
-import net.unikit.database.external.interfaces.Student;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
-import play.mvc.Results;
 import views.html.showLogin;
-import views.html.test;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static assets.SessionUtils.destroySession;
+import static assets.SessionUtils.initSession;
 
 /**
  * Created by abq308 on 05.11.2015.
@@ -26,40 +22,27 @@ public class LoginController extends Controller {
     }
 
     public static Result login() {
-        // Load input form
+        // Get form with data from request
         Form<LoginFormModel> loginForm = Form.form(LoginFormModel.class).bindFromRequest();
-        LoginFormModel loginFormModel = loginForm.get();
 
-        // Check if username exists
-        String username = loginForm.get().username;
-        Student currentUser = Global.getStudentManager().getStudent(username);
-        checkNotNull(currentUser, "Unknown username '" + username + "'!");
-
-        // Check if password is correct
-        // TODO!
-
-        // If errors occured, show errors
+        // If errors occurred, redirect to view and show the errors
         if (loginForm.hasErrors()) {
-            // return badRequest(login.render(loginForm));
-            return badRequest(test.render(loginForm.toString()));
+            return badRequest(showLogin.render(loginForm));
         }
 
-        // Clear previous session data
-        session().clear();
+        // Get form model
+        LoginFormModel loginFormModel = loginForm.get();
 
-        // Store username in session
-        session("username", username);
+        // Init session data
+        initSession(session(), loginFormModel.username);
 
         // Go to user overview page
-        return controllers.userComponent.UserController.showUser();
+        return redirect(controllers.userComponent.routes.UserController.showUser());
     }
 
     public static Result logout() {
-        // Clear session data
-        session().clear();
-
-        // Show result message
-        flash("Auf Wiedersehen!", "Sie wurden erfolgreich ausgeloggt!");
+        // Destroy session data
+        destroySession(session());
 
         // Go to login page
         return redirect(controllers.loginComponent.routes.LoginController.showLogin());

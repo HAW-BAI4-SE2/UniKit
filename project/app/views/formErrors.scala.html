@@ -1,0 +1,17 @@
+@(form: Form[_])
+
+@if(form.hasGlobalErrors) {
+    <table width="605" cellspacing="0" cellpadding="0">
+        <tr valign="top" width="640" >
+            <td>
+                <span class="red">
+                    @for(error <- form.globalErrors) {
+                        <li>@error.message</li>
+                    }
+                </span>
+            </td>
+        </tr>
+    </table>
+    
+    <br>
+}

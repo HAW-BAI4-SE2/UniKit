@@ -28,7 +28,7 @@ public final class Global extends GlobalSettings {
     private static TeamRegistrationManager teamRegistrationManager;
 
     @Override
-    public void onStart(Application app) {
+    public void beforeStart(Application application) {
         Logger.info("Initializing application...");
 
         // Load external database
@@ -54,7 +54,7 @@ public final class Global extends GlobalSettings {
         UniKitDatabaseManager internalDatabaseManager = UniKitDatabaseManagerFactory.createDatabaseManager(databaseConfigurationInternal);
 
         // Store database managers in global values
-        Logger.info("Initializing global values...");
+        Logger.info("Initializing database managers...");
         Global.appointmentManager = externalDatabaseManager.getAppointmentManager();
         Global.courseGroupManager = externalDatabaseManager.getCourseGroupManager();
         Global.courseManager = externalDatabaseManager.getCourseManager();
@@ -67,11 +67,6 @@ public final class Global extends GlobalSettings {
         Global.teamRegistrationManager = internalDatabaseManager.getTeamRegistrationManager();
 
         Logger.info("Application initialized!");
-    }
-
-    @Override
-    public void onStop(Application app) {
-        Logger.info("Application shutdown...");
     }
 
     public static AppointmentManager getAppointmentManager() {

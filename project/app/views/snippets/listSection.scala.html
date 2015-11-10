@@ -1,0 +1,21 @@
+@(title: String, width: Integer)(content: Html)
+
+<table width="@(width)" cellspacing="0" cellpadding="0" >
+    <tr>
+        <td valign="top"/>
+            <table width="@(width)"  cellspacing="0" cellpadding="0" class="tableframe">
+                <tr>
+                    <td>&nbsp;&nbsp;<span class="thick">@(title)</span>
+                        <td align="right">
+                            <a href="javascript:openWin('getHelp.do?keyword=UNKNOWN','200','300','help');">Hilfe</a>&nbsp;&nbsp;
+                        </td>
+                    </td>
+                </tr>
+		    </table>
+            
+            <table width="@(width)" cellspacing="0" cellpadding="0" class="tablecontent">
+                @(content)
+            </table>
+        </td>
+    </tr>
+</table>

@@ -16,12 +16,12 @@ public class CourseRegistrationFormModel {
     //Attribute type must be List, otherwise Play bitches around
     public List<String> registeredCourses;
 
-    public Collection<Course> courses;
+    public List<Course> courses;
 
     //Default constructor needed, even if unused
     public CourseRegistrationFormModel(){}
 
-    public CourseRegistrationFormModel(String studentNumber, Collection<Course> courses){
+    public CourseRegistrationFormModel(String studentNumber, List<Course> courses){
         this.studentNumber = studentNumber;
         this.courses = courses;
     }
