@@ -1,1 +1,262 @@
-@(team: net.unikit.database.unikit_.interfaces.Team)
+@import snippets._
+
+@(team: net.unikit.database.unikit_.interfaces.Team, members: List[net.unikit.database.external.interfaces.Student], applicants: List[net.unikit.database.external.interfaces.Student], invitees: List[net.unikit.database.external.interfaces.Student], course: net.unikit.database.external.interfaces.Course, courseRegistrees: List[net.unikit.database.external.interfaces.Student], currentUser: net.unikit.database.external.interfaces.Student, sessionTimeout: java.util.Date)
+
+@currentUserIsMember() = @{
+    var result = false
+
+    for(registration <- team.getTeamRegistrations) {
+        if(!result && registration != null && registration.getStudentNumber() != null) {
+            if(registration.getStudentNumber().equals(currentUser.getStudentNumber)) {
+                result = true
+            }
+        }
+    }
+
+    result
+}
+
+@currentUserIsInvited() = @{
+    var result = false
+
+    for(invitation <- team.getTeamInvitations) {
+        if(!result && invitation != null && invitation.getInviteeStudentNumber() != null) {
+            if(invitation.getInviteeStudentNumber().equals(currentUser.getStudentNumber)) {
+                result = true
+            }
+        }
+    }
+
+    result
+}
+
+@currentUserRequested() = @{
+    var result = false
+
+    for(application <- team.getTeamApplications()) {
+        if(!result && application != null && application.getApplicantStudentNumber() != null) {
+            if(application.getApplicantStudentNumber().equals(currentUser.getStudentNumber)) {
+                result = true
+            }
+        }
+    }
+
+    result
+}
+
+@teamIsFull() = @{
+    val courseMaxTeamSize = assets.Global.getCourseManager.getCourse(team.getCourseId()).getMaxTeamSize()
+    val currentSize = team.getTeamInvitations().size() + team.getTeamRegistrations().size()
+
+    (currentSize >= courseMaxTeamSize)
+}
+
+@main("Team T" + String.format("%03d", team.getId()) + " (" + course.getName() + ")", assets.NavigationItem.REGISTRATIONS, currentUser, sessionTimeout) {
+    @evidence(605) {
+        <span class="thick">@("Team T" + String.format("%03d", team.getId()) + " (" + course.getName() + ")")</span>
+    }
+
+    @if(currentUserIsMember()) {
+        @evidence(605) {
+            Hier haben Sie die M&ouml;glichkeit Ihr aktuelles Team zu betrachten und zu bearbeiten.<br/><br/>
+            Sie k&ouml;nnen Ihre aktuellen Teammitglieder betrachten und aus dem Team entfernen.<br/>
+            Sofern Ihr Team die maximale Teilnehmerzahl nicht erreicht hat, k&ouml;nnen Sie Student in Ihr Team einladen oder Beitrittsanfragen von Studenten beantworten.
+        }
+    } else {
+        @evidence(605) {
+            Hier haben Sie die M&ouml;glichkeit Ihr aktuelles Team zu betrachten.<br/><br/>
+            @if(!teamIsFull()) {
+                Sie k&ouml;nnen eine Beitrittsanfrage senden, die von dem Team beantwortet werden kann.
+            } else {
+                Da dieses Team die maximale Teilnehmerzahl erreicht hat, k&ouml;nnen Sie keine Beitrittsanfrage senden.
+            }
+
+        }
+    }
+
+    @space()
+
+    @if(!members.isEmpty) {
+        @listSection("Aktuelle Mitglieder", 605) {
+            @for((member, index) <- members.view.zipWithIndex) {
+                @if(index % 2 == 0) {
+                    @listItemDark() {
+                        @member.getFirstName() @member.getLastName() (@member.getEmail())
+                    } {
+                        @if(currentUserIsMember()) {
+                            @buttonRight("Entfernen") {
+                                @controllers.studentComponent.routes.TeamController.removeMember(member.getStudentNumber(), team.getId())
+                            }
+                        } else {
+                            &nbsp;
+                        }
+                    }
+                } else {
+                    @listItemLight() {
+                        @member.getFirstName() @member.getLastName() (@member.getEmail())
+                    } {
+                        @if(currentUserIsMember()) {
+                            @buttonRight("Entfernen") {
+                                @controllers.studentComponent.routes.TeamController.removeMember(member.getStudentNumber(), team.getId())
+                            }
+                        } else {
+                            &nbsp;
+                        }
+                    }
+                }
+            }
+        }
+
+        @space()
+    }
+
+    @if(currentUserIsMember()) {
+        @if(!applicants.isEmpty) {
+            @listSection("Anfragende Studenten", 605) {
+                @for((member, index) <- applicants.view.zipWithIndex) {
+                    @if(index % 2 == 0) {
+                        @listItemDark() {
+                            @member.getFirstName() @member.getLastName() (@member.getEmail())
+                        } {
+                            @buttonRight("In Team aufnehmen") {
+                                @controllers.studentComponent.routes.TeamController.acceptMembershipRequest(member.getStudentNumber(), team.getId())
+                            }
+
+                            @buttonRight("Anfrage ablehnen") {
+                                @controllers.studentComponent.routes.TeamController.declineMembershipRequest(member.getStudentNumber(), team.getId())
+                            }
+                        }
+                    } else {
+                        @listItemLight() {
+                            @member.getFirstName() @member.getLastName() (@member.getEmail())
+                        } {
+                            @buttonRight("In Team aufnehmen") {
+                                @controllers.studentComponent.routes.TeamController.acceptMembershipRequest(member.getStudentNumber(), team.getId())
+                            }
+
+                            @buttonRight("Anfrage ablehnen") {
+                                @controllers.studentComponent.routes.TeamController.declineMembershipRequest(member.getStudentNumber(), team.getId())
+                            }
+                        }
+                    }
+                }
+            }
+
+            @space()
+        }
+
+        @if(!invitees.isEmpty) {
+            @listSection("Eingeladene Studenten", 605) {
+                @for((member, index) <- invitees.view.zipWithIndex) {
+                    @if(index % 2 == 0) {
+                        @listItemDark() {
+                            @member.getFirstName() @member.getLastName() (@member.getEmail())
+                        } {
+                            @buttonRight("Einladung zurueckziehen") {
+                                @controllers.studentComponent.routes.TeamController.cancelInvitation(member.getStudentNumber(), team.getId())
+                            }
+                        }
+                    } else {
+                        @listItemLight() {
+                            @member.getFirstName() @member.getLastName() (@member.getEmail())
+                        } {
+                            @buttonRight("Einladung zurueckziehen") {
+                                @controllers.studentComponent.routes.TeamController.cancelInvitation(member.getStudentNumber(), team.getId())
+                            }
+                        }
+                    }
+                }
+            }
+
+            @space()
+        }
+
+        @if(!teamIsFull()) {
+            @listSection("Verfuegbare Studenten", 605) {
+                @for((student, index) <- courseRegistrees.view.zipWithIndex) {
+                    @if(index % 2 == 0) {
+                        @listItemDark() {
+                            @student.getFirstName() @student.getLastName() (@student.getEmail())
+                        } {
+                            @buttonRight("Einladen") {
+                                @controllers.studentComponent.routes.TeamController.inviteStudent(student.getStudentNumber(), team.getId())
+                            }
+                        }
+                    } else {
+                        @listItemLight() {
+                            @student.getFirstName() @student.getLastName() (@student.getEmail())
+                        } {
+                            @buttonRight("Einladen") {
+                                @controllers.studentComponent.routes.TeamController.inviteStudent(student.getStudentNumber(), team.getId())
+                            }
+                        }
+                    }
+                }
+            }
+
+            @space()
+        }
+
+
+    } else {
+        @if(currentUserIsInvited()) {
+            <table width="605">
+                <tr>
+                    <td>
+                        <table width="605">
+                            @buttonRight("Einladung annehmen") {
+                                @controllers.studentComponent.routes.StudentController.acceptInvitation(team.getId())
+                            }
+
+                            @buttonRight("Einladung ablehnen") {
+                                @controllers.studentComponent.routes.StudentController.declineInvitation(team.getId())
+                            }
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        }
+
+        @if(currentUserRequested()) {
+            <table width="605">
+                <tr>
+                    <td>
+                        <table width="605">
+                            @buttonRight("Anfrage zurueckziehen") {
+                                @controllers.studentComponent.routes.StudentController.cancelMembershipRequest(team.getId())
+                            }
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        } else {
+            <table width="605">
+                <tr>
+                    <td>
+                        <table width="605">
+                        @buttonRight("Beitrittsanfrage versenden") {
+                            @controllers.studentComponent.routes.StudentController.requestMembership(team.getId())
+                        }
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        }
+    }
+
+    <table width="605">
+        <tr>
+            <td>
+                <table width="605">
+                    @buttonRight("Zurueck") {
+                        @if(request.getHeader("referer") == null || request.getHeader("referer").contains("/team/details")) {
+                            @controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId())
+                        } else {
+                            @request.getHeader("referer")
+                        }
+                    }
+                </table>
+            </td>
+        </tr>
+    </table>
+}

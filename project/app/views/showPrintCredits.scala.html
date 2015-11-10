@@ -1,0 +1,110 @@
+@import snippets._
+
+@(currentUser: net.unikit.database.external.interfaces.Student, sessionTimeout: java.util.Date)
+
+@main("DruckHistory", assets.NavigationItem.PRINT_QUOTAS, currentUser, sessionTimeout) {
+<div class="navitem">
+    <div class="navbgleft">&nbsp;</div>
+    <div class="navbgcen"><a href="@controllers.userComponent.routes.UserController.showPrintHistory()" title="Hier sehe ich meine bereits abgearbeiteten Printjobs" class="navlink">Druckjobs</a></div>
+    <div class="navbgright">&nbsp;</div>
+</div>
+<div class="navitem">
+    <div class="navbgleft">&nbsp;</div>
+    <div class="navbgcen"><a href="@controllers.userComponent.routes.UserController.showPrintCreditsHistory()" title="Hier sehe ich, wie sich meine Druckquoten berechnen" class="navlink">Konto</a></div>
+    <div class="navbgright">&nbsp;</div>
+</div>
+<div class="navitem">
+    <div class="navbgleft">&nbsp;</div>
+    <div class="navbgcen">Kontostand</div>
+    <div class="navbgright">&nbsp;</div>
+</div>
+<div id="navihr" style="width: 940px;"></div>
+    
+<br>
+<font class="h_1">DruckQuoten</font>
+<br><br>
+
+<br>
+
+<table width="605">
+	
+		
+		
+		
+		    <table width="298"  cellspacing="0" cellpadding="0" class="tableframe">
+	 		  <tr>
+				<td>&nbsp;&nbsp;Ihre aktuellen Druckquoten<td align="right">  <a href="javascript:openWin('getHelp.do?keyword=prtQut','200','300','help');">Hilfe</a> </td>
+			  </tr>
+		    </table>
+		  
+		    <table width="298" cellspacing="0" cellpadding="0" class="tablecontent">
+			  
+			    
+			      <tr>
+			  	    <td align="left"><span class="thick">Guthaben</span></td>
+				    <td align="right">12,50&nbsp;i€</td>
+				  </tr>
+				
+					
+			  
+			    
+				
+				  	<tr>
+					  	<td align="left"><span class="thick">Laser701</span>&nbsp;(0,05&nbsp;€/Seite)</td>
+						<td align="right">0&nbsp;Seiten</td>
+				  	</tr>
+						
+			  
+			    
+				
+				  	<tr>
+					  	<td align="left"><span class="thick">Laser765</span>&nbsp;(0,02&nbsp;€/Seite)</td>
+						<td align="right">0&nbsp;Seiten</td>
+				  	</tr>
+						
+			  
+			    
+				
+				  	<tr>
+					  	<td align="left"><span class="thick">Laser709</span>&nbsp;(0,05&nbsp;€/Seite)</td>
+						<td align="right">0&nbsp;Seiten</td>
+				  	</tr>
+						
+			  
+			    
+				
+				  	<tr>
+					  	<td align="left"><span class="thick">Laser761</span>&nbsp;(0,05&nbsp;€/Seite)</td>
+						<td align="right">0&nbsp;Seiten</td>
+				  	</tr>
+						
+			  
+			    
+				
+				  	<tr>
+					  	<td align="left"><span class="thick">APoolFarbe1104</span>&nbsp;(0,35&nbsp;€/Seite)</td>
+						<td align="right">0&nbsp;Seiten</td>
+				  	</tr>
+						
+			  
+			    
+				
+				  	<tr>
+					  	<td align="left"><span class="thick">APoolLaser1104_2</span>&nbsp;(0,05&nbsp;€/Seite)</td>
+						<td align="right">0&nbsp;Seiten</td>
+				  	</tr>
+						
+			  
+			    
+				
+				  	<tr>
+					  	<td align="left"><span class="thick">APoolLaser1104_1</span>&nbsp;(0,05&nbsp;€/Seite)</td>
+						<td align="right">0&nbsp;Seiten</td>
+				  	</tr>
+						
+			  
+			</table>
+			
+	</td>
+</table>
+}

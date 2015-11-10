@@ -1,26 +1,141 @@
-@import helper._
-@import models.courseComponent.FormModels.OverviewCourseRegistrationModel
-@(courseRegistrations: OverviewCourseRegistrationModel)
+@import snippets._
 
-<h1>Your courses:</h1>
-<body>
-    Your student number: <input type="text" name="studentNumber" value=@courseRegistrations.getStudentNumber readonly>
-    <table border = "1">
-        <tr>
-            <td> Course Name</td>
-            <td> Course ID</td>
-        </tr>
-        @for(course <- courseRegistrations.getRegisteredCourses){
-            <tr>
-                <td><a href='@controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId)' title="Coursedetails for @course.getName" class="navlink">@course.getName</a></td>
-                <td>@course.getId</td>
-            </tr>
+@(registeredCourses: List[net.unikit.database.external.interfaces.Course], currentUser: net.unikit.database.external.interfaces.Student, sessionTimeout: java.util.Date)
+
+@getSemesterValue(course: net.unikit.database.external.interfaces.Course) = @{
+    var fieldOfStudy = ""
+    var semester = ""
+    var result = ""
+
+    if (!course.getFieldOfStudies().isEmpty()) {
+        fieldOfStudy = course.getFieldOfStudies().head.getAbbreviation()
+    }
+    if (course.getSemester != null) {
+        semester = course.getSemester().toString()
+    }
+
+    if (fieldOfStudy.isEmpty() && semester.isEmpty()) {
+        result = "-"
+    } else {
+        result = fieldOfStudy + "" + semester
+    }
+
+    result
+}
+
+@main("Anmeldungen", assets.NavigationItem.REGISTRATIONS, currentUser, sessionTimeout) {
+    @evidence(605) {
+        <span class="thick">&Uuml;berblick der Anmeldungen</span>
+    }
+
+    @evidence(605) {
+        Hier finden Sie eine &Uuml;bersicht Ihrer angemeldeten Veranstaltungen.<br/><br/>
+        Durch klicken auf den Link einer Veranstaltung, um auf die entsprechende &Uuml;bersichtsseite zu kommen.<br/>
+        Dort haben Sie die M&ouml;glichkeit ein Team f&uuml;r die entsprechende Veranstaltung zu erstellen, Beitrittsanfragen an ein bestehendes Team zu versenden oder erhaltene Einladung eines Teams anzunehmen.
+    }
+
+    @space()
+
+    <!-- TODO: implement filter by semester -->
+    @if(!registeredCourses.isEmpty) {
+        @listSection("Verbindliche Anmeldungen im aktuellen Semester", 605) {
+            <!-- TODO: implement filter by course type 'Verteilung unbenotete GW' -->
+            @if(false) {
+                @courseSection("Verteilung unbenotete GW", "Prof", "", "", "Status") {
+                    @for((course, index) <- (registeredCourses).view.zipWithIndex) {
+                        @if(index % 2 == 0) {
+                            @courseItemLight("{ZKN}", "", "", "{OK}") {
+                                <a href="@controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId())" title="@(course.getName())">@(course.getName())</a>
+                            }
+                        } else {
+                            @courseItemDark("{ZKN}", "", "", "{OK}") {
+                                <a href="@controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId())" title="@(course.getName())">@(course.getName())</a>
+                            }
+                        }
+                    }
+                }
+            }
+
+            <!-- TODO: implement filter by course type 'Prüfungen/Klausuren' -->
+            @if(false) {
+                @courseSection("Prüfungen/Klausuren", "Prof", "Sem.", "", "Status") {
+                    @for((course, index) <- (registeredCourses).view.zipWithIndex) {
+                        @if(index % 2 == 0) {
+                            @courseItemLight("{ZKN}", getSemesterValue(course), "", "{OK}") {
+                                <a href="@controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId())" title="@(course.getName())">@(course.getName())</a>
+                            }
+                        } else {
+                            @courseItemDark("{ZKN}", getSemesterValue(course), "", "{OK}") {
+                                <a href="@controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId())" title="@(course.getName())">@(course.getName())</a>
+                            }
+                        }
+                    }
+                }
+            }
+
+            <!-- TODO: implement filter by course type 'Verteilung Projekte' -->
+            @if(false) {
+                @courseSection("Verteilung Projekte", "Prof", "", "Gruppe", "Status") {
+                    @for((course, index) <- (registeredCourses).view.zipWithIndex) {
+                        @if(index % 2 == 0) {
+                            @courseItemLight("{ZKN}", "", "{-}", "{OK}") {
+                                <a href="@controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId())" title="@(course.getName())">@(course.getName())</a>
+                            }
+                        } else {
+                            @courseItemDark("{ZKN}", "", "{-}", "{OK}") {
+                                <a href="@controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId())" title="@(course.getName())">@(course.getName())</a>
+                            }
+                        }
+                    }
+                }
+            }
+
+            <!-- TODO: implement filter by course type 'Praktika' -->
+            @if(!(registeredCourses).isEmpty) {
+                @courseSection("Praktika", "Prof", "Sem.", "Gruppe", "Status") {
+                    @for((course, index) <- (registeredCourses).view.zipWithIndex) {
+                        @if(index % 2 == 0) {
+                            @courseItemLight("{ZKN}", getSemesterValue(course), "{-}", "{OK}") {
+                                <a href="@controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId())" title="@(course.getName())">@(course.getName())</a>
+                            }
+                        } else {
+                            @courseItemDark("{ZKN}", getSemesterValue(course), "{-}", "{OK}") {
+                                <a href="@controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId())" title="@(course.getName())">@(course.getName())</a>
+                            }
+                        }
+                    }
+                }
+            }
         }
+
+        @space()
+    }
+
+    <!-- TODO: implement filter by semester -->
+    @if(false) {
+        @listSection("Verbindliche Anmeldungen im kommenden Semester", 605) {
+            <!-- TODO: Copy source code from above, but with semester filter -->
+        }
+
+        @space()
+    }
+
+    <div id="navihr" style="width: 940px;"></div>
+
+    <table width="300">
+        <tr class="tableheadline">
+            <td width="20%">Status</td>
+            <td width="80%">Beschreibung</td>
+        </tr>
+
+        <tr>
+            <td>OK</td>
+            <td>Anmeldung geprüft und erlaubt</td>
+        </tr>
+
+        <tr>
+            <td>not OK</td>
+            <td>Voraussetzungen noch nicht erfüllt</td>
+        </tr>
     </table>
-        <a href=@controllers.courseComponent.routes.CourseRegistrationController.showRegisterCourses>
-            <button>Register more courses</button>
-        </a>
-        <a href=@controllers.courseComponent.routes.CourseRegistrationController.cancelCourseRegistration>
-            <button>Cancel registrations</button>
-        </a>
-</body>
+}

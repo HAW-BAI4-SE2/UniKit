@@ -4,6 +4,7 @@ import net.unikit.database.external.interfaces.Course;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Data-model for displaying of course registrations in the showCourseOverview-page
@@ -11,7 +12,7 @@ import java.util.Collection;
  */
 public class OverviewCourseRegistrationModel{
     private String studentNumber;
-    private Collection<Course> registeredCourses;
+    private List<Course> registeredCourses;
 
     public OverviewCourseRegistrationModel(String studentNumber){
         this.registeredCourses = new ArrayList<>();
@@ -22,7 +23,7 @@ public class OverviewCourseRegistrationModel{
         return studentNumber;
     }
 
-    public Collection<Course> getRegisteredCourses() {
+    public List<Course> getRegisteredCourses() {
         return registeredCourses;
     }
 
