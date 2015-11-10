@@ -18,6 +18,7 @@ GET         /print_credits/history            controllers.userComponent.UserCont
 
 GET         /team/details                     controllers.studentComponent.TeamController.showTeamOverview(teamID: Integer)
 GET         /team/create                      controllers.studentComponent.StudentController.createTeam(courseID: Integer)
+GET         /team/delete                      controllers.studentComponent.StudentController.deleteTeam(teamID: Integer)
 GET         /team/show_available              controllers.studentComponent.TeamController.showAvailableTeams(courseID: Integer)
 GET         /team/remove_member               controllers.studentComponent.TeamController.removeMember(studentNumber: String, teamID: Integer)
 
