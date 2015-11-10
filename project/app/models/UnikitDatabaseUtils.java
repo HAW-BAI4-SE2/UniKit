@@ -153,6 +153,9 @@ public class UnikitDatabaseUtils {
                     currentRegistration.getStudentNumber(), currentRegistration.getTeam().getCourseId(),false);
         }
 
+        //TODO: delete all membership requests
+        //TODO: delete all invites
+        
         //Delete team
         checkNotNull(teamToBeDeleted);
         teamManager.deleteTeam(teamToBeDeleted);
