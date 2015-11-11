@@ -1,69 +1,65 @@
 package controllers.courseComponent;
 
 /**
- * The CourseRegistrationController controller contains the logic for displaying the courses available to the student for
- * registration and delegated any persisting operations to the DB-manager.
- * @pre currentUser logged-in student
- * @author Thomas Bednorz on 10/8/2015.
+ * Handles the interaction between views and models associated with course registrations
+ * @author Thomas Bednorz
  */
 
 import assets.Global;
 import assets.SessionUtils;
+
 import models.courseComponent.CourseDatabaseUtils;
+import models.courseComponent.CourseRegistrationDatabaseUtils;
 import models.courseComponent.FormModels.CourseRegistrationFormModel;
-import models.courseComponent.FormModels.OverviewCourseRegistrationModel;
+
 import net.unikit.database.external.interfaces.Course;
 import net.unikit.database.external.interfaces.Student;
 import net.unikit.database.unikit_.interfaces.CourseRegistration;
+
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
+
 import views.html.*;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 public class CourseRegistrationController extends Controller {
+
     /**
-    *Displays the registered courses for the current user
-    *@pre currentUser: a logged in user
-    *@return showCourseOverview page displaying all course registrations for the user
+     *Redirects to the overview of all registered courses for the current user.
+     *@pre currentUser: a logged in user
+     *@return showCourseOverview page displaying all course registrations for the user
      **/
+    public static Result index() {
+        return showCourseOverview();
+    }
+
+    /**
+     * Displays the registered courses for the current user
+     * @return showCourseOverview
+     */
     public static Result showCourseOverview() {
         Student currentUser = SessionUtils.getCurrentUser(session());
         Date sessionTimeout = SessionUtils.getSessionTimeout(session());
 
-        OverviewCourseRegistrationModel allRegistrationsCurrentUser = new OverviewCourseRegistrationModel(currentUser.getStudentNumber());
+        List<Course> allCourseRegistrationsForStudent =
+                CourseRegistrationDatabaseUtils.getRegisteredCourses(currentUser.getStudentNumber());
 
-        List<CourseRegistration> allCourseRegistrations = Global.getCourseRegistrationManager().getAllCourseRegistrations();
-
-        //If entry in the table of all registered courses matches student number of the current user and isn't already in the list, the course name is added the the OverviewList
-        for(CourseRegistration cr : allCourseRegistrations){
-            Course currentCourse = Global.getCourseManager().getCourse(cr.getCourseId());
-
-            if(cr.getStudentNumber().equals(allRegistrationsCurrentUser.getStudentNumber()) && !allRegistrationsCurrentUser.getRegisteredCourses().contains(currentCourse)){
-                allRegistrationsCurrentUser.getRegisteredCourses().add(currentCourse);
-            }
-        }
-
-        return ok(showCourseOverview.render(allRegistrationsCurrentUser.getRegisteredCourses(), currentUser, sessionTimeout));
+        return ok(showCourseOverview.render(allCourseRegistrationsForStudent, currentUser, sessionTimeout));
     }
 
     /**
-    *Displays the options for course registration.
-    *@pre currentUser: a logged in user
-    *@return showRegisterCourses page displaying all available courses for regsitration
-     **/
+     * Displays the options for registering courses.
+     * @return showRegisterCourses page
+     */
     public static Result showRegisterCourses() {
         Student currentUser = SessionUtils.getCurrentUser(session());
         Date sessionTimeout = SessionUtils.getSessionTimeout(session());
 
-        List<Course> availableCourses = Global.getCourseManager().getAllCourses();
-        availableCourses.removeAll(currentUser.getCompletedCourses());
-
+        List<Course> availableCourses =
+                CourseRegistrationDatabaseUtils.getAvailableCourses(currentUser.getStudentNumber());
 
         Form<CourseRegistrationFormModel> courseRegistration =
                 Form.form(CourseRegistrationFormModel.class)
@@ -72,31 +68,22 @@ public class CourseRegistrationController extends Controller {
         return ok(showRegisterCourses.render(courseRegistration, currentUser, sessionTimeout));
     }
 
+    /**
+     * Displays the options for canceling course registrations
+     * @return showCancelRegistration page
+     */
     public static Result showCancelRegistration(){
         Student currentUser = SessionUtils.getCurrentUser(session());
         Date sessionTimeout = SessionUtils.getSessionTimeout(session());
 
-        List<Course> allCourseRegistrations = new ArrayList<>();
-
-        for(CourseRegistration courseRegistration : Global.getCourseRegistrationManager().getAllCourseRegistrations()){
-            if(courseRegistration.getStudentNumber().equals(currentUser.getStudentNumber())){
-                allCourseRegistrations.add(Global.getCourseManager().getCourse(courseRegistration.getCourseId()));
-            }
-        }
+        List<Course> allCourseRegistrations =
+                CourseRegistrationDatabaseUtils.getRegisteredCourses(currentUser.getStudentNumber());
 
         Form<CourseRegistrationFormModel> courseRegistration =
                 Form.form(CourseRegistrationFormModel.class)
                         .fill(new CourseRegistrationFormModel(currentUser.getStudentNumber(), allCourseRegistrations));
 
         return ok(showCancelRegistration.render(courseRegistration, currentUser, sessionTimeout));
-    }
-    /**
-    *Redirects to the overview of all registered courses for the current user.
-    *@pre currentUser: a logged in user
-    *@return showCourseOverview page displaying all course registrations for the user
-     **/
-    public static Result index() {
-        return showCourseOverview();
     }
 
     /**
@@ -115,6 +102,7 @@ public class CourseRegistrationController extends Controller {
         CourseRegistrationFormModel crfm = courseRegistrationForm.get();
 
         //Persist data
+        //TODO: form validation
         if(crfm.registeredCourses != null){
             for(String course : crfm.registeredCourses){
                 CourseRegistration dbEntry = Global.getCourseRegistrationManager().createCourseRegistration();
@@ -143,6 +131,7 @@ public class CourseRegistrationController extends Controller {
         CourseRegistrationFormModel crfm = courseRegistrationForm.get();
 
         //Persist data
+        //TODO: form validation
         if(crfm.registeredCourses != null){
             List<CourseRegistration> allCourseRegistrations = Global.getCourseRegistrationManager().getAllCourseRegistrations();
             CourseRegistration dbEntry = Global.getCourseRegistrationManager().createCourseRegistration();
@@ -161,15 +150,5 @@ public class CourseRegistrationController extends Controller {
         }
 
         return showCourseOverview();
-    }
-
-    /**
-     * Changes the status of a student for a course to either true (is in the team pool) or false (is in the single pool)
-     * @param studentNumber the student for which the status will be changed
-     * @param courseID the course for which the status of the student will be changed
-     * @param status true if student is in team, else false
-     */
-    public static void changeTeamRegistrationStatus(String studentNumber, int courseID, boolean status){
-        CourseDatabaseUtils.changeTeamRegistrationStatus(studentNumber, courseID, status);
     }
 }

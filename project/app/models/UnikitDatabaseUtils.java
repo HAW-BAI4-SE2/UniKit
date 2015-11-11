@@ -143,7 +143,7 @@ public class UnikitDatabaseUtils {
             }
         }
 
-        //TODO: better logic if team doestn exist
+        //TODO: better logic if team doesnt exist
         checkNotNull(teamToBeDeleted);
         int courseForTeamID = teamToBeDeleted.getCourseId();
 
