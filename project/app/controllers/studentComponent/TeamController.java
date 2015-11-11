@@ -6,8 +6,6 @@ package controllers.studentComponent;
 
 import assets.Global;
 import assets.SessionUtils;
-import controllers.studentComponent.*;
-import models.studentComponent.FormModels.TeamStateChangeFormModel;
 import models.studentComponent.TeamDatabaseUtils;
 import net.unikit.database.external.interfaces.Course;
 import net.unikit.database.external.interfaces.Student;
@@ -17,7 +15,6 @@ import net.unikit.database.unikit_.interfaces.CourseRegistration;
 import net.unikit.database.unikit_.interfaces.Team;
 import net.unikit.database.unikit_.interfaces.TeamApplication;
 import net.unikit.database.unikit_.interfaces.TeamInvitation;
-import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 
