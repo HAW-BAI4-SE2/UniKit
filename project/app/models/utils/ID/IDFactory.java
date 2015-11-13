@@ -23,7 +23,7 @@ public  class IDFactory {
     }
 
     public static StudentNumber getStudentNumber(String studentNumber){
-        if (studentNumber == null) {
+        if (studentNumber == null || studentNumber.equals("")) {
             throw new IllegalArgumentException();
         } else {
             return new StudentNumber(studentNumber);
