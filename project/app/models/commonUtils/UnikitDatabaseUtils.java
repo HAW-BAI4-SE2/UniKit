@@ -20,7 +20,7 @@ public class UnikitDatabaseUtils {
         TeamInvitationManager invitationManager = Global.getTeamInvitationManager();
         List<TeamInvitation> allTeamInvitations = invitationManager.getAllTeamInvitations();
         TeamInvitation invitationToBeDeleted = null;
-        
+
         for(TeamInvitation currentInvitation : allTeamInvitations){
             if(currentInvitation.getTeam().getId().equals(teamID) && currentInvitation.getInviteeStudentNumber().equals(studentNumber)){
                invitationToBeDeleted = currentInvitation;
