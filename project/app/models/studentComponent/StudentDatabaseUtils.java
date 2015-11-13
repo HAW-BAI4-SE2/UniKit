@@ -6,7 +6,7 @@ package models.studentComponent;
 
 import assets.Global;
 
-import models.utils.UnikitDatabaseUtils;
+import models.commonUtils.UnikitDatabaseUtils;
 
 import models.courseComponent.CourseDatabaseUtils;
 

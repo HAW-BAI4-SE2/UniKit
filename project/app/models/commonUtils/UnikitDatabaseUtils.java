@@ -1,4 +1,4 @@
-package models.utils;
+package models.commonUtils;
 
 /**
  * @author Thomas Bednorz
@@ -6,6 +6,7 @@ package models.utils;
 
 import assets.Global;
 
+import models.commonUtils.ID.StudentNumber;
 import net.unikit.database.external.interfaces.Course;
 import net.unikit.database.unikit_.interfaces.*;
 
@@ -19,7 +20,7 @@ public class UnikitDatabaseUtils {
         TeamInvitationManager invitationManager = Global.getTeamInvitationManager();
         List<TeamInvitation> allTeamInvitations = invitationManager.getAllTeamInvitations();
         TeamInvitation invitationToBeDeleted = null;
-
+        
         for(TeamInvitation currentInvitation : allTeamInvitations){
             if(currentInvitation.getTeam().getId().equals(teamID) && currentInvitation.getInviteeStudentNumber().equals(studentNumber)){
                invitationToBeDeleted = currentInvitation;

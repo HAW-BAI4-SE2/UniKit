@@ -1,7 +1,7 @@
 package models.courseComponent;
 
 import assets.Global;
-import models.utils.UnikitDatabaseUtils;
+import models.commonUtils.UnikitDatabaseUtils;
 
 import net.unikit.database.external.interfaces.Course;
 import net.unikit.database.unikit_.interfaces.CourseRegistration;
