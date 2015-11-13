@@ -6,7 +6,7 @@ package controllers.courseComponent;
 
 import assets.Global;
 import assets.SessionUtils;
-import models.UnikitDatabaseUtils;
+import models.utils.UnikitDatabaseUtils;
 import models.courseComponent.CourseDatabaseUtils;
 
 import net.unikit.database.external.interfaces.Course;

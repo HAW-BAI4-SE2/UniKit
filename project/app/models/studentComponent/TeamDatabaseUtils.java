@@ -5,10 +5,9 @@ package models.studentComponent;
  */
 
 import assets.Global;
-import models.UnikitDatabaseUtils;
+import models.utils.UnikitDatabaseUtils;
 import net.unikit.database.external.interfaces.Course;
 import net.unikit.database.external.interfaces.Student;
-import net.unikit.database.external.interfaces.StudentManager;
 import net.unikit.database.unikit_.interfaces.*;
 
 import java.util.ArrayList;

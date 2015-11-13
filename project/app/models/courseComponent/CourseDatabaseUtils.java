@@ -5,12 +5,9 @@ package models.courseComponent;
  */
 
 import assets.Global;
-import models.UnikitDatabaseUtils;
+import models.utils.UnikitDatabaseUtils;
 import net.unikit.database.external.interfaces.Course;
-import net.unikit.database.unikit_.interfaces.CourseRegistration;
-import net.unikit.database.unikit_.interfaces.CourseRegistrationManager;
 import net.unikit.database.unikit_.interfaces.Team;
-import net.unikit.database.unikit_.interfaces.TeamRegistrationManager;
 
 import java.util.ArrayList;
 import java.util.List;

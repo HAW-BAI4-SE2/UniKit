@@ -1,4 +1,4 @@
-package models;
+package models.utils;
 
 /**
  * @author Thomas Bednorz
