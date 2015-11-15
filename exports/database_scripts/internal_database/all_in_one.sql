@@ -13,6 +13,7 @@ CREATE TABLE `internal_database`.`COURSE_REGISTRATION` (
   `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '',
   UNIQUE INDEX `id_UNIQUE` (`id` ASC)  COMMENT '',
+  UNIQUE KEY `student_number__course_id_UNIQUE` (`student_number`, `course_id`),
   INDEX `student_number_idx` (`student_number` ASC)  COMMENT '',
   INDEX `course_id_idx` (`course_id` ASC)  COMMENT '');
 
@@ -37,6 +38,7 @@ CREATE TABLE `internal_database`.`TEAM_REGISTRATION` (
   UNIQUE INDEX `id_UNIQUE` (`id` ASC)  COMMENT '',
   INDEX `student_number_idx` (`student_number` ASC)  COMMENT '',
   INDEX `team_id_idx` (`team_id` ASC)  COMMENT '',
+  UNIQUE KEY `student_number__team_id_UNIQUE` (`student_number`, `team_id`),
   CONSTRAINT `team_id_team_registration`
     FOREIGN KEY (`team_id`)
     REFERENCES `internal_database`.`TEAM` (`id`)
@@ -55,6 +57,7 @@ CREATE TABLE `internal_database`.`TEAM_INVITATION` (
   INDEX `invitee_student_number_idx` (`invitee_student_number` ASC)  COMMENT '',
   INDEX `team_id_idx` (`team_id` ASC)  COMMENT '',
   INDEX `created_by_student_number_idx` (`created_by_student_number` ASC)  COMMENT '',
+  UNIQUE KEY `invitee_student_number__team_id_UNIQUE` (`invitee_student_number`, `team_id`),
   CONSTRAINT `team_id_team_invitation`
     FOREIGN KEY (`team_id`)
     REFERENCES `internal_database`.`TEAM` (`id`)
@@ -71,6 +74,7 @@ CREATE TABLE `internal_database`.`MEMBERSHIP_REQUEST` (
   UNIQUE INDEX `id_UNIQUE` (`id` ASC)  COMMENT '',
   INDEX `applicant_student_number_idx` (`applicant_student_number` ASC)  COMMENT '',
   INDEX `team_id_idx` (`team_id` ASC)  COMMENT '',
+  UNIQUE KEY `applicant_student_number__team_id_UNIQUE` (`applicant_student_number`, `team_id`),
   CONSTRAINT `team_id_membership_request`
     FOREIGN KEY (`team_id`)
     REFERENCES `internal_database`.`TEAM` (`id`)

@@ -4,16 +4,6 @@ DROP DATABASE `internal_database_dev`;
 CREATE SCHEMA `external_database_dev`;
 CREATE SCHEMA `internal_database_dev`;
 
-DROP TABLE `external_database_dev`.`COMPLETED_COURSE`;
-DROP TABLE `external_database_dev`.`STUDENT`;
-DROP TABLE `external_database_dev`.`COURSE_LECTURE`;
-DROP TABLE `external_database_dev`.`COURSE_GROUP`;
-DROP TABLE `external_database_dev`.`APPOINTMENT`;
-DROP TABLE `external_database_dev`.`DIDACTIC_UNIT`;
-DROP TABLE `external_database_dev`.`COURSE_TO_FIELD_OF_STUDY`;
-DROP TABLE `external_database_dev`.`COURSE`;
-DROP TABLE `external_database_dev`.`FIELD_OF_STUDY`;
-
 CREATE TABLE `external_database_dev`.`FIELD_OF_STUDY` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `name` VARCHAR(63) NOT NULL COMMENT '',
@@ -43,6 +33,7 @@ CREATE TABLE `external_database_dev`.`COURSE_TO_FIELD_OF_STUDY` (
   UNIQUE INDEX `id_UNIQUE` (`id` ASC)  COMMENT '',
   INDEX `course_id_idx` (`course_id` ASC)  COMMENT '',
   INDEX `field_of_study_id_idx` (`field_of_study_id` ASC)  COMMENT '',
+  UNIQUE KEY `course_id__field_of_study_id_UNIQUE` (`course_id`, `field_of_study_id`),
   CONSTRAINT `course_id_course_to_field_of_study`
     FOREIGN KEY (`course_id`)
     REFERENCES `external_database_dev`.`COURSE` (`id`)
@@ -74,6 +65,8 @@ CREATE TABLE `external_database_dev`.`APPOINTMENT` (
   PRIMARY KEY (`id`)  COMMENT '',
   UNIQUE INDEX `id_UNIQUE` (`id` ASC)  COMMENT '',
   INDEX `didactic_unit_id_idx` (`didactic_unit_id` ASC)  COMMENT '',
+  UNIQUE KEY `didactic_unit_id__start_date_UNIQUE` (`didactic_unit_id`, `start_date`),
+  UNIQUE KEY `didactic_unit_id__end_date_UNIQUE` (`didactic_unit_id`, `end_date`),
   CONSTRAINT `didactic_unit_id_appointment`
     FOREIGN KEY (`didactic_unit_id`)
     REFERENCES `external_database_dev`.`DIDACTIC_UNIT` (`id`)
@@ -138,12 +131,6 @@ CREATE TABLE `external_database_dev`.`COMPLETED_COURSE` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
-DROP TABLE `internal_database_dev`.`MEMBERSHIP_REQUEST`;
-DROP TABLE `internal_database_dev`.`TEAM_INVITATION`;
-DROP TABLE `internal_database_dev`.`TEAM_REGISTRATION`;
-DROP TABLE `internal_database_dev`.`TEAM`;
-DROP TABLE `internal_database_dev`.`COURSE_REGISTRATION`;
-
 CREATE TABLE `internal_database_dev`.`COURSE_REGISTRATION` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `student_number` VARCHAR(31) NOT NULL COMMENT '',
@@ -153,6 +140,7 @@ CREATE TABLE `internal_database_dev`.`COURSE_REGISTRATION` (
   `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '',
   UNIQUE INDEX `id_UNIQUE` (`id` ASC)  COMMENT '',
+  UNIQUE KEY `student_number__course_id_UNIQUE` (`student_number`, `course_id`),
   INDEX `student_number_idx` (`student_number` ASC)  COMMENT '',
   INDEX `course_id_idx` (`course_id` ASC)  COMMENT '');
 
@@ -177,6 +165,7 @@ CREATE TABLE `internal_database_dev`.`TEAM_REGISTRATION` (
   UNIQUE INDEX `id_UNIQUE` (`id` ASC)  COMMENT '',
   INDEX `student_number_idx` (`student_number` ASC)  COMMENT '',
   INDEX `team_id_idx` (`team_id` ASC)  COMMENT '',
+  UNIQUE KEY `student_number__team_id_UNIQUE` (`student_number`, `team_id`),
   CONSTRAINT `team_id_team_registration`
     FOREIGN KEY (`team_id`)
     REFERENCES `internal_database_dev`.`TEAM` (`id`)
@@ -195,6 +184,7 @@ CREATE TABLE `internal_database_dev`.`TEAM_INVITATION` (
   INDEX `invitee_student_number_idx` (`invitee_student_number` ASC)  COMMENT '',
   INDEX `team_id_idx` (`team_id` ASC)  COMMENT '',
   INDEX `created_by_student_number_idx` (`created_by_student_number` ASC)  COMMENT '',
+  UNIQUE KEY `invitee_student_number__team_id_UNIQUE` (`invitee_student_number`, `team_id`),
   CONSTRAINT `team_id_team_invitation`
     FOREIGN KEY (`team_id`)
     REFERENCES `internal_database_dev`.`TEAM` (`id`)
@@ -211,6 +201,7 @@ CREATE TABLE `internal_database_dev`.`MEMBERSHIP_REQUEST` (
   UNIQUE INDEX `id_UNIQUE` (`id` ASC)  COMMENT '',
   INDEX `applicant_student_number_idx` (`applicant_student_number` ASC)  COMMENT '',
   INDEX `team_id_idx` (`team_id` ASC)  COMMENT '',
+  UNIQUE KEY `applicant_student_number__team_id_UNIQUE` (`applicant_student_number`, `team_id`),
   CONSTRAINT `team_id_membership_request`
     FOREIGN KEY (`team_id`)
     REFERENCES `internal_database_dev`.`TEAM` (`id`)
