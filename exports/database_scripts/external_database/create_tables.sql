@@ -27,6 +27,7 @@ CREATE TABLE `external_database`.`COURSE_TO_FIELD_OF_STUDY` (
   UNIQUE INDEX `id_UNIQUE` (`id` ASC)  COMMENT '',
   INDEX `course_id_idx` (`course_id` ASC)  COMMENT '',
   INDEX `field_of_study_id_idx` (`field_of_study_id` ASC)  COMMENT '',
+  UNIQUE KEY `course_id__field_of_study_id_UNIQUE` (`course_id`, `field_of_study_id`),
   CONSTRAINT `course_id_course_to_field_of_study`
     FOREIGN KEY (`course_id`)
     REFERENCES `external_database`.`COURSE` (`id`)
@@ -58,6 +59,8 @@ CREATE TABLE `external_database`.`APPOINTMENT` (
   PRIMARY KEY (`id`)  COMMENT '',
   UNIQUE INDEX `id_UNIQUE` (`id` ASC)  COMMENT '',
   INDEX `didactic_unit_id_idx` (`didactic_unit_id` ASC)  COMMENT '',
+  UNIQUE KEY `didactic_unit_id__start_date_UNIQUE` (`didactic_unit_id`, `start_date`),
+  UNIQUE KEY `didactic_unit_id__end_date_UNIQUE` (`didactic_unit_id`, `end_date`),
   CONSTRAINT `didactic_unit_id_appointment`
     FOREIGN KEY (`didactic_unit_id`)
     REFERENCES `external_database`.`DIDACTIC_UNIT` (`id`)
