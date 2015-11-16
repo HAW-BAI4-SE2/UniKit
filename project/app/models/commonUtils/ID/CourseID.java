@@ -6,7 +6,7 @@ package models.commonUtils.ID;
 public class CourseID {
     int courseID;
 
-    public CourseID get(int courseID) throws IllegalArgumentException{
+    public static CourseID get(int courseID) throws IllegalArgumentException{
         return new CourseID(courseID);
     }
 
