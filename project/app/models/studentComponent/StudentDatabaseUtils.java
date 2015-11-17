@@ -6,7 +6,6 @@ package models.studentComponent;
 
 import assets.Global;
 
-import controllers.courseComponent.CourseRegistrationController;
 
 import models.UnikitDatabaseUtils;
 
