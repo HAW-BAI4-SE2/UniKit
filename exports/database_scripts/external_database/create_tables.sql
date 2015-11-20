@@ -39,53 +39,61 @@ CREATE TABLE `external_database`.`COURSE_TO_FIELD_OF_STUDY` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
-CREATE TABLE `external_database`.`DIDACTIC_UNIT` (
+CREATE TABLE `external_database`.`COURSE_GROUP` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `course_id` INT NOT NULL COMMENT '',
+  `group_number` INT NOT NULL COMMENT '',
+  `max_group_size` INT NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '',
   UNIQUE INDEX `id_UNIQUE` (`id` ASC)  COMMENT '',
   INDEX `course_id_idx` (`course_id` ASC)  COMMENT '',
-  CONSTRAINT `course_id_didactic_unit`
+  CONSTRAINT `course_id_course_group`
     FOREIGN KEY (`course_id`)
     REFERENCES `external_database`.`COURSE` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
-CREATE TABLE `external_database`.`APPOINTMENT` (
+CREATE TABLE `external_database`.`COURSE_GROUP_APPOINTMENT` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
-  `didactic_unit_id` INT NOT NULL COMMENT '',
+  `course_group_id` INT NOT NULL COMMENT '',
   `start_date` DATETIME NOT NULL COMMENT '',
   `end_date` DATETIME NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '',
   UNIQUE INDEX `id_UNIQUE` (`id` ASC)  COMMENT '',
-  INDEX `didactic_unit_id_idx` (`didactic_unit_id` ASC)  COMMENT '',
-  UNIQUE KEY `didactic_unit_id__start_date_UNIQUE` (`didactic_unit_id`, `start_date`),
-  UNIQUE KEY `didactic_unit_id__end_date_UNIQUE` (`didactic_unit_id`, `end_date`),
-  CONSTRAINT `didactic_unit_id_appointment`
-    FOREIGN KEY (`didactic_unit_id`)
-    REFERENCES `external_database`.`DIDACTIC_UNIT` (`id`)
+  INDEX `course_group_id_idx` (`course_group_id` ASC)  COMMENT '',
+  UNIQUE KEY `course_group_id__start_date_UNIQUE` (`course_group_id`, `start_date`),
+  UNIQUE KEY `course_group_id__end_date_UNIQUE` (`course_group_id`, `end_date`),
+  CONSTRAINT `course_group_id_appointment`
+    FOREIGN KEY (`course_group_id`)
+    REFERENCES `external_database`.`COURSE_GROUP` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
-CREATE TABLE `external_database`.`COURSE_GROUP` (
-  `id` INT NOT NULL COMMENT '',
-  `group_number` INT NOT NULL COMMENT '',
-  `max_group_size` INT NOT NULL COMMENT '',
+CREATE TABLE `external_database`.`COURSE_LECTURE` (
+  `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
+  `course_id` INT NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '',
   UNIQUE INDEX `id_UNIQUE` (`id` ASC)  COMMENT '',
-  CONSTRAINT `id_course_group`
-    FOREIGN KEY (`id`)
-    REFERENCES `external_database`.`DIDACTIC_UNIT` (`id`)
+  INDEX `course_id_idx` (`course_id` ASC)  COMMENT '',
+  CONSTRAINT `course_id_course_lecture`
+    FOREIGN KEY (`course_id`)
+    REFERENCES `external_database`.`COURSE` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
-    
-CREATE TABLE `external_database`.`COURSE_LECTURE` (
-  `id` INT NOT NULL COMMENT '',
+
+CREATE TABLE `external_database`.`COURSE_LECTURE_APPOINTMENT` (
+  `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
+  `course_lecture_id` INT NOT NULL COMMENT '',
+  `start_date` DATETIME NOT NULL COMMENT '',
+  `end_date` DATETIME NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '',
   UNIQUE INDEX `id_UNIQUE` (`id` ASC)  COMMENT '',
-  CONSTRAINT `id_course_lecture`
-    FOREIGN KEY (`id`)
-    REFERENCES `external_database`.`DIDACTIC_UNIT` (`id`)
+  INDEX `course_lecture_id_idx` (`course_lecture_id` ASC)  COMMENT '',
+  UNIQUE KEY `course_lecture_id__start_date_UNIQUE` (`course_lecture_id`, `start_date`),
+  UNIQUE KEY `course_lecture_id__end_date_UNIQUE` (`course_lecture_id`, `end_date`),
+  CONSTRAINT `course_lecture_id_appointment`
+    FOREIGN KEY (`course_lecture_id`)
+    REFERENCES `external_database`.`COURSE_LECTURE` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
@@ -124,39 +132,3 @@ CREATE TABLE `external_database`.`COMPLETED_COURSE` (
     REFERENCES `external_database`.`STUDENT` (`student_number`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
-
-DELIMITER //
-CREATE TRIGGER `external_database`.`chk_id_course_group_insert` BEFORE INSERT ON `COURSE_GROUP`
-FOR EACH ROW
-BEGIN
-  IF (NEW.`id` IN (SELECT `id` FROM `external_database`.`COURSE_LECTURE`)) THEN
-    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'INSERT statement conflicted with CHECK constraint `external_database`.`chk_id_course_group_insert`.';
-  END IF;
-END; //
-
-DELIMITER //
-CREATE TRIGGER `external_database`.`chk_id_course_group_update` BEFORE UPDATE ON `COURSE_GROUP`
-FOR EACH ROW
-BEGIN
-  IF (NEW.`id` IN (SELECT `id` FROM `external_database`.`COURSE_LECTURE`)) THEN
-    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'INSERT statement conflicted with CHECK constraint `external_database`.`chk_id_course_group_update`.';
-  END IF;
-END; //
-
-DELIMITER //
-CREATE TRIGGER `external_database`.`chk_id_course_lecture_insert` BEFORE INSERT ON `COURSE_LECTURE`
-FOR EACH ROW
-BEGIN
-  IF (NEW.`id` IN (SELECT `id` FROM `external_database`.`COURSE_GROUP`)) THEN
-    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'INSERT statement conflicted with CHECK constraint `external_database`.`chk_id_course_lecture_insert`.';
-  END IF;
-END; //
-
-DELIMITER //
-CREATE TRIGGER `external_database`.`chk_id_course_lecture_update` BEFORE UPDATE ON `COURSE_LECTURE`
-FOR EACH ROW
-BEGIN
-  IF (NEW.`id` IN (SELECT `id` FROM `external_database`.`COURSE_GROUP`)) THEN
-    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'INSERT statement conflicted with CHECK constraint `external_database`.`chk_id_course_lecture_update`.';
-  END IF;
-END; //
