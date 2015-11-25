@@ -6,6 +6,7 @@ package models.studentComponent;
 
 import assets.Global;
 
+import models.commonUtils.Exceptions.MembershipRequestNotFoundException;
 import models.commonUtils.ID.CourseID;
 import models.commonUtils.ID.StudentNumber;
 import models.commonUtils.ID.TeamID;
@@ -99,7 +100,7 @@ public class StudentDatabaseUtils {
      * @param sNumber the student number of the student who accepted the invitation and will be added to the team
      * @param tID the ID of the team that the student will be added to
      */
-    public static void deleteInvitation(StudentNumber sNumber, TeamID tID){
+    public static void deleteInvitation(StudentNumber sNumber, TeamID tID) throws InvitationNotFoundException{
         UnikitDatabaseUtils.deleteInvitation(sNumber,tID);
     }
 
@@ -108,7 +109,7 @@ public class StudentDatabaseUtils {
      * @param sNumber the student number of the student who requests membership
      * @param tID the ID of the team that gets the membership request
      */
-    public static void storeMembershipRequest(StudentNumber sNumber, TeamID tID) {
+    public static void storeMembershipRequest(StudentNumber sNumber, TeamID tID){
         int teamID = tID.value();
         String studentNumber = sNumber.value();
 
@@ -129,7 +130,7 @@ public class StudentDatabaseUtils {
      * @param sNumber the student number of the student who requests membership
      * @param id the ID of the team that receivers the membership request
      */
-    public static void deleteMembershipRequest(StudentNumber sNumber, TeamID id) throws NullPointerException {
+    public static void deleteMembershipRequest(StudentNumber sNumber, TeamID id) throws MembershipRequestNotFoundException {
         int teamID = id.value();
         String studentNumber = sNumber.value();
 

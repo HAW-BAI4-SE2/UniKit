@@ -38,6 +38,12 @@ public class StudentController extends Controller {
         CourseID cID = CourseID.get(courseID);
         StudentNumber sNumber = StudentNumber.get(currentUser.getStudentNumber());
 
+        try{
+            StudentModel.createTeam(sNumber, cID);
+        }
+        catch(TeamNotFoundException e){
+
+        }
         int createdTeamID = StudentDatabaseUtils.createTeam(sNumber, cID);
 
         //TODO send mail to student
@@ -53,6 +59,12 @@ public class StudentController extends Controller {
     public static Result deleteTeam(int teamID){
         TeamID tID = TeamID.get(teamID);
 
+        try{
+            StudentModel.deleteTeam(tID);
+        }
+        catch(TeamNotFoundException e){
+
+        }
         int courseForTeam = StudentDatabaseUtils.deleteTeam(tID);
 
         return CourseController.showCourseDetails(courseForTeam);
@@ -64,15 +76,19 @@ public class StudentController extends Controller {
      * @return showTeamOverview-page
      */
     public static Result acceptInvitation(int teamID){
-        TeamID tID = TeamID.get(teamID);
-        StudentNumber sNumber = StudentNumber.get(currentUser.getStudentNumber());
 
-        //Add the student to the team and updates registration status
-        StudentDatabaseUtils.acceptInvitation(sNumber, tID);
+            TeamID tID = TeamID.get(teamID);
+            StudentNumber sNumber = StudentNumber.get(currentUser.getStudentNumber());
+            try{
+            //Add the student to the team and updates registration status
+            StudentModel.acceptInvitation(sNumber, tID);
+            }catch(Exception e){
 
-        //TODO: send mail to team members
+             }
+            //TODO: send mail to team members
 
-        return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(tID.value()));
+            return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(tID.value()));
+
     }
 
     /**
@@ -82,6 +98,12 @@ public class StudentController extends Controller {
         TeamID tID = TeamID.get(teamID);
         StudentNumber sNumber = StudentNumber.get(currentUser.getStudentNumber());
 
+        try{
+            StudentModel.declineInvitation(sNumber, tID);
+        }
+        catch(InvitationNotFoundException e){
+
+        }
         StudentDatabaseUtils.deleteInvitation(sNumber, tID);
 
         //TODO: send mail to teammembers & student
@@ -121,8 +143,12 @@ public class StudentController extends Controller {
     public static Result cancelMembershipRequest(int teamID){
         TeamID tID = TeamID.get(teamID);
         StudentNumber sNumber = StudentNumber.get(currentUser.getStudentNumber());
+        try{
+            StudentModel.cancelMembershipRequest(sNumber, tID);
+        } catch (MembershipRequestNotFoundException e) {
 
-        StudentDatabaseUtils.deleteMembershipRequest(sNumber,tID);
+        }
+
         
         //TODO: send mail to student
 
