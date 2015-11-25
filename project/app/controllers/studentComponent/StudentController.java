@@ -8,12 +8,14 @@ import assets.SessionUtils;
 
 import controllers.courseComponent.CourseController;
 
+import models.commonUtils.Exceptions.MembershipRequestNotFoundException;
 import models.studentComponent.StudentDatabaseUtils;
 
 import models.commonUtils.ID.CourseID;
 import models.commonUtils.ID.StudentNumber;
 import models.commonUtils.ID.TeamID;
 
+import models.studentComponent.StudentModel;
 import net.unikit.database.external.interfaces.Student;
 
 import play.mvc.Controller;
@@ -95,10 +97,15 @@ public class StudentController extends Controller {
         TeamID tID = TeamID.get(teamID);
         StudentNumber sNumber = StudentNumber.get(currentUser.getStudentNumber());
 
-        if (StudentDatabaseUtils.isStudentInvited(sNumber, tID)) {
+        /*if (StudentDatabaseUtils.isStudentInvited(sNumber, tID)) {
             acceptInvitation(tID.value());
         } else {
             StudentDatabaseUtils.storeMembershipRequest(sNumber, tID);
+        }*/
+        try{
+            StudentModel.requestMembership(sNumber,tID);
+        } catch (MembershipRequestNotFoundException e) {
+
         }
         //TODO: send mail to team members & student
 
