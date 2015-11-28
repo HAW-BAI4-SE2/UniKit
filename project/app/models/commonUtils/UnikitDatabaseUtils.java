@@ -6,6 +6,7 @@ package models.commonUtils;
 
 import assets.Global;
 
+import models.commonUtils.Exceptions.InvitationNotFoundException;
 import models.commonUtils.ID.CourseID;
 import models.commonUtils.ID.StudentNumber;
 import models.commonUtils.ID.TeamID;
@@ -23,7 +24,7 @@ public class UnikitDatabaseUtils {
      * @param sNumber
      * @param tID
      */
-    public static void deleteInvitation(StudentNumber sNumber, TeamID tID){
+    public static void deleteInvitation(StudentNumber sNumber, TeamID tID) throws InvitationNotFoundException {
         int teamID = tID.value();
         String studentNumber = sNumber.value();
 
@@ -31,15 +32,22 @@ public class UnikitDatabaseUtils {
         List<TeamInvitation> allTeamInvitations = invitationManager.getAllTeamInvitations();
         TeamInvitation invitationToBeDeleted = null;
 
-        for(TeamInvitation currentInvitation : allTeamInvitations){
-            if(currentInvitation.getTeam().getId().equals(teamID) &&
-                    currentInvitation.getInviteeStudentNumber().equals(studentNumber)){
-                invitationToBeDeleted = currentInvitation;
-                break;
+            for (TeamInvitation currentInvitation : allTeamInvitations) {
+                if (currentInvitation.getTeam().getId().equals(teamID) &&
+                        currentInvitation.getInviteeStudentNumber().equals(studentNumber)) {
+                    invitationToBeDeleted = currentInvitation;
+                    break;
+                }
             }
+
+        if(invitationToBeDeleted == null){
+            throw new InvitationNotFoundException();
+        }
+        else{
+            allTeamInvitations.remove(invitationToBeDeleted);
         }
 
-        checkNotNull(invitationToBeDeleted);
+        //checkNotNull(invitationToBeDeleted);
 
         invitationManager.deleteTeamInvitation(invitationToBeDeleted);
     }

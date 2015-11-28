@@ -8,6 +8,7 @@ import assets.SessionUtils;
 
 import controllers.courseComponent.CourseController;
 
+import models.commonUtils.Exceptions.InvitationNotFoundException;
 import models.commonUtils.Exceptions.MembershipRequestNotFoundException;
 import models.studentComponent.StudentDatabaseUtils;
 
@@ -82,8 +83,8 @@ public class StudentController extends Controller {
             try{
             //Add the student to the team and updates registration status
             StudentModel.acceptInvitation(sNumber, tID);
-            }catch(Exception e){
-
+            }catch(InvitationNotFoundException e){
+                System.err.println("Invitation not found");
              }
             //TODO: send mail to team members
 
@@ -101,7 +102,7 @@ public class StudentController extends Controller {
         try{
             StudentModel.declineInvitation(sNumber, tID);
         }
-        catch(InvitationNotFoundException e){
+        catch(Exception e){
 
         }
         StudentDatabaseUtils.deleteInvitation(sNumber, tID);
