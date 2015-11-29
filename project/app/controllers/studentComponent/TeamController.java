@@ -6,16 +6,15 @@ package controllers.studentComponent;
 
 import assets.Global;
 import assets.SessionUtils;
-import models.commonUtils.Exceptions.StudentNotTeamMemberException;
-import models.commonUtils.Exceptions.TeamNotFoundException;
+import models.commonUtils.CommonDatabaseUtils;
+import models.commonUtils.Exceptions.*;
+import models.commonUtils.ID.CourseID;
 import models.commonUtils.ID.StudentNumber;
 import models.commonUtils.ID.TeamID;
-import models.studentComponent.TeamDatabaseUtils;
 import models.studentComponent.TeamModel;
 import net.unikit.database.external.interfaces.Course;
 import net.unikit.database.external.interfaces.Student;
 
-import controllers.courseComponent.CourseController;
 import net.unikit.database.unikit_.interfaces.CourseRegistration;
 import net.unikit.database.unikit_.interfaces.Team;
 import net.unikit.database.unikit_.interfaces.TeamApplication;
@@ -29,125 +28,155 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 
 public class TeamController extends Controller {
 
-//     public static Result addMember(String studentNumber, int teamID) {
-//         checkNotNull(studentNumber);
-//         if(teamID < 0) throw new NullPointerException();
-//
-//         TeamDatabaseUtils.addStudentToTeam(studentNumber,teamID);
-//
-//
-//         return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
-//    }
+    private static Student currentUser;
 
+    static{
+        currentUser = SessionUtils.getCurrentUser(session());
+    }
+
+    /**
+     * Removes a student from the team and returns a resultpage. If student was the last member, the associated team gets deleted.
+     * @param studentNumber the student number of the student who is to be removed from the team
+     * @param teamID the ID of the team from which the student is to be removed
+     * @return team overview page if student was removed successful or if student is not a member of the team,
+     * course detail page if the team wasn't found or if team was deleted, course overview page if team couldn't be found
+     */
     public static Result removeMember(String studentNumber, int teamID){
+        // Init
         StudentNumber sNumber = StudentNumber.get(studentNumber);
         TeamID tID = TeamID.get(teamID);
 
+        // Remove student from team or delete team if last member
+        Team modifiedTeam = null;
         try {
-            TeamModel.removeMember(sNumber, tID);
+            modifiedTeam = TeamModel.removeMember(sNumber, tID);
         } catch (TeamNotFoundException e) {
-            e.printStackTrace();
+            // TODO error message
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
         } catch (StudentNotTeamMemberException e) {
-            e.printStackTrace();
+            // TODO error message
+            return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
         }
 
-
-        Team alteredTeam = TeamDatabaseUtils.getTeamByID(teamID);
-
-        if(alteredTeam.getTeamRegistrations().isEmpty()){
-            TeamDatabaseUtils.deleteTeam(teamID);
-            return redirect(controllers.courseComponent.routes.CourseController.showCourseDetails(alteredTeam.getCourseId()));
+        // If team is empty, display course details, else team overview
+        if(modifiedTeam.getTeamRegistrations().isEmpty()){
+            // TODO error message
+            return redirect(controllers.courseComponent.routes.CourseController.showCourseDetails(modifiedTeam.getCourseId());
         }else{
+            // TODO error message
             return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
         }
     }
 
+    /**
+     * Invites a student to a team and returns a resultpage. If the student has a pending membership request, the student
+     * is immediatly added to the team.
+     * @param studentNumber the student number of the student that is to be invited
+     * @param teamID the ID of the team for which the student is to be invited
+     * @return
+     */
     public static Result inviteStudent(String studentNumber, int teamID) {
-        checkNotNull(studentNumber);
-        if(teamID < 0) throw new NullPointerException();
+        // Init
+        StudentNumber sNumber = StudentNumber.get(studentNumber);
+        TeamID tID = TeamID.get(teamID);
 
-        //If team is not full and can invite more students, the invitation is sent
-        if(TeamDatabaseUtils.teamCanInvite(teamID)){
-            //If student already requested membership, he is automatically added to the team
-            if(TeamDatabaseUtils.isMembershipRequested(studentNumber,teamID)){
-                acceptMembershipRequest(studentNumber,teamID);
-            }else{
-                TeamDatabaseUtils.storeInvitation(studentNumber, teamID, SessionUtils.getCurrentUser(session()));
-            }
-            //TODO: send mail to all team members
-        }else{
-            //TODO: feedback if team is full or max invitations reached
+        try {
+            TeamModel.inviteStudent(sNumber, tID, currentUser);
+            return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
+        } catch (TeamMaxSizeReachedException e) {
+            // TODO error message
+            return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
+        } catch (TeamNotFoundException e) {
+            // TODO error message
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+        } catch (FatalErrorException e) {
+            // TODO error message
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+        } catch (CourseNotFoundException e) {
+            // TODO error message
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
         }
-
-        return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
     }
 
     public static Result cancelInvitation(String studentNumber, int teamID){
-        checkNotNull(studentNumber);
-        if(teamID < 0) throw new NullPointerException();
+        // Init
+        StudentNumber sNumber = StudentNumber.get(studentNumber);
+        TeamID tID = TeamID.get(teamID);
 
-        TeamDatabaseUtils.deleteInvitation(studentNumber, teamID);
-
-        //TODO send mail to all team members
-
-        return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
+        try {
+            TeamModel.cancelInvitation(sNumber, tID);
+            return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
+        } catch (InvitationNotFoundException e) {
+            // TODO error message
+            return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
+        } catch (TeamNotFoundException e) {
+            // TODO error message
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+        }
     }
 
     public static Result acceptMembershipRequest(String studentNumber, int teamID){
-        checkNotNull(studentNumber);
-        if(teamID < 0) throw new NullPointerException();
+        // Init
+        StudentNumber sNumber = StudentNumber.get(studentNumber);
+        TeamID tID = TeamID.get(teamID);
 
-        TeamDatabaseUtils.addStudentToTeam(studentNumber, teamID);
-        TeamDatabaseUtils.deleteMembershipRequest(studentNumber, teamID);
-
-        //TODO send mail to all team members
-
-        return showEditTeam(teamID);
+        try {
+            TeamModel.acceptMembershipRequest(sNumber,tID);
+            return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
+        } catch (MembershipRequestNotFoundException e) {
+            // TODO error message
+            return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
+        } catch (TeamNotFoundException e) {
+            // TODO error message
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+        }
     }
 
     public static Result declineMembershipRequest(String studentNumber, int teamID){
-       checkNotNull(studentNumber);
-        if(teamID < 0) throw new NullPointerException();
+        // Init
+        StudentNumber sNumber = StudentNumber.get(studentNumber);
+        TeamID tID = TeamID.get(teamID);
 
-        Student currentUser = SessionUtils.getCurrentUser(session());
-
-
-        TeamDatabaseUtils.deleteMembershipRequest(studentNumber,teamID);
-
-        //TODO: send mail to student
-
-        int courseID = TeamDatabaseUtils.getTeamByID(teamID).getCourseId();
-
-        return CourseController.showCourseDetails(courseID);
-    }
-
-    public static Result showEditTeam(int teamID){
-        return showTeamOverview(teamID);
+        try {
+            TeamModel.declineMembershipRequest(sNumber,tID);
+            return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
+        } catch (MembershipRequestNotFoundException e) {
+            // TODO error message
+            return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
+        } catch (TeamNotFoundException e) {
+            // TODO error message
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+        }
     }
 
     /**
      *   Displays the details for a team
      **/
     public static Result showTeamOverview(int teamID){
-        /**
-        *   TODO:
-        *       get all members of the current team
-        *       get all pending invitations for the team
-        *       get all pending membership requests for the team
-        **/
-
-        Student currentUser = SessionUtils.getCurrentUser(session());
+       // Init
+        TeamID tID = TeamID.get(teamID);
         Date sessionTimeout = SessionUtils.getSessionTimeout(session());
 
-        Team teamToDisplay = TeamDatabaseUtils.getTeamByID(teamID);
-        Course course = Global.getCourseManager().getCourse(teamToDisplay.getCourseId());
+        // Get team and course associated with team ID
+        Team teamToDisplay = null;
+        Course course = null;
+        try {
+            teamToDisplay = CommonDatabaseUtils.getTeamByID(tID);
+            course = CommonDatabaseUtils.getCourseByID(CourseID.get(teamToDisplay.getCourseId()));
+        } catch (TeamNotFoundException e) {
+            // TODO error message
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+        } catch (CourseNotFoundException e) {
+            // TODO error message
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+        }
+
 
         // Get members of team
-        List<Student> allStudentsForTeam = TeamDatabaseUtils.getAllStudents(teamToDisplay);
+        List<Student> allStudentsForTeam = CommonDatabaseUtils.getAllStudents(teamToDisplay);
 
         // Get registered students for course
         List<Student> courseRegistrees = new ArrayList<>();

@@ -6,21 +6,38 @@ package models.commonUtils;
 
 import assets.Global;
 
-import models.commonUtils.Exceptions.InvitationNotFoundException;
-import models.commonUtils.Exceptions.MembershipRequestNotFoundException;
-import models.commonUtils.Exceptions.StudentNotTeamMemberException;
-import models.commonUtils.Exceptions.TeamNotFoundException;
+import models.commonUtils.Exceptions.*;
 import models.commonUtils.ID.CourseID;
 import models.commonUtils.ID.StudentNumber;
 import models.commonUtils.ID.TeamID;
 import net.unikit.database.external.interfaces.Course;
+import net.unikit.database.external.interfaces.Student;
 import net.unikit.database.unikit_.interfaces.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 public class CommonDatabaseUtils {
+
+
+    public static void storeInvitation(StudentNumber sNumber, TeamID tID, Student currentUser) throws TeamNotFoundException {
+        // Init
+        String studentNumber = sNumber.value();
+
+        //Get team for the invitation
+        Team invitationForTeam = CommonDatabaseUtils.getTeamByID(tID);
+
+        //Create new invitation
+        TeamInvitation newInvitation = Global.getTeamInvitationManager().createTeamInvitation();
+        newInvitation.setInviteeStudentNumber(studentNumber);
+        newInvitation.setTeam(invitationForTeam);
+        newInvitation.setCreatedByStudentNumber(currentUser.getStudentNumber());
+
+        //Store invitation in database
+        Global.getTeamInvitationManager().addTeamInvitation(newInvitation);
+    }
 
     /**
      *
@@ -28,31 +45,25 @@ public class CommonDatabaseUtils {
      * @param tID
      */
     public static void deleteInvitation(StudentNumber sNumber, TeamID tID) throws InvitationNotFoundException {
-        int teamID = tID.value();
+        // Init
         String studentNumber = sNumber.value();
 
-        TeamInvitationManager invitationManager = Global.getTeamInvitationManager();
-        List<TeamInvitation> allTeamInvitations = invitationManager.getAllTeamInvitations();
-        TeamInvitation invitationToBeDeleted = null;
-
-            for (TeamInvitation currentInvitation : allTeamInvitations) {
-                if (currentInvitation.getTeam().getId().equals(teamID) &&
-                        currentInvitation.getInviteeStudentNumber().equals(studentNumber)) {
-                    invitationToBeDeleted = currentInvitation;
-                    break;
-                }
+        // Get invitation
+        TeamInvitation teamInvitation = null;
+        List<TeamInvitation> allTeamInvitations = Global.getTeamInvitationManager().getAllTeamInvitations();
+        for (TeamInvitation currentTeamInvitation : allTeamInvitations) {
+            if (currentTeamInvitation.getInviteeStudentNumber().equals(studentNumber) && currentTeamInvitation.getTeam().getId().equals(tID.value())) {
+                teamInvitation = currentTeamInvitation;
+                break;
             }
+        }
 
-        if(invitationToBeDeleted == null){
+        //Delete invitation from database, else inform system that invitation doesn't exist
+        if(teamInvitation == null){
             throw new InvitationNotFoundException(tID);
+        } else {
+            Global.getTeamInvitationManager().deleteTeamInvitation(teamInvitation);
         }
-        else{
-            allTeamInvitations.remove(invitationToBeDeleted);
-        }
-
-        //checkNotNull(invitationToBeDeleted);
-
-        invitationManager.deleteTeamInvitation(invitationToBeDeleted);
     }
 
     /**
@@ -62,24 +73,17 @@ public class CommonDatabaseUtils {
      * @throws TeamNotFoundException
      */
     public static void addStudentToTeam(StudentNumber sNummber, TeamID tID) throws TeamNotFoundException {
-        int teamID = tID.value();
+        // Init
         String studentNumber = sNummber.value();
 
-        TeamRegistrationManager registrationManager = Global.getTeamRegistrationManager();
-
-        TeamRegistration newTeamRegistration = registrationManager.createTeamRegistration();
+        // Get team to which the student is to be added
         Team teamByID = CommonDatabaseUtils.getTeamByID(tID);
 
-        if(teamByID == null){
-            throw new TeamNotFoundException(tID);
-        }
-
+        // Add student to team
+        TeamRegistration newTeamRegistration = Global.getTeamRegistrationManager().createTeamRegistration();
         newTeamRegistration.setStudentNumber(studentNumber);
         newTeamRegistration.setTeam(teamByID);
-
-        //TODO: check if team still exists
-
-        registrationManager.addTeamRegistration(newTeamRegistration);
+        Global.getTeamRegistrationManager().addTeamRegistration(newTeamRegistration);
     }
 
     /**
@@ -144,19 +148,23 @@ public class CommonDatabaseUtils {
      * @param cID the ID of the course for which the course-object is queried
      * @return the Course-object for the given ID
      */
-    public static Course getCourseByID(CourseID cID) {
+    public static Course getCourseByID(CourseID cID) throws CourseNotFoundException{
         int courseId = cID.value();
 
         Course course = Global.getCourseManager().getCourse(courseId);
 
-        checkNotNull(course);
-        return course;
+        if (course == null){
+            throw new CourseNotFoundException(cID);
+        } else {
+            return course;
+        }
     }
 
     /**
      * Returns the Team-object associated with the teamID
      * @param tID the ID of the queried team
      * @return the Team-object for the given ID
+     * @throws TeamNotFoundException
      */
     public static Team getTeamByID(TeamID tID) throws TeamNotFoundException{
         int teamID = tID.value();
@@ -176,24 +184,57 @@ public class CommonDatabaseUtils {
      * @param cID the course ID for the team
      * @return the Team-object for the student number and course ID
      */
-    public static Team getTeamByStudentAndCourse(StudentNumber sNumber, CourseID cID){
-        int courseID = cID.value();
+    public static Team getTeamByStudentAndCourse(StudentNumber sNumber, CourseID cID) throws TeamNotFoundException {
+        // Init
         String studentNumber = sNumber.value();
-
         List<TeamRegistration> allTeamRegistrations = Global.getTeamRegistrationManager().getAllTeamRegistrations();
 
         // Get the team
-        Team teamByStudentNumberAndCourseID = null;
+        Team queriedTeam = null;
         for(TeamRegistration currentTeamRegistration : allTeamRegistrations){
             if(currentTeamRegistration.getStudentNumber().equals(studentNumber) &&
-                    currentTeamRegistration.getTeam().getCourseId() == courseID){
-                teamByStudentNumberAndCourseID = currentTeamRegistration.getTeam();
+                    currentTeamRegistration.getTeam().getCourseId() == (cID.value())){
+                queriedTeam = currentTeamRegistration.getTeam();
                 break;
             }
         }
 
-        checkNotNull(teamByStudentNumberAndCourseID);
-        return teamByStudentNumberAndCourseID;
+        if(queriedTeam == null){
+            throw new TeamNotFoundException();
+        } else {
+            return queriedTeam;
+        }
+    }
+
+    /**
+     *  Creates a team associated with the studentNumber and courseID,updates the registration status and returns the teamID
+     *  @param sNumber the first member of the team
+     *  @param cID the course ID for which the team will be created
+     *  @return returns the ID for the new team
+     */
+    public static CourseID createTeam(StudentNumber sNumber, CourseID cID){
+        // Init
+        String studentNumber = sNumber.value();
+
+        //Create a new team
+        Team newTeam = Global.getTeamManager().createTeam();
+        newTeam.setCourseId(cID.value());
+        newTeam.setCreatedByStudentNumber(studentNumber);
+        Global.getTeamManager().addTeam(newTeam);
+
+        // Register current user in team
+        TeamRegistration teamRegistration = Global.getTeamRegistrationManager().createTeamRegistration();
+        teamRegistration.setStudentNumber(studentNumber);
+        teamRegistration.setTeam(newTeam);
+        Global.getTeamRegistrationManager().addTeamRegistration(teamRegistration);
+
+        //Updates registration status for student
+        CommonDatabaseUtils.changeTeamRegistrationStatus(sNumber, cID, true);
+
+        //Gets the team that was just created
+        Team createdTeam = teamRegistration.getTeam();
+
+        return CourseID.get(createdTeam.getId());
     }
 
     /**
@@ -230,9 +271,9 @@ public class CommonDatabaseUtils {
     }
 
     /**
-     *
-     * @param sNumber
-     * @param tID
+     * Deletes a membership request for the student and the team
+     * @param sNumber the student number of the student who requested membership with the team
+     * @param tID the ID of the team that received the membership request
      * @throws MembershipRequestNotFoundException
      * @throws TeamNotFoundException
      */
@@ -262,7 +303,20 @@ public class CommonDatabaseUtils {
         }
     }
 
-    public static void inviteStudent(StudentNumber sNumber, TeamID tID) {
+    public static List<Student> getAllStudents(Team team) {
 
+        //TODO: what if team has no registrations?
+
+        //Get all registrations for team
+        List<TeamRegistration> allRegistrationsForTeam = team.getTeamRegistrations();
+
+        //Get all registered students
+        List<Student> allStudentsInTeam = new ArrayList<>();
+        for(TeamRegistration currentRegistration : allRegistrationsForTeam){
+            allStudentsInTeam.add(Global.getStudentManager().getStudent(currentRegistration.getStudentNumber()));
+        }
+
+        checkNotNull(allStudentsInTeam);
+        return allStudentsInTeam;
     }
 }

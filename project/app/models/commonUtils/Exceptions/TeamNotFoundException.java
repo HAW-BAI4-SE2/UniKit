@@ -15,6 +15,10 @@ public class TeamNotFoundException extends Exception {
         this.teamId = teamID;
     }
 
+    public TeamNotFoundException(){
+        this(null);
+    }
+
     public TeamID getTeamId() {
         return teamId;
     }

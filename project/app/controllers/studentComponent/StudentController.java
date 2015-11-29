@@ -8,9 +8,10 @@ import assets.SessionUtils;
 
 import controllers.courseComponent.CourseController;
 
+import models.commonUtils.CommonDatabaseUtils;
 import models.commonUtils.Exceptions.InvitationNotFoundException;
 import models.commonUtils.Exceptions.MembershipRequestNotFoundException;
-import models.studentComponent.StudentDatabaseUtils;
+import models.commonUtils.Exceptions.TeamNotFoundException;
 
 import models.commonUtils.ID.CourseID;
 import models.commonUtils.ID.StudentNumber;
@@ -45,11 +46,9 @@ public class StudentController extends Controller {
         catch(TeamNotFoundException e){
 
         }
-        int createdTeamID = StudentDatabaseUtils.createTeam(sNumber, cID);
+        CourseID createdTeamID = CommonDatabaseUtils.createTeam(sNumber, cID);
 
-        //TODO send mail to student
-
-        return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(createdTeamID));
+        return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(createdTeamID.value()));
     }
 
     /**
@@ -61,12 +60,12 @@ public class StudentController extends Controller {
         TeamID tID = TeamID.get(teamID);
 
         try{
-            StudentModel.deleteTeam(tID);
+            CommonDatabaseUtils.deleteTeam(tID);
         }
         catch(TeamNotFoundException e){
 
         }
-        int courseForTeam = StudentDatabaseUtils.deleteTeam(tID);
+        int courseForTeam = CommonDatabaseUtils.deleteTeam(tID);
 
         return CourseController.showCourseDetails(courseForTeam);
     }
@@ -86,7 +85,6 @@ public class StudentController extends Controller {
             }catch(InvitationNotFoundException e){
                 System.err.println("Invitation not found");
              }
-            //TODO: send mail to team members
 
             return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(tID.value()));
 
@@ -105,11 +103,9 @@ public class StudentController extends Controller {
         catch(Exception e){
 
         }
-        StudentDatabaseUtils.deleteInvitation(sNumber, tID);
+        CommonDatabaseUtils.deleteInvitation(sNumber, tID);
 
-        //TODO: send mail to teammembers & student
-
-        return TeamController.showEditTeam(teamID);
+        return TeamController.showTeamOverview(teamID);
     }
     /**
      *  The student requests the membership with the team. The relevant data is retrived using a TeamStateChangeForm-object
@@ -120,19 +116,13 @@ public class StudentController extends Controller {
         TeamID tID = TeamID.get(teamID);
         StudentNumber sNumber = StudentNumber.get(currentUser.getStudentNumber());
 
-        /*if (StudentDatabaseUtils.isStudentInvited(sNumber, tID)) {
-            acceptInvitation(tID.value());
-        } else {
-            StudentDatabaseUtils.storeMembershipRequest(sNumber, tID);
-        }*/
         try{
             StudentModel.requestMembership(sNumber,tID);
         } catch (MembershipRequestNotFoundException e) {
 
         }
-        //TODO: send mail to team members & student
 
-        int courseToDispay = StudentDatabaseUtils.getTeamByID(tID).getCourseId();
+        int courseToDispay = CommonDatabaseUtils.getTeamByID(tID).getCourseId();
 
         return CourseController.showCourseDetails(courseToDispay);
     }
@@ -150,10 +140,7 @@ public class StudentController extends Controller {
 
         }
 
-        
-        //TODO: send mail to student
-
-        int courseToDispay = StudentDatabaseUtils.getTeamByID(tID).getCourseId();
+        int courseToDispay = CommonDatabaseUtils.getTeamByID(tID).getCourseId();
         return CourseController.showCourseDetails(courseToDispay);
     }
 }

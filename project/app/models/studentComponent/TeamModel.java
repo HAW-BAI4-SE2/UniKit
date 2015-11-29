@@ -2,9 +2,11 @@ package models.studentComponent;
 
 import models.commonUtils.CommonDatabaseUtils;
 import models.commonUtils.Exceptions.*;
+import models.commonUtils.ID.CourseID;
 import models.commonUtils.ID.StudentNumber;
 import models.commonUtils.ID.TeamID;
 import models.commonUtils.NotificationModel;
+import net.unikit.database.external.interfaces.Course;
 import net.unikit.database.external.interfaces.Student;
 import net.unikit.database.unikit_.interfaces.Team;
 
@@ -38,23 +40,25 @@ public class TeamModel {
 
     /**
      * Removes a student from a team and informs all remaining team members of the change.
-     * If the student is the last member of the team, the team gets deleted
-     * @param sNumber the student number of the student that is to be removed
-     * @param tID the ID of the team from which the student is to be removed
+     * If the student is the last member of the team, the team gets deleted.
+     * @param sNumber the student number of the student that is to be removed.
+     * @param tID the ID of the team from which the student is to be removed.
+     * @returns the team from from which the student is to be removed.
      * @throws TeamNotFoundException
      * @throws StudentNotTeamMemberException
      */
-    public static void removeMember(StudentNumber sNumber, TeamID tID) throws TeamNotFoundException, StudentNotTeamMemberException{
+    public static Team removeMember(StudentNumber sNumber, TeamID tID) throws TeamNotFoundException, StudentNotTeamMemberException{
         // Get team prior to removal of student
         Team thisTeam = CommonDatabaseUtils.getTeamByID(tID);
 
         // Delete team if student was the last member, else remove student from team
         if(thisTeam.getTeamRegistrations().size() <=1){
             // Delete team
-            TeamDatabaseUtils.deleteTeam(tID);
+            CommonDatabaseUtils.deleteTeam(tID);
 
             // Inform last member that team was deleted
             NotificationModel.informStudentTeamDeleted(thisTeam, sNumber);
+
         } else {
             // Remove student from team
             CommonDatabaseUtils.removeStudentFromTeam(sNumber, tID);
@@ -64,7 +68,9 @@ public class TeamModel {
 
             // Inform team of removed member
             NotificationModel.informTeamStudentRemoved(thisTeam, sNumber);
+
         }
+        return thisTeam;
     }
 
     /**
@@ -73,10 +79,13 @@ public class TeamModel {
      * @param sNumber the student number of the student that is to be invited.
      * @param tID the ID of the team to which the student is to be invited.
      * @param invitedBy the Student who issued the invite.
+     * @returns the team to which the student was invited
      * @throws TeamNotFoundException
      * @throws FatalErrorException
+     * @throws TeamMaxSizeReachedException
+     * @throws CourseNotFoundException
      */
-    public static void inviteStudent(StudentNumber sNumber, TeamID tID, Student invitedBy) throws TeamNotFoundException, FatalErrorException{
+    public static Team inviteStudent(StudentNumber sNumber, TeamID tID, Student invitedBy) throws TeamMaxSizeReachedException, TeamNotFoundException, FatalErrorException, CourseNotFoundException {
         // Check student
         if(invitedBy == null){
             throw new FatalErrorException("No Student issued the invite");
@@ -85,14 +94,24 @@ public class TeamModel {
         // Get team prior to addition of student
         Team thisTeam = CommonDatabaseUtils.getTeamByID(tID);
 
-        // Invite student to team
-        TeamDatabaseUtils.storeInvitation(sNumber, tID, invitedBy);
+        //Get course for the team
+        Course associatedCourse = CommonDatabaseUtils.getCourseByID(CourseID.get(thisTeam.getCourseId()));
 
-        // Inform student of invite
-        NotificationModel.informStudentInvited(thisTeam, sNumber);
+        // Invite student to team, error if (registrations + invitations) exceeds team size limit
+        if((thisTeam.getTeamInvitations().size()
+                + thisTeam.getTeamRegistrations().size())
+                <= associatedCourse.getMaxTeamSize()){
+            CommonDatabaseUtils.storeInvitation(sNumber, tID, invitedBy);
 
-        // Inform team of invite
-        NotificationModel.informTeamStudentInvited(thisTeam,sNumber);
+            // Inform student of invite
+            NotificationModel.informStudentInvited(thisTeam, sNumber);
+
+            // Inform team of invite
+            NotificationModel.informTeamStudentInvited(thisTeam,sNumber);
+        } else {
+            throw new TeamMaxSizeReachedException(tID);
+        }
+        return thisTeam;
     }
 
     /**
@@ -107,7 +126,7 @@ public class TeamModel {
         Team thisTeam = CommonDatabaseUtils.getTeamByID(tID);
 
         // Delete invitation
-        TeamDatabaseUtils.deleteInvitation(sNumber, tID);
+        CommonDatabaseUtils.deleteInvitation(sNumber, tID);
 
         // Inform student that his invitation was canceled
         NotificationModel.informStudentInviteCancelled(thisTeam, sNumber);
@@ -122,7 +141,7 @@ public class TeamModel {
      * @throws MembershipRequestNotFoundException
      * @throws TeamNotFoundException
      */
-    public static void acceptMembershipRequest(StudentNumber sNumber, TeamID tID) throws MembershipRequestNotFoundException, TeamNotFoundException {
+    public static Team acceptMembershipRequest(StudentNumber sNumber, TeamID tID) throws MembershipRequestNotFoundException, TeamNotFoundException {
         // Get team prior to accepting the membership request
         Team thisTeam = CommonDatabaseUtils.getTeamByID(tID);
 
@@ -143,6 +162,7 @@ public class TeamModel {
         //Inform team of new member
         NotificationModel.informTeamStudentJoined(thisTeam,sNumber);
 
+        return thisTeam;
     }
 
     /**
