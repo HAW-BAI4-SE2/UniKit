@@ -40,7 +40,7 @@ public class StudentController extends Controller {
         StudentNumber sNumber = StudentNumber.get(currentUser.getStudentNumber());
 
         // new Team
-        Team team = null;
+        TeamID team = null;
 
         try{
             team = StudentModel.createTeam(sNumber, cID);
@@ -48,6 +48,9 @@ public class StudentController extends Controller {
         catch(TeamNotFoundException e){
             //TODO error message
             //do nothing
+        } catch (StudentInAnOtherTeamException e) {
+            //TODO error message
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
         }
         return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(team));
     }

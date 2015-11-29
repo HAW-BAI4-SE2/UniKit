@@ -6,6 +6,8 @@ package models.courseComponent;
 
 import assets.Global;
 import models.commonUtils.CommonDatabaseUtils;
+import models.commonUtils.ID.CourseID;
+import models.commonUtils.ID.StudentNumber;
 import net.unikit.database.external.interfaces.Course;
 import net.unikit.database.unikit_.interfaces.Team;
 
@@ -23,7 +25,7 @@ public class CourseDatabaseUtils {
      * @param status true if student is in a team for this course, else false
      */
     public static void changeTeamRegistrationStatus(String studentNumber, int courseID, boolean status){
-        CommonDatabaseUtils.changeTeamRegistrationStatus(studentNumber,courseID,status);
+        CommonDatabaseUtils.changeTeamRegistrationStatus(StudentNumber.get(studentNumber), CourseID.get(courseID), status);
     }
 
     /**
@@ -32,7 +34,7 @@ public class CourseDatabaseUtils {
      * @return course the queried course
      */
     public static Course getCourseByID(int courseID) {
-        return CommonDatabaseUtils.getCourseByID(courseID);
+        return CommonDatabaseUtils.getCourseByID(CourseID.get(courseID));
     }
 
     /**

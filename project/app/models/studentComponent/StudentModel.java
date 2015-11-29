@@ -30,19 +30,14 @@ public class StudentModel {
      *  @param courseID the course ID for which the team is to be created
      *  @return showEditTeam-page
      */
-    public static Team createTeam(StudentNumber sNumber, CourseID cID) throws TeamNotFoundException{
+    public static TeamID createTeam(StudentNumber sNumber, CourseID courseID) throws StudentInAnOtherTeamException, TeamNotFoundException {
 
-        TeamApplication membershiprequest = null;
-        TeamInvitationManager invitationManager = Global.getTeamInvitationManager();
-        List<TeamInvitation> allTeamInvitations = invitationManager.getAllTeamInvitations();
         // is the student in an other team in this course?
-        try {
-            CommonDatabaseUtils.getTeamByStudentAndCourse(sNumber, cID);
+        if( CommonDatabaseUtils.getTeamByStudentAndCourse(sNumber, courseID) == null){
+            return CommonDatabaseUtils.createTeam(sNumber, courseID);
         }
-        catch (TeamNotFoundException e) {
-            // student is in no team of this course
-            // create team
-            CommonDatabaseUtils.createTeam(sNumber, cID);
+        else{
+            throw new StudentInAnOtherTeamException(sNumber);
         }
     }
 
@@ -51,12 +46,12 @@ public class StudentModel {
      *  @param teamID the team ID that is to be deleted
      *  @return showCourseDetails-page for the course the team was associated with
      */
-    public static void deleteTeam(TeamID tID) throws TeamNotFoundException, StudentNotTeamMemberException {
+    public static void deleteTeam(TeamID teamID) throws TeamNotFoundException, StudentNotTeamMemberException {
         Student currentUser = SessionUtils.getCurrentUser(session());
-        Team teamToDelete = CommonDatabaseUtils.getTeamByID(tID);
+        Team teamToDelete = CommonDatabaseUtils.getTeamByID(teamID);
         // does the team still exist?
         try {
-            CommonDatabaseUtils.getTeamByID(tID);
+            CommonDatabaseUtils.getTeamByID(teamID);
         }
         catch(TeamNotFoundException e){
             throw  new TeamNotFoundException();
@@ -66,14 +61,14 @@ public class StudentModel {
             if(teamMember.equals(currentUser)){
                 for(Student member : CommonDatabaseUtils.getAllStudents(teamToDelete)){
                     // inform students
-                    NotificationModel.informStudentTeamDeleted(CommonDatabaseUtils.getTeamByID(tID),
+                    NotificationModel.informStudentTeamDeleted(CommonDatabaseUtils.getTeamByID(teamID),
                             StudentNumber.get(member.getStudentNumber()));
                 }
-                CommonDatabaseUtils.deleteTeam(tID);
+                CommonDatabaseUtils.deleteTeam(teamID);
                 break;
             }
             else{
-                throw new StudentNotTeamMemberException(StudentNumber.get(currentUser.getStudentNumber()), tID);
+                throw new StudentNotTeamMemberException(StudentNumber.get(currentUser.getStudentNumber()), teamID);
             }
         }
     }
@@ -83,11 +78,11 @@ public class StudentModel {
      * @param teamID the ID of the team that issued the invite
      * @return showTeamOverview-page
      */
-    public static void acceptInvitation(StudentNumber sNumber, TeamID tID) throws InvitationNotFoundException, TeamNotFoundException, MembershipRequestNotFoundException {
-            Team thisTeam = CommonDatabaseUtils.getTeamByID(tID);
+    public static void acceptInvitation(StudentNumber sNumber, TeamID teamID) throws InvitationNotFoundException, TeamNotFoundException, MembershipRequestNotFoundException {
+            Team thisTeam = CommonDatabaseUtils.getTeamByID(teamID);
             TeamInvitationManager invitationManager = Global.getTeamInvitationManager();
             List<TeamInvitation> allTeamInvitations = invitationManager.getAllTeamInvitations();
-            int currentCourseID = CommonDatabaseUtils.getTeamByID(tID).getCourseId();
+            int currentCourseID = CommonDatabaseUtils.getTeamByID(teamID).getCourseId();
 //            // does the team still exist?
 //            try {
 //                CommonDatabaseUtils.getTeamByID(tID);
@@ -96,16 +91,16 @@ public class StudentModel {
 //                throw  new TeamNotFoundException();
 //            }
             // does the invitation still exist?
-            for(TeamInvitation invitation : CommonDatabaseUtils.getTeamByID(tID).getTeamInvitations()){
+            for(TeamInvitation invitation : CommonDatabaseUtils.getTeamByID(teamID).getTeamInvitations()){
                 if(invitation.getInviteeStudentNumber().equals(sNumber)){
                     // add student to Team
-                    CommonDatabaseUtils.addStudentToTeam(sNumber, tID);
+                    CommonDatabaseUtils.addStudentToTeam(sNumber, teamID);
                     // inform teammembers
                     NotificationModel.informTeamStudentJoined(thisTeam, sNumber);
                     break;
                 }
                 else{
-                    throw new InvitationNotFoundException(tID);
+                    throw new InvitationNotFoundException(teamID);
                 }
             }
     }
@@ -123,16 +118,16 @@ public class StudentModel {
      *  @param teamID the ID of the team the student requests membership with
      *  @return showCourseDetails-page
      **/
-    public static void requestMembership(StudentNumber sNumber, TeamID tID) throws MembershipRequestNotFoundException, TeamNotFoundException, CourseNotFoundException, TeamMaxSizeReachedException, InvitationNotFoundException {
+    public static void requestMembership(StudentNumber sNumber, TeamID teamID) throws MembershipRequestNotFoundException, TeamNotFoundException, CourseNotFoundException, TeamMaxSizeReachedException, InvitationNotFoundException {
         // does the team still exist?
         try {
-            CommonDatabaseUtils.getTeamByID(tID);
+            CommonDatabaseUtils.getTeamByID(teamID);
         }
         catch(TeamNotFoundException e){
             throw  new TeamNotFoundException();
         }
 
-        Team thisTeam = CommonDatabaseUtils.getTeamByID(tID);
+        Team thisTeam = CommonDatabaseUtils.getTeamByID(teamID);
         //Get course for the team
         Course associatedCourse = CommonDatabaseUtils.getCourseByID(CourseID.get(thisTeam.getCourseId()));
         TeamInvitationManager invitationManager = Global.getTeamInvitationManager();
@@ -142,19 +137,19 @@ public class StudentModel {
             // invitation exists ? acceptMembershipRequest : storeMembershipRequest
             for(TeamInvitation invitation : allTeamInvitations){
                 if(invitation.getTeam().equals(thisTeam) && invitation.getInviteeStudentNumber().equals(sNumber)){
-                    CommonDatabaseUtils.addStudentToTeam(sNumber, tID);
+                    CommonDatabaseUtils.addStudentToTeam(sNumber, teamID);
                     // inform teammembers of student joins the team
                     NotificationModel.informTeamStudentJoined(thisTeam, sNumber);
                 }
                 else{
-                    CommonDatabaseUtils.storeMembershipRequest(sNumber, tID);
+                    CommonDatabaseUtils.storeMembershipRequest(sNumber, teamID);
                     // inform teammembers about membershiprequest
                     NotificationModel.informTeamStudentSendMembershipRequest(thisTeam, sNumber);
                 }
             }
         }
         else{
-            throw  new TeamMaxSizeReachedException(tID);
+            throw  new TeamMaxSizeReachedException(teamID);
         }
     }
 

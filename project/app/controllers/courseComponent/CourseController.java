@@ -7,6 +7,9 @@ package controllers.courseComponent;
 import assets.Global;
 import assets.SessionUtils;
 import models.commonUtils.CommonDatabaseUtils;
+import models.commonUtils.Exceptions.TeamNotFoundException;
+import models.commonUtils.ID.CourseID;
+import models.commonUtils.ID.StudentNumber;
 import models.courseComponent.CourseDatabaseUtils;
 
 import net.unikit.database.external.interfaces.Course;
@@ -34,9 +37,10 @@ public class CourseController extends Controller {
 
         Team team = null;
         try {
-            team = CommonDatabaseUtils.getTeamByStudentAndCourse(currentUser.getStudentNumber(), courseToDisplay.getId());
-        } catch (NullPointerException e) {
-            // Student is not in team
+            team = CommonDatabaseUtils.getTeamByStudentAndCourse(StudentNumber.get(currentUser.getStudentNumber()),
+                    CourseID.get(courseToDisplay.getId()));
+        } catch (TeamNotFoundException e) {
+            // Student is not in Team
         }
 
         List<TeamApplication> teamApplications = null;
