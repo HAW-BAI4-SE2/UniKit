@@ -6,7 +6,12 @@ package controllers.studentComponent;
 
 import assets.Global;
 import assets.SessionUtils;
+import models.commonUtils.Exceptions.StudentNotTeamMemberException;
+import models.commonUtils.Exceptions.TeamNotFoundException;
+import models.commonUtils.ID.StudentNumber;
+import models.commonUtils.ID.TeamID;
 import models.studentComponent.TeamDatabaseUtils;
+import models.studentComponent.TeamModel;
 import net.unikit.database.external.interfaces.Course;
 import net.unikit.database.external.interfaces.Student;
 
@@ -28,24 +33,28 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class TeamController extends Controller {
 
-     public static Result addMember(String studentNumber, int teamID) {
-         checkNotNull(studentNumber);
-         if(teamID < 0) throw new NullPointerException();
-
-         TeamDatabaseUtils.addStudentToTeam(studentNumber,teamID);
-
-         //TODO: send mail to all team members
-
-         return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
-    }
+//     public static Result addMember(String studentNumber, int teamID) {
+//         checkNotNull(studentNumber);
+//         if(teamID < 0) throw new NullPointerException();
+//
+//         TeamDatabaseUtils.addStudentToTeam(studentNumber,teamID);
+//
+//
+//         return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
+//    }
 
     public static Result removeMember(String studentNumber, int teamID){
-        checkNotNull(studentNumber);
-        if(teamID < 0) throw new NullPointerException();
+        StudentNumber sNumber = StudentNumber.get(studentNumber);
+        TeamID tID = TeamID.get(teamID);
 
-        TeamDatabaseUtils.removeStudentFromTeam(studentNumber, teamID);
+        try {
+            TeamModel.removeMember(sNumber, tID);
+        } catch (TeamNotFoundException e) {
+            e.printStackTrace();
+        } catch (StudentNotTeamMemberException e) {
+            e.printStackTrace();
+        }
 
-        //TODO send mail to all team members
 
         Team alteredTeam = TeamDatabaseUtils.getTeamByID(teamID);
 

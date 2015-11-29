@@ -7,6 +7,9 @@ package models.commonUtils;
 import assets.Global;
 
 import models.commonUtils.Exceptions.InvitationNotFoundException;
+import models.commonUtils.Exceptions.MembershipRequestNotFoundException;
+import models.commonUtils.Exceptions.StudentNotTeamMemberException;
+import models.commonUtils.Exceptions.TeamNotFoundException;
 import models.commonUtils.ID.CourseID;
 import models.commonUtils.ID.StudentNumber;
 import models.commonUtils.ID.TeamID;
@@ -17,7 +20,7 @@ import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class UnikitDatabaseUtils {
+public class CommonDatabaseUtils {
 
     /**
      *
@@ -41,7 +44,7 @@ public class UnikitDatabaseUtils {
             }
 
         if(invitationToBeDeleted == null){
-            throw new InvitationNotFoundException();
+            throw new InvitationNotFoundException(tID);
         }
         else{
             allTeamInvitations.remove(invitationToBeDeleted);
@@ -56,15 +59,20 @@ public class UnikitDatabaseUtils {
      *
      * @param sNummber
      * @param tID
+     * @throws TeamNotFoundException
      */
-    public static void addStudentToTeam(StudentNumber sNummber, TeamID tID) {
+    public static void addStudentToTeam(StudentNumber sNummber, TeamID tID) throws TeamNotFoundException {
         int teamID = tID.value();
         String studentNumber = sNummber.value();
 
         TeamRegistrationManager registrationManager = Global.getTeamRegistrationManager();
 
         TeamRegistration newTeamRegistration = registrationManager.createTeamRegistration();
-        Team teamByID = UnikitDatabaseUtils.getTeamByID(tID);
+        Team teamByID = CommonDatabaseUtils.getTeamByID(tID);
+
+        if(teamByID == null){
+            throw new TeamNotFoundException(tID);
+        }
 
         newTeamRegistration.setStudentNumber(studentNumber);
         newTeamRegistration.setTeam(teamByID);
@@ -79,7 +87,7 @@ public class UnikitDatabaseUtils {
      * @param sNumber
      * @param tID
      */
-    public static void removeStudentFromTeam(StudentNumber sNumber, TeamID tID) {
+    public static void removeStudentFromTeam(StudentNumber sNumber, TeamID tID) throws StudentNotTeamMemberException {
         int teamID = tID.value();
         String studentNumber = sNumber.value();
 
@@ -96,9 +104,13 @@ public class UnikitDatabaseUtils {
             }
         }
 
-        //Delete registration from database
-        checkNotNull(teamRegistration);
-        Global.getTeamRegistrationManager().deleteTeamRegistration(teamRegistration);
+        // Inform system if
+        if(teamRegistration == null){
+            throw new StudentNotTeamMemberException(sNumber,tID);
+        } else {
+            Global.getTeamRegistrationManager().deleteTeamRegistration(teamRegistration);
+        }
+
     }
 
     /**
@@ -146,13 +158,16 @@ public class UnikitDatabaseUtils {
      * @param tID the ID of the queried team
      * @return the Team-object for the given ID
      */
-    public static Team getTeamByID(TeamID tID) {
+    public static Team getTeamByID(TeamID tID) throws TeamNotFoundException{
         int teamID = tID.value();
 
         Team team = Global.getTeamManager().getTeam(teamID);
 
-        checkNotNull(team);
-        return team;
+        if (team == null){
+            throw new TeamNotFoundException(tID);
+        } else {
+            return team;
+        }
     }
 
     /**
@@ -183,28 +198,19 @@ public class UnikitDatabaseUtils {
 
     /**
      *
-     * @param tID
-     * @return
+     * @param tID the ID of the team that will be deleted
+     * @return the ID for the associated course
+     * @throws TeamNotFoundException
      */
-    public static int deleteTeam(TeamID tID) {
-        int teamID = tID.value();
+    public static CourseID deleteTeam(TeamID tID) throws TeamNotFoundException {
+        // Init
+        List<Team> allTeams = Global.getTeamManager().getAllTeams();
 
-        TeamManager teamManager = Global.getTeamManager();
+        // Get team to be deleted
+        Team teamToBeDeleted = getTeamByID(tID);
 
-        List<Team> allTeams = teamManager.getAllTeams();
-
-        Team teamToBeDeleted = null;
-        for(Team currentTeam : allTeams){
-            if(currentTeam.getId().equals(teamID)){
-                teamToBeDeleted = currentTeam;
-                break;
-            }
-        }
-
-        //TODO: better logic if team doesnt exist
-
-        checkNotNull(teamToBeDeleted);
-        int courseForTeamID = teamToBeDeleted.getCourseId();
+        // Get CourseID for associated course
+        CourseID courseForTeamID = CourseID.get(teamToBeDeleted.getCourseId());
 
         //Update status of students to single registration
         for(TeamRegistration currentRegistration : teamToBeDeleted.getTeamRegistrations()){
@@ -218,8 +224,7 @@ public class UnikitDatabaseUtils {
         //TODO: delete all invites
         
         //Delete team
-        checkNotNull(teamToBeDeleted);
-        teamManager.deleteTeam(teamToBeDeleted);
+        Global.getTeamManager().deleteTeam(teamToBeDeleted);
 
         return courseForTeamID;
     }
@@ -228,27 +233,36 @@ public class UnikitDatabaseUtils {
      *
      * @param sNumber
      * @param tID
+     * @throws MembershipRequestNotFoundException
+     * @throws TeamNotFoundException
      */
-    public static void deleteMembershipRequest(StudentNumber sNumber, TeamID tID) {
-        int teamID = tID.value();
+    public static void deleteMembershipRequest(StudentNumber sNumber, TeamID tID) throws MembershipRequestNotFoundException, TeamNotFoundException {
+        // Init
         String studentNumber = sNumber.value();
 
-        TeamApplicationManager membershipRequestManager = Global.getTeamApplicationManager();
-
-        List<TeamApplication> allMembershipRequests = membershipRequestManager.getAllTeamApplications();
+        // Get team for membership request
+        Team teamForMembershipRequest = getTeamByID(tID);
 
         //Get membership request to be deleted
+        List<TeamApplication> allMembershipRequests = Global.getTeamApplicationManager().getAllTeamApplications();
         TeamApplication membershipRequestToBeDeleted = null;
         for(TeamApplication currentMembershipRequest : allMembershipRequests){
-            if(currentMembershipRequest.getTeam().getId().equals(teamID) &&
+            if(currentMembershipRequest.getTeam().getId().equals(teamForMembershipRequest.getId()) &&
                     currentMembershipRequest.getApplicantStudentNumber().equals(studentNumber)){
                 membershipRequestToBeDeleted = currentMembershipRequest;
                 break;
             }
         }
 
-        //Delete membership request from database
-        checkNotNull(membershipRequestToBeDeleted);
-        membershipRequestManager.deleteTeamApplication(membershipRequestToBeDeleted);
+        // Delete membership requests if existent, else inform system
+        if(membershipRequestToBeDeleted == null){
+            throw new MembershipRequestNotFoundException(sNumber,tID);
+        } else {
+            Global.getTeamApplicationManager().deleteTeamApplication(membershipRequestToBeDeleted);
+        }
+    }
+
+    public static void inviteStudent(StudentNumber sNumber, TeamID tID) {
+
     }
 }

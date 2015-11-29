@@ -1,21 +1,17 @@
 package models.studentComponent;
 
 import assets.Global;
+import models.commonUtils.CommonDatabaseUtils;
 import models.commonUtils.Exceptions.InvitationNotFoundException;
 import models.commonUtils.Exceptions.MembershipRequestNotFoundException;
 import models.commonUtils.Exceptions.TeamNotFoundException;
 import models.commonUtils.ID.CourseID;
 import models.commonUtils.ID.StudentNumber;
 import models.commonUtils.ID.TeamID;
-import models.commonUtils.UnikitDatabaseUtils;
-import net.unikit.database.external.interfaces.Course;
 import net.unikit.database.unikit_.interfaces.TeamInvitation;
 import net.unikit.database.unikit_.interfaces.TeamInvitationManager;
 
 import java.util.List;
-
-import static java.lang.System.err;
-import static com.google.common.base.Preconditions.*;
 
 /**
  * @author Jana Wengenroth
@@ -63,15 +59,15 @@ public class StudentModel {
                     currentCourseID = teamInvitation.getTeam().getCourseId();
                 }
                 if (teamInvitation.getTeam().getCourseId() == currentCourseID && teamInvitation.getInviteeStudentNumber().equals(sNumber)) {
-                    UnikitDatabaseUtils.deleteInvitation(sNumber, teamInvitation.getTeam().getId());
+                    CommonDatabaseUtils.deleteInvitation(sNumber, teamInvitation.getTeam().getId());
                 }
             }
-            //UnikitDatabaseUtils.deleteInvitation(sNumber, tID);
-            UnikitDatabaseUtils.addStudentToTeam(sNumber, tID);
+            //CommonDatabaseUtils.deleteInvitation(sNumber, tID);
+            CommonDatabaseUtils.addStudentToTeam(sNumber, tID);
             //TODO send mail
-            UnikitDatabaseUtils.deleteMembershipRequest(sNumber, tID);
+            CommonDatabaseUtils.deleteMembershipRequest(sNumber, tID);
 
-            UnikitDatabaseUtils.changeTeamRegistrationStatus(sNumber, currentCourseID, true);
+            CommonDatabaseUtils.changeTeamRegistrationStatus(sNumber, currentCourseID, true);
             // (?)team exists?
             // invitation exists?
             // (?)student in an other team?
@@ -87,7 +83,7 @@ public class StudentModel {
      *   Declines (deletes) the invitation for the student by the team. The relevant data is retrived using a TeamStateChangeForm-object
      **/
     public static void declineInvitation(StudentNumber sNumber, TeamID tID) throws InvitationNotFoundException {
-        // invitation still exists? (team deleted invatation, team doesn´t exist anymore)
+        // invitation still exists? (team deleted invatation, team doesnï¿½t exist anymore)
         // inform students
     }
     /**

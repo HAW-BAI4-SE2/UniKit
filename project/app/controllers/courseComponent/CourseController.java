@@ -6,7 +6,7 @@ package controllers.courseComponent;
 
 import assets.Global;
 import assets.SessionUtils;
-import models.commonUtils.UnikitDatabaseUtils;
+import models.commonUtils.CommonDatabaseUtils;
 import models.courseComponent.CourseDatabaseUtils;
 
 import net.unikit.database.external.interfaces.Course;
@@ -34,7 +34,7 @@ public class CourseController extends Controller {
 
         Team team = null;
         try {
-            team = UnikitDatabaseUtils.getTeamByStudentAndCourse(currentUser.getStudentNumber(), courseToDisplay.getId());
+            team = CommonDatabaseUtils.getTeamByStudentAndCourse(currentUser.getStudentNumber(), courseToDisplay.getId());
         } catch (NullPointerException e) {
             // Student is not in team
         }

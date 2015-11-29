@@ -1,7 +1,7 @@
 package models.courseComponent;
 
 import assets.Global;
-import models.commonUtils.UnikitDatabaseUtils;
+import models.commonUtils.CommonDatabaseUtils;
 
 import net.unikit.database.external.interfaces.Course;
 import net.unikit.database.unikit_.interfaces.CourseRegistration;
@@ -30,7 +30,7 @@ public class CourseRegistrationDatabaseUtils {
         for(CourseRegistration currentCourseRegistration : allCourseRegistrations){
             if(currentCourseRegistration.getStudentNumber().equals(studentNumber)){
                 allRegisteredCoursesStudent.add(
-                        UnikitDatabaseUtils.getCourseByID(
+                        CommonDatabaseUtils.getCourseByID(
                                 currentCourseRegistration.getCourseId()));
             }
         }

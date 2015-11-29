@@ -5,7 +5,7 @@ package models.courseComponent;
  */
 
 import assets.Global;
-import models.commonUtils.UnikitDatabaseUtils;
+import models.commonUtils.CommonDatabaseUtils;
 import net.unikit.database.external.interfaces.Course;
 import net.unikit.database.unikit_.interfaces.Team;
 
@@ -23,16 +23,16 @@ public class CourseDatabaseUtils {
      * @param status true if student is in a team for this course, else false
      */
     public static void changeTeamRegistrationStatus(String studentNumber, int courseID, boolean status){
-        UnikitDatabaseUtils.changeTeamRegistrationStatus(studentNumber,courseID,status);
+        CommonDatabaseUtils.changeTeamRegistrationStatus(studentNumber,courseID,status);
     }
 
     /**
-     * Returns the course for the queried course ID. Delegates the call to the UnikitDatabaseUtils.
+     * Returns the course for the queried course ID. Delegates the call to the CommonDatabaseUtils.
      * @param courseID the ID of the queried course
      * @return course the queried course
      */
     public static Course getCourseByID(int courseID) {
-        return UnikitDatabaseUtils.getCourseByID(courseID);
+        return CommonDatabaseUtils.getCourseByID(courseID);
     }
 
     /**
@@ -46,7 +46,7 @@ public class CourseDatabaseUtils {
 
         //Gets the course associated with the courseID
         Course associatedCourse = null;
-        associatedCourse = UnikitDatabaseUtils.getCourseByID(courseID);
+        associatedCourse = CommonDatabaseUtils.getCourseByID(courseID);
         checkNotNull(associatedCourse);
 
         //Gets all teams with free slots associated with the course
