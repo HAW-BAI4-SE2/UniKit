@@ -141,7 +141,7 @@ public class TeamModel {
      * @throws MembershipRequestNotFoundException
      * @throws TeamNotFoundException
      */
-    public static Team acceptMembershipRequest(StudentNumber sNumber, TeamID tID) throws MembershipRequestNotFoundException, TeamNotFoundException {
+    public static Team acceptMembershipRequest(StudentNumber sNumber, TeamID tID) throws MembershipRequestNotFoundException, TeamNotFoundException, InvitationNotFoundException {
         // Get team prior to accepting the membership request
         Team thisTeam = CommonDatabaseUtils.getTeamByID(tID);
 

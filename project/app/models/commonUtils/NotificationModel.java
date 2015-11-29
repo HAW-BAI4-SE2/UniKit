@@ -45,4 +45,10 @@ public class NotificationModel {
 
     public static void informStudentMembershipRequestDeclined(Team thisTeam, StudentNumber sNumber) {
     }
+
+    public static void informTeamStudentSendMembershipRequest(Team thisTeam, StudentNumber sNumber){
+    }
+
+    public static void informTeamStudentDeletedMembershipRequest(Team thisTeam, StudentNumber sNumber){
+    }
 }

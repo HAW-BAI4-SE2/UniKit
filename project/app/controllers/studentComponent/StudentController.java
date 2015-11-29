@@ -9,9 +9,7 @@ import assets.SessionUtils;
 import controllers.courseComponent.CourseController;
 
 import models.commonUtils.CommonDatabaseUtils;
-import models.commonUtils.Exceptions.InvitationNotFoundException;
-import models.commonUtils.Exceptions.MembershipRequestNotFoundException;
-import models.commonUtils.Exceptions.TeamNotFoundException;
+import models.commonUtils.Exceptions.*;
 
 import models.commonUtils.ID.CourseID;
 import models.commonUtils.ID.StudentNumber;
@@ -20,6 +18,7 @@ import models.commonUtils.ID.TeamID;
 import models.studentComponent.StudentModel;
 import net.unikit.database.external.interfaces.Student;
 
+import net.unikit.database.unikit_.interfaces.Team;
 import play.mvc.Controller;
 import play.mvc.Result;
 
@@ -40,15 +39,17 @@ public class StudentController extends Controller {
         CourseID cID = CourseID.get(courseID);
         StudentNumber sNumber = StudentNumber.get(currentUser.getStudentNumber());
 
+        // new Team
+        Team team = null;
+
         try{
-            StudentModel.createTeam(sNumber, cID);
+            team = StudentModel.createTeam(sNumber, cID);
         }
         catch(TeamNotFoundException e){
-
+            //TODO error message
+            //do nothing
         }
-        CourseID createdTeamID = CommonDatabaseUtils.createTeam(sNumber, cID);
-
-        return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(createdTeamID.value()));
+        return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(team));
     }
 
     /**
@@ -60,14 +61,16 @@ public class StudentController extends Controller {
         TeamID tID = TeamID.get(teamID);
 
         try{
-            CommonDatabaseUtils.deleteTeam(tID);
+            StudentModel.deleteTeam(tID);
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
         }
         catch(TeamNotFoundException e){
-
+            //TODO error message
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+        } catch (StudentNotTeamMemberException e) {
+            //TODO error message
+            return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
         }
-        int courseForTeam = CommonDatabaseUtils.deleteTeam(tID);
-
-        return CourseController.showCourseDetails(courseForTeam);
     }
 
     /**
@@ -75,19 +78,24 @@ public class StudentController extends Controller {
      * @param teamID the ID of the team that issued the invite
      * @return showTeamOverview-page
      */
-    public static Result acceptInvitation(int teamID){
-
+    public static Result acceptInvitation(int teamID) {
             TeamID tID = TeamID.get(teamID);
             StudentNumber sNumber = StudentNumber.get(currentUser.getStudentNumber());
+
             try{
             //Add the student to the team and updates registration status
             StudentModel.acceptInvitation(sNumber, tID);
+                return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
             }catch(InvitationNotFoundException e){
-                System.err.println("Invitation not found");
-             }
-
-            return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(tID.value()));
-
+                //TODO error message
+                return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+             } catch (MembershipRequestNotFoundException e) {
+                //TODO error message
+                return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            } catch (TeamNotFoundException e) {
+                //TODO error message
+                return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            }
     }
 
     /**
@@ -99,13 +107,14 @@ public class StudentController extends Controller {
 
         try{
             StudentModel.declineInvitation(sNumber, tID);
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+        } catch (InvitationNotFoundException e) {
+            //TODO error message
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+        } catch (TeamNotFoundException e) {
+            //TODO error message
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
         }
-        catch(Exception e){
-
-        }
-        CommonDatabaseUtils.deleteInvitation(sNumber, tID);
-
-        return TeamController.showTeamOverview(teamID);
     }
     /**
      *  The student requests the membership with the team. The relevant data is retrived using a TeamStateChangeForm-object
@@ -116,10 +125,24 @@ public class StudentController extends Controller {
         TeamID tID = TeamID.get(teamID);
         StudentNumber sNumber = StudentNumber.get(currentUser.getStudentNumber());
 
-        try{
-            StudentModel.requestMembership(sNumber,tID);
+        try {
+            StudentModel.requestMembership(sNumber, tID);
+            return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview());
+        }catch (InvitationNotFoundException e) {
+            //TODO error message
+            // ??? nothing
+        } catch (CourseNotFoundException e) {
+            //TODO error message
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+        } catch (TeamMaxSizeReachedException e) {
+            //TODO error message
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+        } catch (TeamNotFoundException e) {
+            //TODO error message
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
         } catch (MembershipRequestNotFoundException e) {
-
+            //TODO error message
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
         }
 
         int courseToDispay = CommonDatabaseUtils.getTeamByID(tID).getCourseId();
@@ -131,13 +154,17 @@ public class StudentController extends Controller {
      *  The student cancels his membership request with the team. The relevant data is retrived using a TeamStateChangeForm-object
      *  @return showCourseDetails-page
     **/
-    public static Result cancelMembershipRequest(int teamID){
+    public static Result cancelMembershipRequest(int teamID) {
         TeamID tID = TeamID.get(teamID);
         StudentNumber sNumber = StudentNumber.get(currentUser.getStudentNumber());
-        try{
+        try {
             StudentModel.cancelMembershipRequest(sNumber, tID);
         } catch (MembershipRequestNotFoundException e) {
-
+            //TODO error message
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+        } catch (TeamNotFoundException e) {
+            //TODO error message
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
         }
 
         int courseToDispay = CommonDatabaseUtils.getTeamByID(tID).getCourseId();

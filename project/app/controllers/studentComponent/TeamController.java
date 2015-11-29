@@ -64,7 +64,7 @@ public class TeamController extends Controller {
         // If team is empty, display course details, else team overview
         if(modifiedTeam.getTeamRegistrations().isEmpty()){
             // TODO error message
-            return redirect(controllers.courseComponent.routes.CourseController.showCourseDetails(modifiedTeam.getCourseId());
+            return redirect(controllers.courseComponent.routes.CourseController.showCourseDetails(modifiedTeam.getCourseId()));
         }else{
             // TODO error message
             return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
