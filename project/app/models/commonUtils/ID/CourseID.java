@@ -1,5 +1,7 @@
 package models.commonUtils.ID;
 
+import net.unikit.database.interfaces.entities.Course;
+
 /**
  * @author Thomas Bednorz
  */
@@ -8,6 +10,10 @@ public class CourseID {
 
     public static CourseID get(int courseID) throws IllegalArgumentException{
         return new CourseID(courseID);
+    }
+
+    public static CourseID get(Course.ID courseID){
+        return new CourseID(courseID.getValue());
     }
 
     private CourseID() {}

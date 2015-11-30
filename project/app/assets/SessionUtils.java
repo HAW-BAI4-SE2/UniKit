@@ -1,6 +1,8 @@
 package assets;
 
-import net.unikit.database.external.interfaces.Student;
+
+import models.commonUtils.ID.IDUtils;
+import net.unikit.database.interfaces.entities.Student;
 import play.mvc.Http;
 
 import java.util.Date;
@@ -37,7 +39,8 @@ public final class SessionUtils {
         String username = session.get("username");
         checkNotNull(username, "username is null!");
 
-        Student currentUser = Global.getStudentManager().getStudent(username);
+        Student currentUser = Global.getStudentManager().getEntity(
+                Global.getStudentManager().createID(username));
         checkNotNull(currentUser, "currentUser is null!");
 
         return currentUser;

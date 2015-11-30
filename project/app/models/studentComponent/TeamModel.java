@@ -6,9 +6,11 @@ import models.commonUtils.ID.CourseID;
 import models.commonUtils.ID.StudentNumber;
 import models.commonUtils.ID.TeamID;
 import models.commonUtils.NotificationModel;
-import net.unikit.database.external.interfaces.Course;
-import net.unikit.database.external.interfaces.Student;
-import net.unikit.database.unikit_.interfaces.Team;
+import net.unikit.database.interfaces.entities.Course;
+import net.unikit.database.interfaces.entities.Student;
+import net.unikit.database.interfaces.entities.Team;
+
+import java.util.List;
 
 /**
  * This class receives the calls from the TeamController.
@@ -24,7 +26,7 @@ public class TeamModel {
      * @param tID the ID of the team the student is to be added to
      * @throws TeamNotFoundException
      */
-    public static void addMember(StudentNumber sNumber, TeamID tID) throws TeamNotFoundException {
+    public static void addMember(StudentNumber sNumber, TeamID tID) throws TeamNotFoundException, StudentNotFoundException {
         // Get team prior to addition of student
         Team originalTeam = CommonDatabaseUtils.getTeamByID(tID);
 
@@ -45,9 +47,9 @@ public class TeamModel {
      * @param tID the ID of the team from which the student is to be removed.
      * @returns the team from from which the student is to be removed.
      * @throws TeamNotFoundException
-     * @throws StudentNotTeamMemberException
+     * @throws NotTeamMemberExcpetion
      */
-    public static Team removeMember(StudentNumber sNumber, TeamID tID) throws TeamNotFoundException, StudentNotTeamMemberException{
+    public static Team removeMember(StudentNumber sNumber, TeamID tID) throws TeamNotFoundException, NotTeamMemberExcpetion, StudentNotFoundException {
         // Get team prior to removal of student
         Team thisTeam = CommonDatabaseUtils.getTeamByID(tID);
 
@@ -81,21 +83,16 @@ public class TeamModel {
      * @param invitedBy the Student who issued the invite.
      * @returns the team to which the student was invited
      * @throws TeamNotFoundException
-     * @throws FatalErrorException
      * @throws TeamMaxSizeReachedException
      * @throws CourseNotFoundException
      */
-    public static Team inviteStudent(StudentNumber sNumber, TeamID tID, Student invitedBy) throws TeamMaxSizeReachedException, TeamNotFoundException, FatalErrorException, CourseNotFoundException {
-        // Check student
-        if(invitedBy == null){
-            throw new FatalErrorException("No Student issued the invite");
-        }
+    public static Team inviteStudent(StudentNumber sNumber, TeamID tID, StudentNumber invitedBy) throws TeamMaxSizeReachedException, TeamNotFoundException, CourseNotFoundException, InvitationAlreadyExistsException, StudentNotFoundException {
 
         // Get team prior to addition of student
         Team thisTeam = CommonDatabaseUtils.getTeamByID(tID);
 
         //Get course for the team
-        Course associatedCourse = CommonDatabaseUtils.getCourseByID(CourseID.get(thisTeam.getCourseId()));
+        Course associatedCourse = thisTeam.getCourse();
 
         // Invite student to team, error if (registrations + invitations) exceeds team size limit
         if((thisTeam.getTeamInvitations().size()
@@ -121,7 +118,7 @@ public class TeamModel {
      * @throws InvitationNotFoundException
      * @throws TeamNotFoundException
      */
-    public static void cancelInvitation(StudentNumber sNumber, TeamID tID) throws InvitationNotFoundException, TeamNotFoundException{
+    public static void cancelInvitation(StudentNumber sNumber, TeamID tID) throws InvitationNotFoundException, TeamNotFoundException, StudentNotFoundException {
         // Get team prior to cancellation of invite
         Team thisTeam = CommonDatabaseUtils.getTeamByID(tID);
 
@@ -141,7 +138,7 @@ public class TeamModel {
      * @throws MembershipRequestNotFoundException
      * @throws TeamNotFoundException
      */
-    public static Team acceptMembershipRequest(StudentNumber sNumber, TeamID tID) throws MembershipRequestNotFoundException, TeamNotFoundException, InvitationNotFoundException {
+    public static Team acceptMembershipRequest(StudentNumber sNumber, TeamID tID) throws MembershipRequestNotFoundException, TeamNotFoundException, StudentNotFoundException {
         // Get team prior to accepting the membership request
         Team thisTeam = CommonDatabaseUtils.getTeamByID(tID);
 
@@ -172,7 +169,7 @@ public class TeamModel {
      * @throws MembershipRequestNotFoundException
      * @throws TeamNotFoundException
      */
-    public static void declineMembershipRequest(StudentNumber sNumber, TeamID tID) throws MembershipRequestNotFoundException, TeamNotFoundException {
+    public static void declineMembershipRequest(StudentNumber sNumber, TeamID tID) throws MembershipRequestNotFoundException, TeamNotFoundException, StudentNotFoundException {
         // Get team prior to declining the membership request
         Team thisTeam = CommonDatabaseUtils.getTeamByID(tID);
 
@@ -182,5 +179,37 @@ public class TeamModel {
         // Inform student that membership request was declined
         NotificationModel.informStudentMembershipRequestDeclined(thisTeam,sNumber);
 
+    }
+
+    public static List<Student> getAllStudents(CourseID courseID) throws CourseNotFoundException {
+        Course course = CommonDatabaseUtils.getCourseByID(courseID);
+        return CommonDatabaseUtils.getAllStudents(course);
+    }
+
+    public static List<Student> getAllMembershipRequests(TeamID teamID) throws TeamNotFoundException {
+        Team team = CommonDatabaseUtils.getTeamByID(teamID);
+        return CommonDatabaseUtils.getAllMembershipRequests(team);
+    }
+
+    public static List<Student> getAllStudents(TeamID teamID) throws TeamNotFoundException {
+        Team team = CommonDatabaseUtils.getTeamByID(teamID);
+        return CommonDatabaseUtils.getAllStudents(team);
+    }
+
+    public static List<Student> getAllInvites(TeamID teamID) throws TeamNotFoundException {
+        Team team = CommonDatabaseUtils.getTeamByID(teamID);
+        return CommonDatabaseUtils.getAllInvites(team);
+    }
+
+    public static Course getCourseByID(CourseID courseID) throws CourseNotFoundException {
+        return CommonDatabaseUtils.getCourseByID(courseID);
+    }
+
+    public static List<Team> getAllTeams(CourseID courseID) throws CourseNotFoundException {
+        return CommonDatabaseUtils.getAllTeams(courseID);
+    }
+
+    public static List<Team> getAllAvailableTeams(CourseID courseID) throws CourseNotFoundException {
+        return CommonDatabaseUtils.getAvailableTeams(courseID);
     }
 }

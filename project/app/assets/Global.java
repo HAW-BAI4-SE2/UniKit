@@ -1,10 +1,10 @@
 package assets;
 
-import net.unikit.database.common.interfaces.DatabaseConfiguration;
-import net.unikit.database.external.implementations.ImportDatabaseManagerFactory;
-import net.unikit.database.external.interfaces.*;
-import net.unikit.database.unikit_.implementations.UniKitDatabaseManagerFactory;
-import net.unikit.database.unikit_.interfaces.*;
+
+import net.unikit.database.implementations.DatabaseManagerFactory;
+import net.unikit.database.interfaces.DatabaseConfiguration;
+import net.unikit.database.interfaces.DatabaseManager;
+import net.unikit.database.interfaces.managers.*;
 import play.Application;
 import play.GlobalSettings;
 import play.Logger;
@@ -13,16 +13,17 @@ import play.Play;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static net.unikit.database.common.implementations.DatabaseConfigurationUtils.createDatabaseConfigurationFromProperties;
+import static net.unikit.database.implementations.DatabaseConfigurationUtils.createDatabaseConfigurationFromProperties;
 
 public final class Global extends GlobalSettings {
-    private static AppointmentManager appointmentManager;
+    // MISSING?
+//    private static AppointmentManager appointmentManager;
     private static CourseGroupManager courseGroupManager;
     private static CourseManager courseManager;
     private static FieldOfStudyManager fieldOfStudyManager;
     private static StudentManager studentManager;
     private static CourseRegistrationManager courseRegistrationManager;
-    private static TeamApplicationManager teamApplicationManager;
+    private static MembershipRequestManager membershipRequestManager;
     private static TeamInvitationManager teamInvitationManager;
     private static TeamManager teamManager;
     private static TeamRegistrationManager teamRegistrationManager;
@@ -40,7 +41,8 @@ public final class Global extends GlobalSettings {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ImportDatabaseManager externalDatabaseManager = ImportDatabaseManagerFactory.createDatabaseManager(databaseConfigurationExternal);
+//        ImportDatabaseManager externalDatabaseManager = ImportDatabaseManagerFactory.createDatabaseManager(databaseConfigurationExternal);
+
 
         // Load internal database
         Logger.info("Loading internal database...");
@@ -51,27 +53,40 @@ public final class Global extends GlobalSettings {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        UniKitDatabaseManager internalDatabaseManager = UniKitDatabaseManagerFactory.createDatabaseManager(databaseConfigurationInternal);
+//        UniKitDatabaseManager internalDatabaseManager = UniKitDatabaseManagerFactory.createDatabaseManager(databaseConfigurationInternal);
+
+        DatabaseManager DatabaseManager = DatabaseManagerFactory.createDatabaseManager(databaseConfigurationInternal,  databaseConfigurationExternal);
 
         // Store database managers in global values
         Logger.info("Initializing database managers...");
-        Global.appointmentManager = externalDatabaseManager.getAppointmentManager();
-        Global.courseGroupManager = externalDatabaseManager.getCourseGroupManager();
-        Global.courseManager = externalDatabaseManager.getCourseManager();
-        Global.fieldOfStudyManager = externalDatabaseManager.getFieldOfStudyManager();
-        Global.studentManager = externalDatabaseManager.getStudentManager();
-        Global.courseRegistrationManager = internalDatabaseManager.getCourseRegistrationManager();
-        Global.teamApplicationManager = internalDatabaseManager.getTeamApplicationManager();
-        Global.teamInvitationManager = internalDatabaseManager.getTeamInvitationManager();
-        Global.teamManager = internalDatabaseManager.getTeamManager();
-        Global.teamRegistrationManager = internalDatabaseManager.getTeamRegistrationManager();
+//        Global.appointmentManager = externalDatabaseManager.getAppointmentManager();
+//        Global.courseGroupManager = externalDatabaseManager.getCourseGroupManager();
+//        Global.courseManager = externalDatabaseManager.getCourseManager();
+//        Global.fieldOfStudyManager = externalDatabaseManager.getFieldOfStudyManager();
+//        Global.studentManager = externalDatabaseManager.getStudentManager();
+//        Global.courseRegistrationManager = internalDatabaseManager.getCourseRegistrationManager();
+//        Global.teamApplicationManager = internalDatabaseManager.getMembershipRequestManager();
+//        Global.teamInvitationManager = internalDatabaseManager.getTeamInvitationManager();
+//        Global.teamManager = internalDatabaseManager.getTeamManager();
+//        Global.teamRegistrationManager = internalDatabaseManager.getTeamRegistrationManager();
+
+        // ERROR: ApplicationManager missing?
+        Global.courseGroupManager = DatabaseManagerFactory.getDatabaseManager().getCourseGroupManager();
+        Global.courseManager = DatabaseManagerFactory.getDatabaseManager().getCourseManager();
+        Global.fieldOfStudyManager = DatabaseManagerFactory.getDatabaseManager().getFieldOfStudyManager();
+        Global.studentManager = DatabaseManagerFactory.getDatabaseManager().getStudentManager();
+        Global.courseRegistrationManager = DatabaseManagerFactory.getDatabaseManager().getCourseRegistrationManager();
+        Global.membershipRequestManager = DatabaseManagerFactory.getDatabaseManager().getMembershipRequestManager();
+        Global.teamInvitationManager = DatabaseManagerFactory.getDatabaseManager().getTeamInvitationManager();
+        Global.teamManager = DatabaseManagerFactory.getDatabaseManager().getTeamManager();
+        Global.teamRegistrationManager = DatabaseManagerFactory.getDatabaseManager().getTeamRegistrationManager();
 
         Logger.info("Application initialized!");
     }
 
-    public static AppointmentManager getAppointmentManager() {
-        return appointmentManager;
-    }
+//    public static AppointmentManager getAppointmentManager() {
+//        return appointmentManager;
+//    }
 
     public static CourseGroupManager getCourseGroupManager() {
         return courseGroupManager;
@@ -93,8 +108,8 @@ public final class Global extends GlobalSettings {
         return courseRegistrationManager;
     }
 
-    public static TeamApplicationManager getTeamApplicationManager() {
-        return teamApplicationManager;
+    public static MembershipRequestManager getMembershipRequestManager() {
+        return membershipRequestManager;
     }
 
     public static TeamInvitationManager getTeamInvitationManager() {

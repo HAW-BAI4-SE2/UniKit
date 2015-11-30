@@ -1,7 +1,8 @@
 package models.commonUtils;
 
 import models.commonUtils.ID.StudentNumber;
-import net.unikit.database.unikit_.interfaces.Team;
+import models.commonUtils.ID.TeamID;
+import net.unikit.database.interfaces.entities.Team;
 
 
 /**
@@ -9,14 +10,14 @@ import net.unikit.database.unikit_.interfaces.Team;
  */
 public class NotificationModel {
 
-    public static void informTeamStudentJoined(Team thisTeam, StudentNumber student) {
+    public static void informTeamStudentJoined(TeamID thisTeam, StudentNumber student) {
     }
 
     public static void informStudentRemovedFromTeam(Team thisTeam, StudentNumber student) {
 
     }
 
-    public static void informStudentTeamJoined(Team thisTeam, StudentNumber student) {
+    public static void informStudentTeamJoined(TeamID thisTeam, StudentNumber student) {
     }
 
     public static void informTeamStudentRemoved(Team thisTeam, StudentNumber student) {
@@ -39,7 +40,7 @@ public class NotificationModel {
 
     }
 
-    public static void informTeamInviteCancelled(Team thisTeam, StudentNumber sNumber) {
+    public static void informTeamInviteCancelled(TeamID thisTeam, StudentNumber sNumber) {
 
     }
 
@@ -49,6 +50,14 @@ public class NotificationModel {
     public static void informTeamStudentSendMembershipRequest(Team thisTeam, StudentNumber sNumber){
     }
 
-    public static void informTeamStudentDeletedMembershipRequest(Team thisTeam, StudentNumber sNumber){
+    public static void informTeamStudentDeletedMembershipRequest(TeamID thisTeam, StudentNumber sNumber){
+    }
+
+    public static void informTeamMembershipRequested(TeamID tID, StudentNumber sNumber) {
+
+    }
+
+    public static void informStudentMembershipRequested(TeamID tID, StudentNumber sNumber) {
+
     }
 }

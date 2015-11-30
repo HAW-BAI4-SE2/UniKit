@@ -1,5 +1,7 @@
 package models.commonUtils.ID;
 
+import net.unikit.database.interfaces.entities.Student;
+
 /**
  * @author Thomas Bednorz
  */
@@ -8,6 +10,10 @@ public class StudentNumber {
 
     public static StudentNumber get(String studentNumber) throws IllegalArgumentException{
         return new StudentNumber(studentNumber);
+    }
+
+    public static StudentNumber get(Student.StudentNumber studentNumber) {
+        return new StudentNumber(studentNumber.getValue());
     }
 
     private StudentNumber() {}
@@ -23,4 +29,6 @@ public class StudentNumber {
     public String value(){
         return studentNumber;
     }
+
+
 }

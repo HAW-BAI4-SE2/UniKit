@@ -4,21 +4,17 @@ package controllers.studentComponent;
  * @author Thomas Bednorz
  */
 
-import assets.Global;
 import assets.SessionUtils;
 import models.commonUtils.CommonDatabaseUtils;
 import models.commonUtils.Exceptions.*;
 import models.commonUtils.ID.CourseID;
+import models.commonUtils.ID.IDUtils;
 import models.commonUtils.ID.StudentNumber;
 import models.commonUtils.ID.TeamID;
 import models.studentComponent.TeamModel;
-import net.unikit.database.external.interfaces.Course;
-import net.unikit.database.external.interfaces.Student;
 
-import net.unikit.database.unikit_.interfaces.CourseRegistration;
-import net.unikit.database.unikit_.interfaces.Team;
-import net.unikit.database.unikit_.interfaces.TeamApplication;
-import net.unikit.database.unikit_.interfaces.TeamInvitation;
+import net.unikit.database.interfaces.entities.*;
+
 import play.mvc.Controller;
 import play.mvc.Result;
 
@@ -56,7 +52,10 @@ public class TeamController extends Controller {
         } catch (TeamNotFoundException e) {
             // TODO error message
             return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
-        } catch (StudentNotTeamMemberException e) {
+        } catch (NotTeamMemberExcpetion e) {
+            // TODO error message
+            return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
+        } catch (StudentNotFoundException e) {
             // TODO error message
             return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
         }
@@ -64,7 +63,7 @@ public class TeamController extends Controller {
         // If team is empty, display course details, else team overview
         if(modifiedTeam.getTeamRegistrations().isEmpty()){
             // TODO error message
-            return redirect(controllers.courseComponent.routes.CourseController.showCourseDetails(modifiedTeam.getCourseId()));
+            return redirect(controllers.courseComponent.routes.CourseController.showCourseDetails(IDUtils.getInt(modifiedTeam.getCourse())));
         }else{
             // TODO error message
             return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
@@ -81,10 +80,11 @@ public class TeamController extends Controller {
     public static Result inviteStudent(String studentNumber, int teamID) {
         // Init
         StudentNumber sNumber = StudentNumber.get(studentNumber);
+        StudentNumber createdBySNumber = StudentNumber.get(currentUser.getStudentNumber());
         TeamID tID = TeamID.get(teamID);
 
         try {
-            TeamModel.inviteStudent(sNumber, tID, currentUser);
+            TeamModel.inviteStudent(sNumber, tID, createdBySNumber);
             return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
         } catch (TeamMaxSizeReachedException e) {
             // TODO error message
@@ -96,6 +96,12 @@ public class TeamController extends Controller {
             // TODO error message
             return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
         } catch (CourseNotFoundException e) {
+            // TODO error message
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+        } catch (InvitationAlreadyExistsException e) {
+            // TODO error message
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+        } catch (StudentNotFoundException e) {
             // TODO error message
             return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
         }
@@ -115,6 +121,9 @@ public class TeamController extends Controller {
         } catch (TeamNotFoundException e) {
             // TODO error message
             return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+        } catch (StudentNotFoundException e) {
+            // TODO error message
+            return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
         }
     }
 
@@ -132,6 +141,9 @@ public class TeamController extends Controller {
         } catch (TeamNotFoundException e) {
             // TODO error message
             return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+        } catch (StudentNotFoundException e) {
+            // TODO error message
+            return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
         }
     }
 
@@ -149,6 +161,9 @@ public class TeamController extends Controller {
         } catch (TeamNotFoundException e) {
             // TODO error message
             return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+        } catch (StudentNotFoundException e) {
+            // TODO error message
+            return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
         }
     }
 
@@ -156,55 +171,35 @@ public class TeamController extends Controller {
      *   Displays the details for a team
      **/
     public static Result showTeamOverview(int teamID){
-       // Init
-        TeamID tID = TeamID.get(teamID);
         Date sessionTimeout = SessionUtils.getSessionTimeout(session());
 
-        // Get team and course associated with team ID
         Team teamToDisplay = null;
-        Course course = null;
+        List<Student> allStudentsInTeam = null;
+        List<Student> allMembershipRequests = null;
+        List<Student> allInvites = null;
         try {
-            teamToDisplay = CommonDatabaseUtils.getTeamByID(tID);
-            course = CommonDatabaseUtils.getCourseByID(CourseID.get(teamToDisplay.getCourseId()));
+            teamToDisplay = CommonDatabaseUtils.getTeamByID(TeamID.get(teamID));
+            allMembershipRequests = TeamModel.getAllMembershipRequests(TeamID.get(teamID));
+            allStudentsInTeam = TeamModel.getAllStudents(TeamID.get(teamID));
+            allInvites = TeamModel.getAllInvites(TeamID.get(teamID));
         } catch (TeamNotFoundException e) {
             // TODO error message
             return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+        }
+
+        // Get all students who are not in the team
+        Course associatedCourse = teamToDisplay.getCourse();
+        List<Student> availableStudents = null;
+        try {
+            availableStudents = TeamModel.getAllStudents(CourseID.get(associatedCourse.getId()));
         } catch (CourseNotFoundException e) {
-            // TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            // No Students found
         }
 
+        availableStudents.removeAll(allStudentsInTeam);
 
-        // Get members of team
-        List<Student> allStudentsForTeam = CommonDatabaseUtils.getAllStudents(teamToDisplay);
 
-        // Get registered students for course
-        List<Student> courseRegistrees = new ArrayList<>();
-        List<CourseRegistration> allCourseRegistrations = Global.getCourseRegistrationManager().getAllCourseRegistrations();
-        for (CourseRegistration courseRegistration : allCourseRegistrations) {
-            if (courseRegistration.getCourseId() == course.getId()) {
-                courseRegistrees.add(Global.getStudentManager().getStudent(courseRegistration.getStudentNumber()));
-            }
-        }
-
-        // Remove members of team from registered students
-        courseRegistrees.removeAll(allStudentsForTeam);
-
-        // Get applicants for team
-        List<Student> applicants = new ArrayList<>();
-        List<TeamApplication> teamApplications = teamToDisplay.getTeamApplications();
-        for (TeamApplication teamApplication : teamApplications) {
-            applicants.add(Global.getStudentManager().getStudent(teamApplication.getApplicantStudentNumber()));
-        }
-
-        // Get invitees for team
-        List<Student> invitees = new ArrayList<>();
-        List<TeamInvitation> teamInvitations = teamToDisplay.getTeamInvitations();
-        for (TeamInvitation teamInvitation : teamInvitations) {
-            invitees.add(Global.getStudentManager().getStudent(teamInvitation.getInviteeStudentNumber()));
-        }
-
-        return ok(showTeamOverview.render(teamToDisplay, allStudentsForTeam, applicants, invitees, course, courseRegistrees, currentUser, sessionTimeout));
+        return ok(showTeamOverview.render(teamToDisplay, allStudentsInTeam, allMembershipRequests, allInvites, associatedCourse, availableStudents, currentUser, sessionTimeout));
 }
 
 
@@ -213,24 +208,23 @@ public class TeamController extends Controller {
      *  @return
      **/ 
     public static Result showAvailableTeams(int courseID){
-        /*
-         *  TODO:
-         *      get all teams which are not full for a given course
-        */
-
         Student currentUser = SessionUtils.getCurrentUser(session());
         Date sessionTimeout = SessionUtils.getSessionTimeout(session());
 
-        Course course = Global.getCourseManager().getCourse(courseID);
-        List<Team> availableTeams = new ArrayList<>();
-
-        List<Team> allTeams = Global.getTeamManager().getAllTeams();
-        for (Team team : allTeams) {
-            if (team.getCourseId() == course.getId()) {
-                // TODO: Check if team is full
-                availableTeams.add(team);
-            }
+        Course course = null;
+        try {
+            course = TeamModel.getCourseByID(CourseID.get(courseID));
+        } catch (CourseNotFoundException e) {
+            e.printStackTrace();
         }
+
+        List<Team> availableTeams = null;
+        try {
+            TeamModel.getAllAvailableTeams(CourseID.get(courseID));
+        } catch (CourseNotFoundException e) {
+            // Course doesn't exist
+        }
+
 
         return ok(showAvailableTeams.render(availableTeams, course, currentUser, sessionTimeout));
     }

@@ -7,11 +7,12 @@ package controllers.courseComponent;
 import assets.Global;
 import assets.SessionUtils;
 import models.commonUtils.CommonDatabaseUtils;
+import models.commonUtils.Exceptions.CourseNotFoundException;
 import models.commonUtils.Exceptions.TeamNotFoundException;
 import models.commonUtils.ID.CourseID;
 import models.commonUtils.ID.StudentNumber;
-import models.courseComponent.CourseDatabaseUtils;
-
+import models.courseComponent.CourseModel;
+import net.unikit.database.interfaces.entities.*;
 import net.unikit.database.external.interfaces.Course;
 
 import net.unikit.database.external.interfaces.Student;
@@ -31,8 +32,16 @@ public class CourseController extends Controller {
     public static Result showCourseDetails(int courseID){
         Student currentUser = SessionUtils.getCurrentUser(session());
         Date sessionTimeout = SessionUtils.getSessionTimeout(session());
+        CourseID cID = CourseID.get(courseID);
 
-        Course courseToDisplay = CourseDatabaseUtils.getCourseByID(courseID);
+        Course courseToDisplay = null;
+        try {
+            courseToDisplay = CourseModel.getCourseByID(cID);
+
+        } catch (CourseNotFoundException e) {
+            //TODO error message
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+        }
         //List<Team> availableTeamsForCourse = CourseDatabaseUtils.getAvailableTeamsForCourse(courseID);
 
         Team team = null;
@@ -48,7 +57,7 @@ public class CourseController extends Controller {
 
         if (team == null) {
             teamApplications = new ArrayList<>();
-            List<TeamApplication> allTeamApplications = Global.getTeamApplicationManager().getAllTeamApplications();
+            List<TeamApplication> allTeamApplications = Global.getMembershipRequestManager().getAllTeamApplications();
             for (TeamApplication teamApplication : allTeamApplications) {
                 if (teamApplication == null ||
                         teamApplication.getApplicantStudentNumber() == null ||

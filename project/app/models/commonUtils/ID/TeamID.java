@@ -1,5 +1,7 @@
 package models.commonUtils.ID;
 
+import net.unikit.database.interfaces.entities.Team;
+
 /**
  * @author Thomas Bednorz
  */
@@ -8,6 +10,10 @@ public class TeamID {
 
     public static TeamID get(int teamID) throws IllegalArgumentException{
         return new TeamID(teamID);
+    }
+
+    public static TeamID get(Team.ID teamID) {
+        return new TeamID(teamID.getValue());
     }
 
     private TeamID() {}
@@ -23,4 +29,6 @@ public class TeamID {
     public int value(){
         return teamID;
     }
+
+
 }
