@@ -1,13 +1,13 @@
 @import snippets._
 
-@(team: net.unikit.database.unikit_.interfaces.Team, members: List[net.unikit.database.external.interfaces.Student], applicants: List[net.unikit.database.external.interfaces.Student], invitees: List[net.unikit.database.external.interfaces.Student], course: net.unikit.database.external.interfaces.Course, courseRegistrees: List[net.unikit.database.external.interfaces.Student], currentUser: net.unikit.database.external.interfaces.Student, sessionTimeout: java.util.Date)
+@(team: net.unikit.database.interfaces.entities.Team, members: List[net.unikit.database.interfaces.entities.Student], applicants: List[net.unikit.database.interfaces.entities.Student], invitees: List[net.unikit.database.interfaces.entities.Student], course: net.unikit.database.interfaces.entities.Course, courseRegistrees: List[net.unikit.database.interfaces.entities.Student], currentUser: net.unikit.database.interfaces.entities.Student, sessionTimeout: java.util.Date)
 
 @currentUserIsMember() = @{
     var result = false
 
     for(registration <- team.getTeamRegistrations) {
-        if(!result && registration != null && registration.getStudentNumber() != null) {
-            if(registration.getStudentNumber().equals(currentUser.getStudentNumber)) {
+        if(!result && registration != null && registration.getStudent().getStudentNumber() != null) {
+            if(registration.getStudent().getStudentNumber().equals(currentUser.getStudentNumber)) {
                 result = true
             }
         }
@@ -20,8 +20,8 @@
     var result = false
 
     for(invitation <- team.getTeamInvitations) {
-        if(!result && invitation != null && invitation.getInviteeStudentNumber() != null) {
-            if(invitation.getInviteeStudentNumber().equals(currentUser.getStudentNumber)) {
+        if(!result && invitation != null && invitation.getInvitee().getStudentNumber() != null) {
+            if(invitation.getInvitee().getStudentNumber().equals(currentUser.getStudentNumber)) {
                 result = true
             }
         }
@@ -33,9 +33,9 @@
 @currentUserRequested() = @{
     var result = false
 
-    for(application <- team.getTeamApplications()) {
-        if(!result && application != null && application.getApplicantStudentNumber() != null) {
-            if(application.getApplicantStudentNumber().equals(currentUser.getStudentNumber)) {
+    for(membershipRequest <- team.getMembershipRequests()) {
+        if(!result && membershipRequest != null && membershipRequest.getApplicant().getStudentNumber() != null) {
+            if(membershipRequest.getApplicant().getStudentNumber().equals(currentUser.getStudentNumber)) {
                 result = true
             }
         }
@@ -45,7 +45,7 @@
 }
 
 @teamIsFull() = @{
-    val courseMaxTeamSize = assets.Global.getCourseManager.getCourse(team.getCourseId()).getMaxTeamSize()
+    val courseMaxTeamSize = assets.Global.getCourseManager.getEntity(team.getCourse().getId()).getMaxTeamSize()
     val currentSize = team.getTeamInvitations().size() + team.getTeamRegistrations().size()
 
     (currentSize >= courseMaxTeamSize)

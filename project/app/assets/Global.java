@@ -16,9 +16,10 @@ import java.io.InputStream;
 import static net.unikit.database.implementations.DatabaseConfigurationUtils.createDatabaseConfigurationFromProperties;
 
 public final class Global extends GlobalSettings {
-    // MISSING?
-//    private static AppointmentManager appointmentManager;
+    private static CourseGroupAppointmentManager courseGroupAppointmentManager;
     private static CourseGroupManager courseGroupManager;
+    private static CourseLectureAppointmentManager courseLectureAppointmentManager;
+    private static CourseLectureManager courseLectureManager;
     private static CourseManager courseManager;
     private static FieldOfStudyManager fieldOfStudyManager;
     private static StudentManager studentManager;
@@ -32,8 +33,7 @@ public final class Global extends GlobalSettings {
     public void beforeStart(Application application) {
         Logger.info("Initializing application...");
 
-        // Load external database
-        Logger.info("Loading external database...");
+        // Create external database configuration
         InputStream inputStreamExternal = Play.application().resourceAsStream("database_external.properties");
         DatabaseConfiguration databaseConfigurationExternal = null;
         try {
@@ -41,11 +41,8 @@ public final class Global extends GlobalSettings {
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        ImportDatabaseManager externalDatabaseManager = ImportDatabaseManagerFactory.createDatabaseManager(databaseConfigurationExternal);
 
-
-        // Load internal database
-        Logger.info("Loading internal database...");
+        // Create internal database configuration
         InputStream inputStreamInternal = Play.application().resourceAsStream("database_internal.properties");
         DatabaseConfiguration databaseConfigurationInternal = null;
         try {
@@ -53,25 +50,17 @@ public final class Global extends GlobalSettings {
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        UniKitDatabaseManager internalDatabaseManager = UniKitDatabaseManagerFactory.createDatabaseManager(databaseConfigurationInternal);
 
+        // Load database
+        Logger.info("Initializing database...");
         DatabaseManager DatabaseManager = DatabaseManagerFactory.createDatabaseManager(databaseConfigurationInternal,  databaseConfigurationExternal);
 
         // Store database managers in global values
         Logger.info("Initializing database managers...");
-//        Global.appointmentManager = externalDatabaseManager.getAppointmentManager();
-//        Global.courseGroupManager = externalDatabaseManager.getCourseGroupManager();
-//        Global.courseManager = externalDatabaseManager.getCourseManager();
-//        Global.fieldOfStudyManager = externalDatabaseManager.getFieldOfStudyManager();
-//        Global.studentManager = externalDatabaseManager.getStudentManager();
-//        Global.courseRegistrationManager = internalDatabaseManager.getCourseRegistrationManager();
-//        Global.teamApplicationManager = internalDatabaseManager.getMembershipRequestManager();
-//        Global.teamInvitationManager = internalDatabaseManager.getTeamInvitationManager();
-//        Global.teamManager = internalDatabaseManager.getTeamManager();
-//        Global.teamRegistrationManager = internalDatabaseManager.getTeamRegistrationManager();
-
-        // ERROR: ApplicationManager missing?
+        Global.courseGroupAppointmentManager = DatabaseManagerFactory.getDatabaseManager().getCourseGroupAppointmentManager();
         Global.courseGroupManager = DatabaseManagerFactory.getDatabaseManager().getCourseGroupManager();
+        Global.courseLectureAppointmentManager = DatabaseManagerFactory.getDatabaseManager().getCourseLectureAppointmentManager();
+        Global.courseLectureManager = DatabaseManagerFactory.getDatabaseManager().getCourseLectureManager();
         Global.courseManager = DatabaseManagerFactory.getDatabaseManager().getCourseManager();
         Global.fieldOfStudyManager = DatabaseManagerFactory.getDatabaseManager().getFieldOfStudyManager();
         Global.studentManager = DatabaseManagerFactory.getDatabaseManager().getStudentManager();
@@ -84,12 +73,20 @@ public final class Global extends GlobalSettings {
         Logger.info("Application initialized!");
     }
 
-//    public static AppointmentManager getAppointmentManager() {
-//        return appointmentManager;
-//    }
+    public static CourseGroupAppointmentManager getCourseGroupAppointmentManager() {
+        return courseGroupAppointmentManager;
+    }
 
     public static CourseGroupManager getCourseGroupManager() {
         return courseGroupManager;
+    }
+
+    public static CourseLectureAppointmentManager getCourseLectureAppointmentManager() {
+        return courseLectureAppointmentManager;
+    }
+
+    public static CourseLectureManager getCourseLectureManager() {
+        return courseLectureManager;
     }
 
     public static CourseManager getCourseManager() {

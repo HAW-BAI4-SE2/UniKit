@@ -1,6 +1,6 @@
 @import snippets._
 
-@(currentTeam: net.unikit.database.unikit_.interfaces.Team, currentInvitations: List[net.unikit.database.unikit_.interfaces.TeamInvitation], currentMembershipRequests: List[net.unikit.database.unikit_.interfaces.TeamApplication], course: net.unikit.database.external.interfaces.Course, currentUser: net.unikit.database.external.interfaces.Student, sessionTimeout: java.util.Date)
+@(currentTeam: net.unikit.database.interfaces.entities.Team, currentInvitations: List[net.unikit.database.interfaces.entities.TeamInvitation], currentMembershipRequests: List[net.unikit.database.interfaces.entities.MembershipRequest], course: net.unikit.database.interfaces.entities.Course, currentUser: net.unikit.database.interfaces.entities.Student, sessionTimeout: java.util.Date)
 
 @main(course.getName(), assets.NavigationItem.REGISTRATIONS, currentUser, sessionTimeout) {
     @evidence(605) {
