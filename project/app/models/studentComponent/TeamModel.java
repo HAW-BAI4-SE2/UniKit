@@ -34,10 +34,10 @@ public class TeamModel {
         CommonDatabaseUtils.addStudentToTeam(sNumber, tID);
 
         // Inform team of new member
-        NotificationModel.informTeamStudentJoined(originalTeam,sNumber);
+        NotificationModel.informTeamStudentJoined(tID,sNumber);
 
         // Inform student of new membership
-        NotificationModel.informStudentTeamJoined(originalTeam,sNumber);
+        NotificationModel.informStudentTeamJoined(tID,sNumber);
     }
 
     /**
@@ -154,10 +154,10 @@ public class TeamModel {
         }
 
         // Inform student of new membership
-        NotificationModel.informStudentTeamJoined(thisTeam,sNumber);
+        NotificationModel.informStudentTeamJoined(tID,sNumber);
 
         //Inform team of new member
-        NotificationModel.informTeamStudentJoined(thisTeam,sNumber);
+        NotificationModel.informTeamStudentJoined(tID,sNumber);
 
         return thisTeam;
     }

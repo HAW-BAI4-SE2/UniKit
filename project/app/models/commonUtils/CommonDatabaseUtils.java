@@ -562,7 +562,7 @@ public class CommonDatabaseUtils {
 
         for(TeamInvitation currentInvitation : invitationManager.getAllEntities()){
             if(currentInvitation.getInvitee().equals(student) &&
-                    currentInvitation.getTeam().getCourse().equals(course){
+                    currentInvitation.getTeam().getCourse().equals(course)){
                 allInvitations.add(currentInvitation);
             }
 
@@ -579,6 +579,8 @@ public class CommonDatabaseUtils {
         for(CourseRegistration currentCourseRegistration : student.getCourseRegistrations()){
             allRegisteredCourses.add(currentCourseRegistration.getCourse());
         }
+
+        return allRegisteredCourses;
     }
 
     public static List<Course> getAvailableCourses(StudentNumber sNumber) throws StudentNotFoundException {
