@@ -8,13 +8,15 @@ package controllers.courseComponent;
 import assets.Global;
 import assets.SessionUtils;
 
+import models.commonUtils.Exceptions.CourseNotFoundException;
+import models.commonUtils.Exceptions.StudentNotFoundException;
+import models.commonUtils.ID.StudentNumber;
 import models.courseComponent.CourseDatabaseUtils;
+import models.courseComponent.CourseModel;
 import models.courseComponent.CourseRegistrationDatabaseUtils;
 import models.courseComponent.FormModels.CourseRegistrationFormModel;
 
-import net.unikit.database.external.interfaces.Course;
-import net.unikit.database.external.interfaces.Student;
-import net.unikit.database.unikit_.interfaces.CourseRegistration;
+import net.unikit.database.interfaces.entities.*;
 
 import play.data.Form;
 import play.mvc.Controller;
@@ -44,10 +46,16 @@ public class CourseRegistrationController extends Controller {
         Student currentUser = SessionUtils.getCurrentUser(session());
         Date sessionTimeout = SessionUtils.getSessionTimeout(session());
 
-        List<Course> allCourseRegistrationsForStudent =
-                CourseRegistrationDatabaseUtils.getRegisteredCourses(currentUser.getStudentNumber());
+        StudentNumber sNumber = StudentNumber.get(currentUser.getStudentNumber());
 
-        return ok(showCourseOverview.render(allCourseRegistrationsForStudent, currentUser, sessionTimeout));
+        List<Course> allRegisteredCourses = null;
+        try {
+            allRegisteredCourses = CourseModel.getRegisteredCourses(sNumber);
+        } catch (StudentNotFoundException e) {
+            // WTF, student doesnt exist?
+        }
+
+        return ok(showCourseOverview.render(allRegisteredCourses, currentUser, sessionTimeout));
     }
 
     /**
@@ -58,12 +66,19 @@ public class CourseRegistrationController extends Controller {
         Student currentUser = SessionUtils.getCurrentUser(session());
         Date sessionTimeout = SessionUtils.getSessionTimeout(session());
 
-        List<Course> availableCourses =
-                CourseRegistrationDatabaseUtils.getAvailableCourses(currentUser.getStudentNumber());
+        StudentNumber sNumber = StudentNumber.get(currentUser.getStudentNumber());
+
+        List<Course> availableCourses = null;
+
+        try {
+            availableCourses = CourseModel.getAvailableCourses(sNumber);
+        } catch (StudentNotFoundException e) {
+            // Student doesnt exist, wtf
+        }
 
         Form<CourseRegistrationFormModel> courseRegistration =
                 Form.form(CourseRegistrationFormModel.class)
-                        .fill(new CourseRegistrationFormModel(currentUser.getStudentNumber(), availableCourses));
+                        .fill(new CourseRegistrationFormModel(currentUser.getStudentNumber().getValue(), availableCourses));
 
         return ok(showRegisterCourses.render(courseRegistration, currentUser, sessionTimeout));
     }
@@ -76,12 +91,19 @@ public class CourseRegistrationController extends Controller {
         Student currentUser = SessionUtils.getCurrentUser(session());
         Date sessionTimeout = SessionUtils.getSessionTimeout(session());
 
-        List<Course> allCourseRegistrations =
-                CourseRegistrationDatabaseUtils.getRegisteredCourses(currentUser.getStudentNumber());
+        StudentNumber sNumber = StudentNumber.get(currentUser.getStudentNumber());
+
+        List<Course> allRegisteredCourses = null;
+
+        try {
+            allRegisteredCourses = CourseModel.getRegisteredCourses(sNumber);
+        } catch (StudentNotFoundException e) {
+            // WTF, student doesnt exist?
+        }
 
         Form<CourseRegistrationFormModel> courseRegistration =
                 Form.form(CourseRegistrationFormModel.class)
-                        .fill(new CourseRegistrationFormModel(currentUser.getStudentNumber(), allCourseRegistrations));
+                        .fill(new CourseRegistrationFormModel(currentUser.getStudentNumber().getValue(), allRegisteredCourses));
 
         return ok(showCancelRegistration.render(courseRegistration, currentUser, sessionTimeout));
     }
@@ -94,6 +116,8 @@ public class CourseRegistrationController extends Controller {
         Student currentUser = SessionUtils.getCurrentUser(session());
         Date sessionTimeout = SessionUtils.getSessionTimeout(session());
 
+        StudentNumber sNumber = StudentNumber.get(currentUser.getStudentNumber());
+
         //Bind Form-object to Model
         Form<CourseRegistrationFormModel> courseRegistrationForm =
                 Form.form(CourseRegistrationFormModel.class)
@@ -101,15 +125,12 @@ public class CourseRegistrationController extends Controller {
 
         CourseRegistrationFormModel crfm = courseRegistrationForm.get();
 
-        //Persist data
-        //TODO: form validation
-        if(crfm.registeredCourses != null){
-            for(String course : crfm.registeredCourses){
-                CourseRegistration dbEntry = Global.getCourseRegistrationManager().createCourseRegistration();
-                dbEntry.setStudentNumber(currentUser.getStudentNumber());
-                dbEntry.setCourseId(Integer.parseInt(course));
-                Global.getCourseRegistrationManager().addCourseRegistration(dbEntry);
-            }
+        try {
+            CourseModel.storeCourseRegistrations(sNumber, crfm.registeredCourses);
+        } catch (CourseNotFoundException e) {
+            e.printStackTrace();
+        } catch (StudentNotFoundException e) {
+            e.printStackTrace();
         }
 
         return showCourseOverview();
@@ -123,6 +144,8 @@ public class CourseRegistrationController extends Controller {
         Student currentUser = SessionUtils.getCurrentUser(session());
         Date sessionTimeout = SessionUtils.getSessionTimeout(session());
 
+        StudentNumber sNumber = StudentNumber.get(currentUser.getStudentNumber());
+
         //Bind Form-object to Model
         Form<CourseRegistrationFormModel> courseRegistrationForm =
                 Form.form(CourseRegistrationFormModel.class)
@@ -130,23 +153,12 @@ public class CourseRegistrationController extends Controller {
 
         CourseRegistrationFormModel crfm = courseRegistrationForm.get();
 
-        //Persist data
-        //TODO: form validation
-        if(crfm.registeredCourses != null){
-            List<CourseRegistration> allCourseRegistrations = Global.getCourseRegistrationManager().getAllCourseRegistrations();
-            CourseRegistration dbEntry = Global.getCourseRegistrationManager().createCourseRegistration();
-            dbEntry.setStudentNumber(currentUser.getStudentNumber());
-
-            for(String course : crfm.registeredCourses){
-
-                dbEntry.setCourseId(Integer.parseInt(course));
-
-                for(CourseRegistration cr : allCourseRegistrations ){
-                    if(currentUser.getStudentNumber().equals(cr.getStudentNumber()) && Integer.parseInt(course) == cr.getCourseId()){
-                        Global.getCourseRegistrationManager().deleteCourseRegistration(cr);
-                    }
-                }
-            }
+        try {
+            CourseModel.cancelCourseRegistrations(sNumber, crfm.registeredCourses);
+        } catch (CourseNotFoundException e) {
+            e.printStackTrace();
+        } catch (StudentNotFoundException e) {
+            e.printStackTrace();
         }
 
         return showCourseOverview();

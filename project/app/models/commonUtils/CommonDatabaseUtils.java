@@ -522,4 +522,98 @@ public class CommonDatabaseUtils {
         }
         return false;
     }
+
+    public static List<MembershipRequest> getAllMembershipRequests(StudentNumber sNumber) throws StudentNotFoundException {
+        Student student = getStudent(sNumber);
+
+        List<MembershipRequest> allMembershipRequests = new ArrayList<>();
+        for(MembershipRequest currentMembershipRequest : membershipRequestManager.getAllEntities()){
+            if(currentMembershipRequest.getApplicant().equals(student)){
+                allMembershipRequests.add(currentMembershipRequest);
+            }
+        }
+
+        return allMembershipRequests;
+    }
+
+    public static List<MembershipRequest> getAllMembershipRequests(StudentNumber sNumber, CourseID cID) throws StudentNotFoundException, CourseNotFoundException {
+        Student student = getStudent(sNumber);
+        Course course = getCourse(cID);
+
+        List<MembershipRequest> allMembershipRequests = new ArrayList<>();
+
+        for(MembershipRequest currentMembershipRequest : membershipRequestManager.getAllEntities()){
+            if(currentMembershipRequest.getApplicant().equals(student) &&
+                    currentMembershipRequest.getTeam().getCourse().equals(course)){
+                allMembershipRequests.add(currentMembershipRequest);
+            }
+
+        }
+
+        return allMembershipRequests;
+
+    }
+
+    public static List<TeamInvitation> getAllInvitations(StudentNumber sNumber, CourseID cID) throws StudentNotFoundException, CourseNotFoundException {
+        Student student = getStudent(sNumber);
+        Course course = getCourse(cID);
+
+        List<TeamInvitation> allInvitations = new ArrayList<>();
+
+        for(TeamInvitation currentInvitation : invitationManager.getAllEntities()){
+            if(currentInvitation.getInvitee().equals(student) &&
+                    currentInvitation.getTeam().getCourse().equals(course){
+                allInvitations.add(currentInvitation);
+            }
+
+        }
+        return allInvitations;
+    }
+
+
+
+    public static List<Course> getRegisteredCourses(StudentNumber sNumber) throws StudentNotFoundException {
+        Student student = getStudent(sNumber);
+        List<Course> allRegisteredCourses = new ArrayList<>();
+
+        for(CourseRegistration currentCourseRegistration : student.getCourseRegistrations()){
+            allRegisteredCourses.add(currentCourseRegistration.getCourse());
+        }
+    }
+
+    public static List<Course> getAvailableCourses(StudentNumber sNumber) throws StudentNotFoundException {
+        Student student = getStudent(sNumber);
+
+        List<Course> allAvailableCourses = courseManager.getAllEntities();
+        allAvailableCourses.removeAll(student.getCompletedCourses());
+
+       return allAvailableCourses;
+    }
+
+    public static void storeCourseRegistration(StudentNumber sNumber, CourseID cID) throws CourseNotFoundException, StudentNotFoundException {
+        Student student = getStudent(sNumber);
+        Course course = getCourse(cID);
+
+        CourseRegistration newCourseRegistration = courseRegistrationManager.createEntity();
+        newCourseRegistration.setCourse(course);
+        newCourseRegistration.setStudent(student);
+        newCourseRegistration.setCurrentlyAssignedToTeam(false);
+
+        courseRegistrationManager.addEntity(newCourseRegistration);
+    }
+
+    public static void deleteCourseRegistration(StudentNumber sNumber, CourseID cID) throws StudentNotFoundException, CourseNotFoundException {
+        Student student = getStudent(sNumber);
+        Course course = getCourse(cID);
+
+        CourseRegistration courseRegsitration = null;
+        for(CourseRegistration currentCourseRegsitration : courseRegistrationManager.getAllEntities()){
+            if(currentCourseRegsitration.getCourse().equals(course) &&
+                    currentCourseRegsitration.getStudent().equals(student)){
+                courseRegsitration = currentCourseRegsitration;
+            }
+        }
+
+        courseRegistrationManager.deleteEntity(courseRegsitration);
+    }
 }

@@ -8,17 +8,13 @@ import assets.Global;
 import assets.SessionUtils;
 import models.commonUtils.CommonDatabaseUtils;
 import models.commonUtils.Exceptions.CourseNotFoundException;
+import models.commonUtils.Exceptions.StudentNotFoundException;
 import models.commonUtils.Exceptions.TeamNotFoundException;
 import models.commonUtils.ID.CourseID;
 import models.commonUtils.ID.StudentNumber;
 import models.courseComponent.CourseModel;
 import net.unikit.database.interfaces.entities.*;
-import net.unikit.database.external.interfaces.Course;
 
-import net.unikit.database.external.interfaces.Student;
-import net.unikit.database.unikit_.interfaces.Team;
-import net.unikit.database.unikit_.interfaces.TeamApplication;
-import net.unikit.database.unikit_.interfaces.TeamInvitation;
 import play.mvc.Controller;
 import play.mvc.Result;
 
@@ -32,7 +28,9 @@ public class CourseController extends Controller {
     public static Result showCourseDetails(int courseID){
         Student currentUser = SessionUtils.getCurrentUser(session());
         Date sessionTimeout = SessionUtils.getSessionTimeout(session());
+
         CourseID cID = CourseID.get(courseID);
+        StudentNumber sNumber = StudentNumber.get(currentUser.getStudentNumber());
 
         Course courseToDisplay = null;
         try {
@@ -42,47 +40,28 @@ public class CourseController extends Controller {
             //TODO error message
             return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
         }
-        //List<Team> availableTeamsForCourse = CourseDatabaseUtils.getAvailableTeamsForCourse(courseID);
 
         Team team = null;
         try {
-            team = CommonDatabaseUtils.getTeamByStudentAndCourse(StudentNumber.get(currentUser.getStudentNumber()),
-                    CourseID.get(courseToDisplay.getId()));
+            team = CourseModel.getTeam(sNumber, cID);
         } catch (TeamNotFoundException e) {
             // Student is not in Team
         }
 
-        List<TeamApplication> teamApplications = null;
+        // Get all membership request the student has issued for the course
+        List<MembershipRequest> membershipRequests = null;
+
+        // Get all invitations the student has received for the course
         List<TeamInvitation> teamInvitations = null;
-
-        if (team == null) {
-            teamApplications = new ArrayList<>();
-            List<TeamApplication> allTeamApplications = Global.getMembershipRequestManager().getAllTeamApplications();
-            for (TeamApplication teamApplication : allTeamApplications) {
-                if (teamApplication == null ||
-                        teamApplication.getApplicantStudentNumber() == null ||
-                        teamApplication.getTeam() == null)
-                    continue;
-                if (teamApplication.getApplicantStudentNumber().equals(currentUser.getStudentNumber()) &&
-                        teamApplication.getTeam().getCourseId() == courseToDisplay.getId()) {
-                    teamApplications.add(teamApplication);
-                }
-            }
-
-            teamInvitations = new ArrayList<>();
-            List<TeamInvitation> allTeamInvitations = Global.getTeamInvitationManager().getAllTeamInvitations();
-            for (TeamInvitation teamInvitation : allTeamInvitations) {
-                if (teamInvitation == null ||
-                        teamInvitation.getInviteeStudentNumber() == null ||
-                        teamInvitation.getTeam() == null)
-                    continue;
-                if (teamInvitation.getInviteeStudentNumber().equals(currentUser.getStudentNumber()) &&
-                        teamInvitation.getTeam().getCourseId() == courseToDisplay.getId()) {
-                    teamInvitations.add(teamInvitation);
-                }
-            }
+        try {
+            membershipRequests = CourseModel.getMembershipRequests(sNumber, cID);
+            teamInvitations = CourseModel.getInvitations(sNumber,cID);
+        } catch (StudentNotFoundException e) {
+            //TODO: WTF, student doesn't exist?!
+        } catch (CourseNotFoundException e) {
+            //TODO: WTF, course doesn't exist?!
         }
 
-        return ok(showCourseDetails.render(team, teamInvitations, teamApplications, courseToDisplay, currentUser, sessionTimeout));
+        return ok(showCourseDetails.render(team, teamInvitations, membershipRequests, courseToDisplay, currentUser, sessionTimeout));
     }
 }
