@@ -1,6 +1,6 @@
 @import snippets._
 
-@(currentUser: net.unikit.database.external.interfaces.Student, sessionTimeout: java.util.Date)
+@(currentUser: net.unikit.database.interfaces.entities.Student, sessionTimeout: java.util.Date)
 
 @main("DruckHistory", assets.NavigationItem.PRINT_QUOTAS, currentUser, sessionTimeout) {
 <div class="navitem">

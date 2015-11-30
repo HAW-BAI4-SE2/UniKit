@@ -1,9 +1,9 @@
 @import snippets._
 
 @import models.courseComponent.FormModels.CourseRegistrationFormModel
-@(courseRegistrationForm: Form[CourseRegistrationFormModel], currentUser: net.unikit.database.external.interfaces.Student, sessionTimeout: java.util.Date)
+@(courseRegistrationForm: Form[CourseRegistrationFormModel], currentUser: net.unikit.database.interfaces.entities.Student, sessionTimeout: java.util.Date)
 
-@getSemesterValue(course: net.unikit.database.external.interfaces.Course) = @{
+@getSemesterValue(course: net.unikit.database.interfaces.entities.Course) = @{
     // TAKEN FROM SHOW_COURSE_OVERVIEW!
     var fieldOfStudy = ""
     var semester = ""

@@ -1,6 +1,6 @@
 @import snippets._
 
-@(team: net.unikit.database.unikit_.interfaces.Team, members: List[net.unikit.database.external.interfaces.Student], applicants: List[net.unikit.database.external.interfaces.Student], invitees: List[net.unikit.database.external.interfaces.Student], course: net.unikit.database.external.interfaces.Course, courseRegistrees: List[net.unikit.database.external.interfaces.Student], currentUser: net.unikit.database.external.interfaces.Student, sessionTimeout: java.util.Date)
+@(team: net.unikit.database.interfaces.entities.Team, members: List[net.unikit.database.interfaces.entities.Student], applicants: List[net.unikit.database.interfaces.entities.Student], invitees: List[net.unikit.database.interfaces.entities.Student], course: net.unikit.database.interfaces.entities.Course, courseRegistrees: List[net.unikit.database.interfaces.entities.Student], currentUser: net.unikit.database.interfaces.entities.Student, sessionTimeout: java.util.Date)
 
 @currentUserIsMember() = @{
     var result = false
