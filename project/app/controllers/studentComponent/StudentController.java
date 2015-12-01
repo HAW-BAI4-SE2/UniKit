@@ -38,6 +38,7 @@ public class StudentController extends Controller {
         TeamID teamID = null;
         try{
             teamID = StudentModel.createTeam(sNumber, cID);
+            return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID.value()));
         } catch (StudentNotFoundException e) {
             //TODO error message
             return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
@@ -49,11 +50,13 @@ public class StudentController extends Controller {
             return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
         } catch (FatalErrorException e) {
             // This code gets executed in case the team couldn't be created for some reason
+            //TODO error message
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
         } catch (TeamExistsException e) {
             //TODO error message
             return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
         }
-        return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID.value()));
+
     }
 
     /**

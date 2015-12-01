@@ -18,7 +18,7 @@
             @for((team, index) <- availableTeams.view.zipWithIndex) {
                 @if(index % 2 == 0) {
                     @listItemDark() {
-                        Team T@(String.format("%03d", team.getId()))
+                        Team T@(String.format("%03d", team.getId().getValue()))
                     } {
                         @buttonRight("Team betrachten") {
                             @controllers.studentComponent.routes.TeamController.showTeamOverview(team.getId().getValue())

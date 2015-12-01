@@ -45,7 +45,7 @@
 
             @listItemWhite() {
                 <div style="margin-left: 30px;">
-                    Sie sind dem Team 'T@(String.format("%03d", currentTeam.getId()))' zugeordnet!
+                    Sie sind dem Team 'T@(String.format("%03d", currentTeam.getId().getValue()))' zugeordnet!
                 </div>
             } {&nbsp;}
 
@@ -84,7 +84,7 @@
                     }
                 } else {
                     @listItemLight() {
-                        Team T@(String.format("%03d", teamInvitation.getTeam().getId()))
+                        Team T@(String.format("%03d", teamInvitation.getTeam().getId().getValue()))
                     } {
                         @buttonRight("Team betrachten") {
                             @controllers.studentComponent.routes.TeamController.showTeamOverview(teamInvitation.getTeam().getId().getValue())
@@ -102,7 +102,7 @@
             @for((membershipRequest, index) <- currentMembershipRequests.view.zipWithIndex) {
                 @if(index % 2 == 0) {
                     @listItemDark() {
-                        Team T@(String.format("%03d", membershipRequest.getTeam().getId()))
+                        Team T@(String.format("%03d", membershipRequest.getTeam().getId().getValue()))
                     } {
                         @buttonRight("Team betrachten") {
                             @controllers.studentComponent.routes.TeamController.showTeamOverview(membershipRequest.getTeam().getId().getValue())
@@ -110,7 +110,7 @@
                     }
                 } else {
                     @listItemLight() {
-                        Team T@(String.format("%03d", membershipRequest.getTeam().getId()))
+                        Team T@(String.format("%03d", membershipRequest.getTeam().getId().getValue()))
                     } {
                         @buttonRight("Team betrachten") {
                             @controllers.studentComponent.routes.TeamController.showTeamOverview(membershipRequest.getTeam().getId().getValue())

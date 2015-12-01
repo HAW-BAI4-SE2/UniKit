@@ -51,9 +51,9 @@
     (currentSize >= courseMaxTeamSize)
 }
 
-@main("Team T" + String.format("%03d", team.getId()) + " (" + course.getName() + ")", assets.NavigationItem.REGISTRATIONS, currentUser, sessionTimeout) {
+@main("Team T" + String.format("%03d", team.getId().getValue()) + " (" + course.getName() + ")", assets.NavigationItem.REGISTRATIONS, currentUser, sessionTimeout) {
     @evidence(605) {
-        <span class="thick">@("Team T" + String.format("%03d", team.getId()) + " (" + course.getName() + ")")</span>
+        <span class="thick">@("Team T" + String.format("%03d", team.getId().getValue()) + " (" + course.getName() + ")")</span>
     }
 
     @if(currentUserIsMember()) {

@@ -737,7 +737,11 @@ public class CommonDatabaseUtils {
         Student student = getStudent(sNumber);
 
         List<Course> allAvailableCourses = new ArrayList<>(courseManager.getAllEntities());
+
+        System.out.println(allAvailableCourses.size());
+
         allAvailableCourses.removeAll(student.getCompletedCourses());
+
         allAvailableCourses.removeAll(getRegisteredCourses(sNumber));
 
        return allAvailableCourses;
