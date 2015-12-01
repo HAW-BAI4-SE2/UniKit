@@ -12,6 +12,7 @@ import models.commonUtils.ID.CourseID;
 import models.commonUtils.ID.StudentNumber;
 import models.commonUtils.ID.TeamID;
 import models.studentComponent.StudentModel;
+import net.unikit.database.exceptions.EntityNotFoundException;
 import net.unikit.database.interfaces.entities.Student;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -176,6 +177,9 @@ public class StudentController extends Controller {
             courseToDispay = CommonDatabaseUtils.getTeamByID(tID).getCourse().getId().getValue();
         } catch (TeamNotFoundException e) {
             //TODO error message
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+        } catch (EntityNotFoundException e) {
+            //TODO error handling
             return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
         }
         return CourseController.showCourseDetails(courseToDispay);
