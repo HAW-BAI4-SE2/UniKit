@@ -12,6 +12,7 @@ import models.commonUtils.ID.IDUtils;
 import models.commonUtils.ID.StudentNumber;
 import models.commonUtils.ID.TeamID;
 import models.studentComponent.TeamModel;
+import net.unikit.database.exceptions.EntityNotFoundException;
 import net.unikit.database.interfaces.entities.Course;
 import net.unikit.database.interfaces.entities.Student;
 import net.unikit.database.interfaces.entities.Team;
@@ -62,7 +63,11 @@ public class TeamController extends Controller {
         // If team is empty, display course details, else team overview
         if(modifiedTeam.getTeamRegistrations().isEmpty()){
             // TODO error message
-            return redirect(controllers.courseComponent.routes.CourseController.showCourseDetails(IDUtils.getInt(modifiedTeam.getCourse())));
+            try {
+                return redirect(controllers.courseComponent.routes.CourseController.showCourseDetails(IDUtils.getInt(modifiedTeam.getCourse())));
+            } catch (EntityNotFoundException e) {
+                e.printStackTrace();
+            }
         }else{
             // TODO error message
             return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
@@ -189,7 +194,12 @@ public class TeamController extends Controller {
         }
 
         // Get all students who are not in the team
-        Course associatedCourse = teamToDisplay.getCourse();
+        Course associatedCourse = null;
+        try {
+            associatedCourse = teamToDisplay.getCourse();
+        } catch (EntityNotFoundException e) {
+            controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview();
+        }
         List<Student> availableStudents = null;
         try {
             availableStudents = TeamModel.getAllStudents(CourseID.get(associatedCourse.getId()));
