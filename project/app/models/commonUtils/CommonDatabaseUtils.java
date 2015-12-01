@@ -503,15 +503,19 @@ public class CommonDatabaseUtils {
         Student.StudentNumber studentNumber = studentManager.createID(sNumber.value());
 
         for(MembershipRequest membershipRequest : membershipRequestManager.getAllEntities()){
-            if(membershipRequest.getTeam().getCourse().getId().equals(courseID) &&
-                    membershipRequest.getApplicant().getStudentNumber().equals(studentNumber)){
-                try {
-                    deleteMembershipRequest(sNumber, TeamID.get(membershipRequest.getTeam().getId()));
-                } catch (Exception e) {
-                    // Depending of the context of the call, it's expected that no membership requests exist
+            try {
+                if(membershipRequest.getTeam().getCourse().getId().equals(courseID) &&
+                        membershipRequest.getApplicant().getStudentNumber().equals(studentNumber)){
+                    try {
+                        deleteMembershipRequest(sNumber, TeamID.get(membershipRequest.getTeam().getId()));
+                    } catch (Exception e) {
+                        // Depending of the context of the call, it's expected that no membership requests exist
+                    }
                 }
+            } catch (EntityNotFoundException e) {
+                // TODO: Handle this internal database error (erroneous foreign keys)
+                e.printStackTrace();
             }
-
         }
     }
 
@@ -520,7 +524,12 @@ public class CommonDatabaseUtils {
 
         for(MembershipRequest currentMembershipRequest : membershipRequestManager.getAllEntities()){
             if(currentMembershipRequest.getTeam().equals(team)){
-                allRequestingStudents.add(currentMembershipRequest.getApplicant());
+                try {
+                    allRequestingStudents.add(currentMembershipRequest.getApplicant());
+                } catch (EntityNotFoundException e) {
+                    // TODO: Handle this internal database error (erroneous foreign keys)
+                    e.printStackTrace();
+                }
             }
         }
         return allRequestingStudents;
@@ -531,7 +540,12 @@ public class CommonDatabaseUtils {
 
         for(TeamInvitation currentInvitation : invitationManager.getAllEntities()){
             if(currentInvitation.getTeam().equals(team)){
-                allInvitedStudents.add(currentInvitation.getInvitee());
+                try {
+                    allInvitedStudents.add(currentInvitation.getInvitee());
+                } catch (EntityNotFoundException e) {
+                    // TODO: Handle this internal database error (erroneous foreign keys)
+                    e.printStackTrace();
+                }
             }
         }
         return allInvitedStudents;
@@ -542,8 +556,13 @@ public class CommonDatabaseUtils {
         List<Team> allTeamsForCourse = new ArrayList<>();
 
         for(Team currentTeam : teamManager.getAllEntities()){
-            if(currentTeam.getCourse().equals(course)){
-                allTeamsForCourse.add(currentTeam);
+            try {
+                if(currentTeam.getCourse().equals(course)){
+                    allTeamsForCourse.add(currentTeam);
+                }
+            } catch (EntityNotFoundException e) {
+                // TODO: Handle this internal database error (erroneous foreign keys)
+                e.printStackTrace();
             }
         }
         return allTeamsForCourse;
@@ -554,9 +573,14 @@ public class CommonDatabaseUtils {
         List<Team> allAvailableTeams = new ArrayList<>();
 
         for(Team currentTeam : teamManager.getAllEntities()){
-            if(currentTeam.getCourse().equals(course) &&
-                    currentTeam.getTeamRegistrations().size() < course.getMaxTeamSize()){
-                allAvailableTeams.add(currentTeam);
+            try {
+                if(currentTeam.getCourse().equals(course) &&
+                        currentTeam.getTeamRegistrations().size() < course.getMaxTeamSize()){
+                    allAvailableTeams.add(currentTeam);
+                }
+            } catch (EntityNotFoundException e) {
+                // TODO: Handle this internal database error (erroneous foreign keys)
+                e.printStackTrace();
             }
         }
 
@@ -568,8 +592,13 @@ public class CommonDatabaseUtils {
         Team team = getTeam(tID);
 
         for(TeamRegistration currentRegistration : team.getTeamRegistrations()){
-            if(currentRegistration.getStudent().equals(student)){
-                return true;
+            try {
+                if(currentRegistration.getStudent().equals(student)){
+                    return true;
+                }
+            } catch (EntityNotFoundException e) {
+                // TODO: Handle this internal database error (erroneous foreign keys)
+                e.printStackTrace();
             }
         }
 
@@ -581,9 +610,14 @@ public class CommonDatabaseUtils {
         Team team = getTeam(tID);
 
         for(MembershipRequest currentMembershipRequest : team.getMembershipRequests()){
-            if(currentMembershipRequest.getTeam().equals(team) &&
-                    currentMembershipRequest.getApplicant().equals(student)){
-                return true;
+            try {
+                if(currentMembershipRequest.getTeam().equals(team) &&
+                        currentMembershipRequest.getApplicant().equals(student)){
+                    return true;
+                }
+            } catch (EntityNotFoundException e) {
+                // TODO: Handle this internal database error (erroneous foreign keys)
+                e.printStackTrace();
             }
         }
         return false;
@@ -591,8 +625,13 @@ public class CommonDatabaseUtils {
 
     public static boolean isMaxSizeReached(TeamID tID) throws TeamNotFoundException {
         Team team = getTeam(tID);
-        if( ( team.getTeamRegistrations().size() + team.getTeamInvitations().size() ) >= team.getCourse().getMaxTeamSize()){
-            return true;
+        try {
+            if( ( team.getTeamRegistrations().size() + team.getTeamInvitations().size() ) >= team.getCourse().getMaxTeamSize()){
+                return true;
+            }
+        } catch (EntityNotFoundException e) {
+            // TODO: Handle this internal database error (erroneous foreign keys)
+            e.printStackTrace();
         }
         return false;
     }
@@ -602,8 +641,13 @@ public class CommonDatabaseUtils {
         Team team = getTeam(tID);
 
         for(TeamInvitation currentInvitation : team.getTeamInvitations()){
-            if(currentInvitation.getInvitee().equals(student)){
-                return true;
+            try {
+                if(currentInvitation.getInvitee().equals(student)){
+                    return true;
+                }
+            } catch (EntityNotFoundException e) {
+                // TODO: Handle this internal database error (erroneous foreign keys)
+                e.printStackTrace();
             }
         }
         return false;
@@ -614,8 +658,13 @@ public class CommonDatabaseUtils {
 
         List<MembershipRequest> allMembershipRequests = new ArrayList<>();
         for(MembershipRequest currentMembershipRequest : membershipRequestManager.getAllEntities()){
-            if(currentMembershipRequest.getApplicant().equals(student)){
-                allMembershipRequests.add(currentMembershipRequest);
+            try {
+                if(currentMembershipRequest.getApplicant().equals(student)){
+                    allMembershipRequests.add(currentMembershipRequest);
+                }
+            } catch (EntityNotFoundException e) {
+                // TODO: Handle this internal database error (erroneous foreign keys)
+                e.printStackTrace();
             }
         }
 
@@ -629,9 +678,14 @@ public class CommonDatabaseUtils {
         List<MembershipRequest> allMembershipRequests = new ArrayList<>();
 
         for(MembershipRequest currentMembershipRequest : membershipRequestManager.getAllEntities()){
-            if(currentMembershipRequest.getApplicant().equals(student) &&
-                    currentMembershipRequest.getTeam().getCourse().equals(course)){
-                allMembershipRequests.add(currentMembershipRequest);
+            try {
+                if(currentMembershipRequest.getApplicant().equals(student) &&
+                        currentMembershipRequest.getTeam().getCourse().equals(course)){
+                    allMembershipRequests.add(currentMembershipRequest);
+                }
+            } catch (EntityNotFoundException e) {
+                // TODO: Handle this internal database error (erroneous foreign keys)
+                e.printStackTrace();
             }
 
         }
@@ -647,9 +701,14 @@ public class CommonDatabaseUtils {
         List<TeamInvitation> allInvitations = new ArrayList<>();
 
         for(TeamInvitation currentInvitation : invitationManager.getAllEntities()){
-            if(currentInvitation.getInvitee().equals(student) &&
-                    currentInvitation.getTeam().getCourse().equals(course)){
-                allInvitations.add(currentInvitation);
+            try {
+                if(currentInvitation.getInvitee().equals(student) &&
+                        currentInvitation.getTeam().getCourse().equals(course)){
+                    allInvitations.add(currentInvitation);
+                }
+            } catch (EntityNotFoundException e) {
+                // TODO: Handle this internal database error (erroneous foreign keys)
+                e.printStackTrace();
             }
 
         }
@@ -662,8 +721,13 @@ public class CommonDatabaseUtils {
         Student student = getStudent(sNumber);
         List<Course> allRegisteredCourses = new ArrayList<>();
 
-        for(CourseRegistration currentCourseRegistration : student.getCourseRegistrations()){
-            allRegisteredCourses.add(currentCourseRegistration.getCourse());
+        try {
+            for(CourseRegistration currentCourseRegistration : student.getCourseRegistrations()){
+                allRegisteredCourses.add(currentCourseRegistration.getCourse());
+            }
+        } catch (EntityNotFoundException e) {
+            // TODO: Handle this internal database error (erroneous foreign keys)
+            e.printStackTrace();
         }
 
         return allRegisteredCourses;
@@ -687,21 +751,40 @@ public class CommonDatabaseUtils {
         newCourseRegistration.setStudent(student);
         newCourseRegistration.setCurrentlyAssignedToTeam(false);
 
-        courseRegistrationManager.addEntity(newCourseRegistration);
+        try {
+            courseRegistrationManager.addEntity(newCourseRegistration);
+        } catch (ConstraintViolationException e) {
+            // NOTE: Registration is already in database!
+            // TODO: Show error message in view?
+            e.printStackTrace();
+        }
     }
 
-    public static void deleteCourseRegistration(StudentNumber sNumber, CourseID cID) throws StudentNotFoundException, CourseNotFoundException {
+    public static void deleteCourseRegistration(StudentNumber sNumber, CourseID cID) throws StudentNotFoundException, CourseNotFoundException, CourseRegistrationNotFoundException {
         Student student = getStudent(sNumber);
         Course course = getCourse(cID);
 
-        CourseRegistration courseRegsitration = null;
+        CourseRegistration courseRegistration = null;
         for(CourseRegistration currentCourseRegsitration : courseRegistrationManager.getAllEntities()){
-            if(currentCourseRegsitration.getCourse().equals(course) &&
-                    currentCourseRegsitration.getStudent().equals(student)){
-                courseRegsitration = currentCourseRegsitration;
+            try {
+                if(currentCourseRegsitration.getCourse().equals(course) &&
+                        currentCourseRegsitration.getStudent().equals(student)){
+                    courseRegistration = currentCourseRegsitration;
+                }
+            } catch (EntityNotFoundException e) {
+                // TODO: Handle this internal database error (erroneous foreign keys)
+                e.printStackTrace();
             }
         }
 
-        courseRegistrationManager.deleteEntity(courseRegsitration);
+        if (courseRegistration == null)
+            throw new CourseRegistrationNotFoundException(sNumber, cID);
+
+        try {
+            courseRegistrationManager.deleteEntity(courseRegistration);
+        } catch (EntityNotFoundException e) {
+            // TODO (NOTE): Should never been thrown, because entry is directly taken out of database
+            e.printStackTrace();
+        }
     }
 }
