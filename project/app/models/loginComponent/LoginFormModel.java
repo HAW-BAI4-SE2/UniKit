@@ -2,7 +2,7 @@ package models.loginComponent;
 
 import assets.BCrypt;
 import assets.Global;
-import net.unikit.database.external.interfaces.Student;
+import net.unikit.database.interfaces.entities.Student;
 import play.data.validation.ValidationError;
 
 import java.util.ArrayList;

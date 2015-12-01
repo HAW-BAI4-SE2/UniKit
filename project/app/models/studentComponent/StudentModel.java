@@ -1,6 +1,5 @@
 package models.studentComponent;
 
-import assets.Global;
 import assets.SessionUtils;
 import models.commonUtils.CommonDatabaseUtils;
 import models.commonUtils.Exceptions.*;
@@ -8,14 +7,7 @@ import models.commonUtils.ID.CourseID;
 import models.commonUtils.ID.StudentNumber;
 import models.commonUtils.ID.TeamID;
 import models.commonUtils.NotificationModel;
-import net.unikit.database.interfaces.entities.Course;
-import net.unikit.database.interfaces.entities.Student;
 import net.unikit.database.interfaces.entities.Team;
-import net.unikit.database.interfaces.entities.TeamInvitation;
-import net.unikit.database.interfaces.managers.TeamInvitationManager;
-
-
-import java.util.List;
 
 import static models.commonUtils.NotificationModel.*;
 import static play.mvc.Controller.session;

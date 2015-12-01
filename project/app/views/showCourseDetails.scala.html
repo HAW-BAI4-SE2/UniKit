@@ -26,7 +26,7 @@
             @listItemWhite() {
                 <div style="margin-left: 30px;">
                     @buttonLeft("Team erstellen") {
-                        @controllers.studentComponent.routes.StudentController.createTeam(course.getId())
+                        @controllers.studentComponent.routes.StudentController.createTeam(course.getId().getValue())
                     }
                 </div>
             } {&nbsp;}
@@ -34,7 +34,7 @@
             @listItemWhite() {
                 <div style="margin-left: 30px;">
                     @buttonLeft("Beitrittsanfrage versenden") {
-                        @controllers.studentComponent.routes.TeamController.showAvailableTeams(course.getId())
+                        @controllers.studentComponent.routes.TeamController.showAvailableTeams(course.getId().getValue())
                     }
                 </div>
             } {&nbsp;}
@@ -52,7 +52,7 @@
             @listItemWhite() {
                 <div style="margin-left: 30px;">
                     @buttonLeft("Team bearbeiten") {
-                        @controllers.studentComponent.routes.TeamController.showTeamOverview(currentTeam.getId())
+                        @controllers.studentComponent.routes.TeamController.showTeamOverview(currentTeam.getId().getValue())
                     }
                 </div>
             } {&nbsp;}
@@ -60,7 +60,7 @@
             @listItemWhite() {
                 <div style="margin-left: 30px;">
                     @buttonLeft("Team verlassen") {
-                        @controllers.studentComponent.routes.TeamController.removeMember(currentUser.getStudentNumber(), currentTeam.getId())
+                        @controllers.studentComponent.routes.TeamController.removeMember(currentUser.getStudentNumber().getValue(), currentTeam.getId().getValue())
                     }
                 </div>
             } {&nbsp;}
@@ -76,10 +76,10 @@
             @for((teamInvitation, index) <- currentInvitations.view.zipWithIndex) {
                 @if(index % 2 == 0) {
                     @listItemDark() {
-                        Team T@(String.format("%03d", teamInvitation.getTeam().getId()))
+                        Team T@(String.format("%03d", teamInvitation.getTeam().getId().getValue()))
                     } {
                         @buttonRight("Team betrachten") {
-                            @controllers.studentComponent.routes.TeamController.showTeamOverview(teamInvitation.getTeam().getId())
+                            @controllers.studentComponent.routes.TeamController.showTeamOverview(teamInvitation.getTeam().getId().getValue())
                         }
                     }
                 } else {
@@ -87,7 +87,7 @@
                         Team T@(String.format("%03d", teamInvitation.getTeam().getId()))
                     } {
                         @buttonRight("Team betrachten") {
-                            @controllers.studentComponent.routes.TeamController.showTeamOverview(teamInvitation.getTeam().getId())
+                            @controllers.studentComponent.routes.TeamController.showTeamOverview(teamInvitation.getTeam().getId().getValue())
                         }
                     }
                 }
@@ -105,7 +105,7 @@
                         Team T@(String.format("%03d", membershipRequest.getTeam().getId()))
                     } {
                         @buttonRight("Team betrachten") {
-                            @controllers.studentComponent.routes.TeamController.showTeamOverview(membershipRequest.getTeam().getId())
+                            @controllers.studentComponent.routes.TeamController.showTeamOverview(membershipRequest.getTeam().getId().getValue())
                         }
                     }
                 } else {
@@ -113,7 +113,7 @@
                         Team T@(String.format("%03d", membershipRequest.getTeam().getId()))
                     } {
                         @buttonRight("Team betrachten") {
-                            @controllers.studentComponent.routes.TeamController.showTeamOverview(membershipRequest.getTeam().getId())
+                            @controllers.studentComponent.routes.TeamController.showTeamOverview(membershipRequest.getTeam().getId().getValue())
                         }
                     }
                 }

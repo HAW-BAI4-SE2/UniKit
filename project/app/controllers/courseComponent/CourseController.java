@@ -4,9 +4,7 @@ package controllers.courseComponent;
  * @author Thomas Bednorz
  */
 
-import assets.Global;
 import assets.SessionUtils;
-import models.commonUtils.CommonDatabaseUtils;
 import models.commonUtils.Exceptions.CourseNotFoundException;
 import models.commonUtils.Exceptions.StudentNotFoundException;
 import models.commonUtils.Exceptions.TeamNotFoundException;
@@ -14,13 +12,10 @@ import models.commonUtils.ID.CourseID;
 import models.commonUtils.ID.StudentNumber;
 import models.courseComponent.CourseModel;
 import net.unikit.database.interfaces.entities.*;
-
 import play.mvc.Controller;
 import play.mvc.Result;
+import views.html.showCourseDetails;
 
-import views.html.*;
-
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 

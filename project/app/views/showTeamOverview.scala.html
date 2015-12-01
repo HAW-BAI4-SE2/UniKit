@@ -6,7 +6,7 @@
     var result = false
 
     for(registration <- team.getTeamRegistrations) {
-        if(!result && registration != null && registration.getStudent().getStudentNumber() != null) {
+        if(!result && registration != null && registration.getStudent().getStudentNumber().getValue() != null) {
             if(registration.getStudent().getStudentNumber().equals(currentUser.getStudentNumber)) {
                 result = true
             }
@@ -20,7 +20,7 @@
     var result = false
 
     for(invitation <- team.getTeamInvitations) {
-        if(!result && invitation != null && invitation.getInvitee().getStudentNumber() != null) {
+        if(!result && invitation != null && invitation.getInvitee().getStudentNumber().getValue() != null) {
             if(invitation.getInvitee().getStudentNumber().equals(currentUser.getStudentNumber)) {
                 result = true
             }
@@ -34,7 +34,7 @@
     var result = false
 
     for(membershipRequest <- team.getMembershipRequests()) {
-        if(!result && membershipRequest != null && membershipRequest.getApplicant().getStudentNumber() != null) {
+        if(!result && membershipRequest != null && membershipRequest.getApplicant().getStudentNumber().getValue() != null) {
             if(membershipRequest.getApplicant().getStudentNumber().equals(currentUser.getStudentNumber)) {
                 result = true
             }
@@ -85,7 +85,7 @@
                     } {
                         @if(currentUserIsMember()) {
                             @buttonRight("Entfernen") {
-                                @controllers.studentComponent.routes.TeamController.removeMember(member.getStudentNumber(), team.getId())
+                                @controllers.studentComponent.routes.TeamController.removeMember(member.getStudentNumber().getValue(), team.getId().getValue())
                             }
                         } else {
                             &nbsp;
@@ -97,7 +97,7 @@
                     } {
                         @if(currentUserIsMember()) {
                             @buttonRight("Entfernen") {
-                                @controllers.studentComponent.routes.TeamController.removeMember(member.getStudentNumber(), team.getId())
+                                @controllers.studentComponent.routes.TeamController.removeMember(member.getStudentNumber().getValue(), team.getId().getValue())
                             }
                         } else {
                             &nbsp;
@@ -119,11 +119,11 @@
                             @member.getFirstName() @member.getLastName() (@member.getEmail())
                         } {
                             @buttonRight("In Team aufnehmen") {
-                                @controllers.studentComponent.routes.TeamController.acceptMembershipRequest(member.getStudentNumber(), team.getId())
+                                @controllers.studentComponent.routes.TeamController.acceptMembershipRequest(member.getStudentNumber().getValue(), team.getId().getValue())
                             }
 
                             @buttonRight("Anfrage ablehnen") {
-                                @controllers.studentComponent.routes.TeamController.declineMembershipRequest(member.getStudentNumber(), team.getId())
+                                @controllers.studentComponent.routes.TeamController.declineMembershipRequest(member.getStudentNumber().getValue(), team.getId().getValue())
                             }
                         }
                     } else {
@@ -131,11 +131,11 @@
                             @member.getFirstName() @member.getLastName() (@member.getEmail())
                         } {
                             @buttonRight("In Team aufnehmen") {
-                                @controllers.studentComponent.routes.TeamController.acceptMembershipRequest(member.getStudentNumber(), team.getId())
+                                @controllers.studentComponent.routes.TeamController.acceptMembershipRequest(member.getStudentNumber().getValue(), team.getId().getValue())
                             }
 
                             @buttonRight("Anfrage ablehnen") {
-                                @controllers.studentComponent.routes.TeamController.declineMembershipRequest(member.getStudentNumber(), team.getId())
+                                @controllers.studentComponent.routes.TeamController.declineMembershipRequest(member.getStudentNumber().getValue(), team.getId().getValue())
                             }
                         }
                     }
@@ -153,7 +153,7 @@
                             @member.getFirstName() @member.getLastName() (@member.getEmail())
                         } {
                             @buttonRight("Einladung zurueckziehen") {
-                                @controllers.studentComponent.routes.TeamController.cancelInvitation(member.getStudentNumber(), team.getId())
+                                @controllers.studentComponent.routes.TeamController.cancelInvitation(member.getStudentNumber().getValue(), team.getId().getValue())
                             }
                         }
                     } else {
@@ -161,7 +161,7 @@
                             @member.getFirstName() @member.getLastName() (@member.getEmail())
                         } {
                             @buttonRight("Einladung zurueckziehen") {
-                                @controllers.studentComponent.routes.TeamController.cancelInvitation(member.getStudentNumber(), team.getId())
+                                @controllers.studentComponent.routes.TeamController.cancelInvitation(member.getStudentNumber().getValue(), team.getId().getValue())
                             }
                         }
                     }
@@ -179,7 +179,7 @@
                             @student.getFirstName() @student.getLastName() (@student.getEmail())
                         } {
                             @buttonRight("Einladen") {
-                                @controllers.studentComponent.routes.TeamController.inviteStudent(student.getStudentNumber(), team.getId())
+                                @controllers.studentComponent.routes.TeamController.inviteStudent(student.getStudentNumber().getValue(), team.getId().getValue())
                             }
                         }
                     } else {
@@ -187,7 +187,7 @@
                             @student.getFirstName() @student.getLastName() (@student.getEmail())
                         } {
                             @buttonRight("Einladen") {
-                                @controllers.studentComponent.routes.TeamController.inviteStudent(student.getStudentNumber(), team.getId())
+                                @controllers.studentComponent.routes.TeamController.inviteStudent(student.getStudentNumber().getValue(), team.getId().getValue())
                             }
                         }
                     }
@@ -205,11 +205,11 @@
                     <td>
                         <table width="605">
                             @buttonRight("Einladung annehmen") {
-                                @controllers.studentComponent.routes.StudentController.acceptInvitation(team.getId())
+                                @controllers.studentComponent.routes.StudentController.acceptInvitation(team.getId().getValue())
                             }
 
                             @buttonRight("Einladung ablehnen") {
-                                @controllers.studentComponent.routes.StudentController.declineInvitation(team.getId())
+                                @controllers.studentComponent.routes.StudentController.declineInvitation(team.getId().getValue())
                             }
                         </table>
                     </td>
@@ -223,7 +223,7 @@
                     <td>
                         <table width="605">
                             @buttonRight("Anfrage zurueckziehen") {
-                                @controllers.studentComponent.routes.StudentController.cancelMembershipRequest(team.getId())
+                                @controllers.studentComponent.routes.StudentController.cancelMembershipRequest(team.getId().getValue())
                             }
                         </table>
                     </td>
@@ -235,7 +235,7 @@
                     <td>
                         <table width="605">
                         @buttonRight("Beitrittsanfrage versenden") {
-                            @controllers.studentComponent.routes.StudentController.requestMembership(team.getId())
+                            @controllers.studentComponent.routes.StudentController.requestMembership(team.getId().getValue())
                         }
                         </table>
                     </td>
@@ -250,7 +250,7 @@
                 <table width="605">
                     @buttonRight("Zurueck") {
                         @if(request.getHeader("referer") == null || request.getHeader("referer").contains("/team/details")) {
-                            @controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId())
+                            @controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId().getValue())
                         } else {
                             @request.getHeader("referer")
                         }

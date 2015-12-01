@@ -5,7 +5,6 @@ package models.commonUtils;
  */
 
 import assets.Global;
-
 import models.commonUtils.Exceptions.*;
 import models.commonUtils.ID.CourseID;
 import models.commonUtils.ID.StudentNumber;
@@ -15,8 +14,6 @@ import net.unikit.database.interfaces.managers.*;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 public class CommonDatabaseUtils {
 
@@ -586,7 +583,7 @@ public class CommonDatabaseUtils {
     public static List<Course> getAvailableCourses(StudentNumber sNumber) throws StudentNotFoundException {
         Student student = getStudent(sNumber);
 
-        List<Course> allAvailableCourses = courseManager.getAllEntities();
+        List<Course> allAvailableCourses = new ArrayList<>(courseManager.getAllEntities());
         allAvailableCourses.removeAll(student.getCompletedCourses());
 
        return allAvailableCourses;

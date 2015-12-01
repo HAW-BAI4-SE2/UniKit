@@ -5,24 +5,20 @@ package controllers.courseComponent;
  * @author Thomas Bednorz
  */
 
-import assets.Global;
 import assets.SessionUtils;
-
 import models.commonUtils.Exceptions.CourseNotFoundException;
 import models.commonUtils.Exceptions.StudentNotFoundException;
 import models.commonUtils.ID.StudentNumber;
-import models.courseComponent.CourseDatabaseUtils;
 import models.courseComponent.CourseModel;
-import models.courseComponent.CourseRegistrationDatabaseUtils;
 import models.courseComponent.FormModels.CourseRegistrationFormModel;
-
-import net.unikit.database.interfaces.entities.*;
-
+import net.unikit.database.interfaces.entities.Course;
+import net.unikit.database.interfaces.entities.Student;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
-
-import views.html.*;
+import views.html.showCancelRegistration;
+import views.html.showCourseOverview;
+import views.html.showRegisterCourses;
 
 import java.util.Date;
 import java.util.List;
@@ -123,10 +119,9 @@ public class CourseRegistrationController extends Controller {
                 Form.form(CourseRegistrationFormModel.class)
                         .bindFromRequest();
 
-        CourseRegistrationFormModel crfm = courseRegistrationForm.get();
 
         try {
-            CourseModel.storeCourseRegistrations(sNumber, crfm.registeredCourses);
+            CourseModel.storeCourseRegistrations(sNumber, courseRegistrationForm.get().registeredCourses);
         } catch (CourseNotFoundException e) {
             e.printStackTrace();
         } catch (StudentNotFoundException e) {

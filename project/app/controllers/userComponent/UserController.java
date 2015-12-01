@@ -1,7 +1,7 @@
 package controllers.userComponent;
 
 import assets.SessionUtils;
-import net.unikit.database.interfaces.entities.*;
+import net.unikit.database.interfaces.entities.Student;
 import play.mvc.Controller;
 import play.mvc.Result;
 import views.html.*;

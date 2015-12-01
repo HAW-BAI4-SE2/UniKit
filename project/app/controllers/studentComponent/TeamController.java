@@ -12,15 +12,14 @@ import models.commonUtils.ID.IDUtils;
 import models.commonUtils.ID.StudentNumber;
 import models.commonUtils.ID.TeamID;
 import models.studentComponent.TeamModel;
-
-import net.unikit.database.interfaces.entities.*;
-
+import net.unikit.database.interfaces.entities.Course;
+import net.unikit.database.interfaces.entities.Student;
+import net.unikit.database.interfaces.entities.Team;
 import play.mvc.Controller;
 import play.mvc.Result;
+import views.html.showAvailableTeams;
+import views.html.showTeamOverview;
 
-import views.html.*;
-
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -86,21 +85,23 @@ public class TeamController extends Controller {
         try {
             TeamModel.inviteStudent(sNumber, tID, createdBySNumber);
             return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
+
         } catch (TeamMaxSizeReachedException e) {
             // TODO error message
             return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
+
         } catch (TeamNotFoundException e) {
             // TODO error message
             return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
-        } catch (FatalErrorException e) {
-            // TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+
         } catch (CourseNotFoundException e) {
             // TODO error message
             return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+
         } catch (InvitationAlreadyExistsException e) {
             // TODO error message
             return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+
         } catch (StudentNotFoundException e) {
             // TODO error message
             return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());

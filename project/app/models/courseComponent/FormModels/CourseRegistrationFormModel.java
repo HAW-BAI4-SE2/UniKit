@@ -1,8 +1,7 @@
 package models.courseComponent.FormModels;
 
-import net.unikit.database.interfaces.entities.*;
+import net.unikit.database.interfaces.entities.Course;
 
-import java.util.Collection;
 import java.util.List;
 
 /**

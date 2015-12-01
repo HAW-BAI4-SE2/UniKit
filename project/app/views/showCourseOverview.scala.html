@@ -45,11 +45,11 @@
                     @for((course, index) <- (registeredCourses).view.zipWithIndex) {
                         @if(index % 2 == 0) {
                             @courseItemLight("{ZKN}", "", "", "{OK}") {
-                                <a href="@controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId())" title="@(course.getName())">@(course.getName())</a>
+                                <a href="@controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId().getValue())" title="@(course.getName())">@(course.getName())</a>
                             }
                         } else {
                             @courseItemDark("{ZKN}", "", "", "{OK}") {
-                                <a href="@controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId())" title="@(course.getName())">@(course.getName())</a>
+                                <a href="@controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId().getValue())" title="@(course.getName())">@(course.getName())</a>
                             }
                         }
                     }
@@ -62,11 +62,11 @@
                     @for((course, index) <- (registeredCourses).view.zipWithIndex) {
                         @if(index % 2 == 0) {
                             @courseItemLight("{ZKN}", getSemesterValue(course), "", "{OK}") {
-                                <a href="@controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId())" title="@(course.getName())">@(course.getName())</a>
+                                <a href="@controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId().getValue())" title="@(course.getName())">@(course.getName())</a>
                             }
                         } else {
                             @courseItemDark("{ZKN}", getSemesterValue(course), "", "{OK}") {
-                                <a href="@controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId())" title="@(course.getName())">@(course.getName())</a>
+                                <a href="@controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId().getValue())" title="@(course.getName())">@(course.getName())</a>
                             }
                         }
                     }
@@ -79,11 +79,11 @@
                     @for((course, index) <- (registeredCourses).view.zipWithIndex) {
                         @if(index % 2 == 0) {
                             @courseItemLight("{ZKN}", "", "{-}", "{OK}") {
-                                <a href="@controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId())" title="@(course.getName())">@(course.getName())</a>
+                                <a href="@controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId().getValue())" title="@(course.getName())">@(course.getName())</a>
                             }
                         } else {
                             @courseItemDark("{ZKN}", "", "{-}", "{OK}") {
-                                <a href="@controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId())" title="@(course.getName())">@(course.getName())</a>
+                                <a href="@controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId().getValue())" title="@(course.getName())">@(course.getName())</a>
                             }
                         }
                     }
@@ -96,11 +96,11 @@
                     @for((course, index) <- (registeredCourses).view.zipWithIndex) {
                         @if(index % 2 == 0) {
                             @courseItemLight("{ZKN}", getSemesterValue(course), "{-}", "{OK}") {
-                                <a href="@controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId())" title="@(course.getName())">@(course.getName())</a>
+                                <a href="@controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId().getValue())" title="@(course.getName())">@(course.getName())</a>
                             }
                         } else {
                             @courseItemDark("{ZKN}", getSemesterValue(course), "{-}", "{OK}") {
-                                <a href="@controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId())" title="@(course.getName())">@(course.getName())</a>
+                                <a href="@controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId().getValue())" title="@(course.getName())">@(course.getName())</a>
                             }
                         }
                     }

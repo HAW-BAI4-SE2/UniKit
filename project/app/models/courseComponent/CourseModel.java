@@ -10,9 +10,7 @@ import net.unikit.database.interfaces.entities.Course;
 import net.unikit.database.interfaces.entities.MembershipRequest;
 import net.unikit.database.interfaces.entities.Team;
 import net.unikit.database.interfaces.entities.TeamInvitation;
-import play.api.i18n.Messages;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

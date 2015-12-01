@@ -21,7 +21,7 @@
                         Team T@(String.format("%03d", team.getId()))
                     } {
                         @buttonRight("Team betrachten") {
-                            @controllers.studentComponent.routes.TeamController.showTeamOverview(team.getId())
+                            @controllers.studentComponent.routes.TeamController.showTeamOverview(team.getId().getValue())
                         }
                     }
                 } else {
@@ -29,7 +29,7 @@
                         Team T@(String.format("%03d", team.getId()))
                     } {
                         @buttonRight("Team betrachten") {
-                            @controllers.studentComponent.routes.TeamController.showTeamOverview(team.getId())
+                            @controllers.studentComponent.routes.TeamController.showTeamOverview(team.getId().getValue())
                         }
                     }
                 }
@@ -45,7 +45,7 @@
                         @if(request.getHeader("referer") == null ||
                                 request.getHeader("referer").contains("/team/show_available") ||
                                 request.getHeader("referer").contains("/team/details")) {
-                            @controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId())
+                            @controllers.courseComponent.routes.CourseController.showCourseDetails(course.getId().getValue())
                         } else {
                             @request.getHeader("referer")
                         }

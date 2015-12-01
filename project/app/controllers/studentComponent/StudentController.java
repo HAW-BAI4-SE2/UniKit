@@ -5,20 +5,14 @@ package controllers.studentComponent;
  */
 
 import assets.SessionUtils;
-
 import controllers.courseComponent.CourseController;
-
 import models.commonUtils.CommonDatabaseUtils;
 import models.commonUtils.Exceptions.*;
-
 import models.commonUtils.ID.CourseID;
 import models.commonUtils.ID.StudentNumber;
 import models.commonUtils.ID.TeamID;
-
 import models.studentComponent.StudentModel;
-
-import net.unikit.database.interfaces.entities.*;
-
+import net.unikit.database.interfaces.entities.Student;
 import play.mvc.Controller;
 import play.mvc.Result;
 
