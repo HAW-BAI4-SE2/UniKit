@@ -11,7 +11,12 @@ public class CourseNotFoundException extends Throwable {
     private final CourseID courseID;
 
     public CourseNotFoundException(CourseID cID) {
+        super("Course not found");
         this.courseID = cID;
+    }
+
+    public CourseNotFoundException() {
+        this(null);
     }
 
     public CourseID getCourseID() {

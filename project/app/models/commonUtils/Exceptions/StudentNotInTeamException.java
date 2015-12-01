@@ -8,11 +8,11 @@ import models.commonUtils.ID.TeamID;
  * It contains the StudentNumber of the respective student and the TeamID of the team.
  * @author Thomas Bednorz
  */
-public class NotTeamMemberExcpetion extends Exception {
+public class StudentNotInTeamException extends Exception {
     private final StudentNumber student;
     private final TeamID teamID;
 
-    public NotTeamMemberExcpetion(StudentNumber sNumber, TeamID tID) {
+    public StudentNotInTeamException(StudentNumber sNumber, TeamID tID) {
         super("Student not member of the team");
         this.student = sNumber;
         this.teamID = tID;

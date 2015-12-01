@@ -5,10 +5,10 @@ import models.commonUtils.ID.StudentNumber;
 /**
  * Created by tbu on 11/30/2015.
  */
-public class StudentAlreadyInTeamException extends Exception {
+public class StudentInTeamException extends Exception {
     private final StudentNumber studentNumber;
 
-    public StudentAlreadyInTeamException(StudentNumber sNumber) {
+    public StudentInTeamException(StudentNumber sNumber) {
         super("Student member of a team");
         this.studentNumber = sNumber;
     }

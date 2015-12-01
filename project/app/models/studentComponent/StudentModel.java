@@ -21,12 +21,12 @@ public class StudentModel {
      *  @param courseID the course ID for which the team is to be created
      *  @return showEditTeam-page
      */
-    public static TeamID createTeam(StudentNumber sNumber, CourseID courseID) throws CourseNotFoundException, StudentNotFoundException, StudentAlreadyInTeamException, FatalErrorException {
+    public static TeamID createTeam(StudentNumber sNumber, CourseID courseID) throws CourseNotFoundException, StudentNotFoundException, StudentInTeamException, FatalErrorException {
 
         // is the student in an other team in this course?
         try {
             CommonDatabaseUtils.getTeamByStudentAndCourse(sNumber,courseID);
-            throw new StudentAlreadyInTeamException(sNumber);
+            throw new StudentInTeamException(sNumber);
         } catch (TeamNotFoundException e) {
             return CommonDatabaseUtils.createTeam(sNumber, courseID);
         }
@@ -37,7 +37,7 @@ public class StudentModel {
      *  @param tID the team ID that is to be deleted
      *  @return showCourseDetails-page for the course the team was associated with
      */
-    public static void deleteTeam(TeamID tID) throws TeamNotFoundException, NotTeamMemberExcpetion {
+    public static void deleteTeam(TeamID tID) throws TeamNotFoundException, StudentNotInTeamException {
         StudentNumber currentUser = StudentNumber.get(SessionUtils.getCurrentUser(session()).getStudentNumber());
         Team deletedTeam = CommonDatabaseUtils.getTeamByID(tID);
 
@@ -46,7 +46,7 @@ public class StudentModel {
                 CommonDatabaseUtils.deleteTeam(tID);
                 NotificationModel.informStudentTeamDeleted(deletedTeam, currentUser);
             } else {
-                throw new NotTeamMemberExcpetion(currentUser,tID);
+                throw new StudentNotInTeamException(currentUser,tID);
             }
         } catch (StudentNotFoundException e) {
             // Do nothing if student doesnt exist

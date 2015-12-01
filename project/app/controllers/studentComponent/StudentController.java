@@ -39,7 +39,7 @@ public class StudentController extends Controller {
             teamID = StudentModel.createTeam(sNumber, cID);
         } catch (StudentNotFoundException e) {
             e.printStackTrace();
-        } catch (StudentAlreadyInTeamException e) {
+        } catch (StudentInTeamException e) {
             e.printStackTrace();
         } catch (CourseNotFoundException e) {
             e.printStackTrace();
@@ -64,7 +64,7 @@ public class StudentController extends Controller {
         catch(TeamNotFoundException e){
             //TODO error message
             return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
-        } catch (NotTeamMemberExcpetion e) {
+        } catch (StudentNotInTeamException e) {
             //TODO error message
             return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
         }

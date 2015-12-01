@@ -11,7 +11,7 @@ public class TeamMaxSizeReachedException extends Exception {
     private final TeamID teamID;
 
     public TeamMaxSizeReachedException(TeamID tID) {
-        super("Maximum number of invites reached");
+        super("Maximum number of invites and members reached");
         this.teamID = tID;
     }
 

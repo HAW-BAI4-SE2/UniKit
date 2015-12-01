@@ -51,7 +51,7 @@ public class TeamController extends Controller {
         } catch (TeamNotFoundException e) {
             // TODO error message
             return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
-        } catch (NotTeamMemberExcpetion e) {
+        } catch (StudentNotInTeamException e) {
             // TODO error message
             return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
         } catch (StudentNotFoundException e) {
@@ -98,7 +98,7 @@ public class TeamController extends Controller {
             // TODO error message
             return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
 
-        } catch (InvitationAlreadyExistsException e) {
+        } catch (InvitationExistsException e) {
             // TODO error message
             return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
 

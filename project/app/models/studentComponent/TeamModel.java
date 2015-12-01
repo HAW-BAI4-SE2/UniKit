@@ -47,9 +47,9 @@ public class TeamModel {
      * @param tID the ID of the team from which the student is to be removed.
      * @returns the team from from which the student is to be removed.
      * @throws TeamNotFoundException
-     * @throws NotTeamMemberExcpetion
+     * @throws StudentNotInTeamException
      */
-    public static Team removeMember(StudentNumber sNumber, TeamID tID) throws TeamNotFoundException, NotTeamMemberExcpetion, StudentNotFoundException {
+    public static Team removeMember(StudentNumber sNumber, TeamID tID) throws TeamNotFoundException, StudentNotInTeamException, StudentNotFoundException {
         // Get team prior to removal of student
         Team thisTeam = CommonDatabaseUtils.getTeamByID(tID);
 
@@ -86,7 +86,7 @@ public class TeamModel {
      * @throws TeamMaxSizeReachedException
      * @throws CourseNotFoundException
      */
-    public static Team inviteStudent(StudentNumber sNumber, TeamID tID, StudentNumber invitedBy) throws TeamMaxSizeReachedException, TeamNotFoundException, CourseNotFoundException, InvitationAlreadyExistsException, StudentNotFoundException {
+    public static Team inviteStudent(StudentNumber sNumber, TeamID tID, StudentNumber invitedBy) throws TeamMaxSizeReachedException, TeamNotFoundException, CourseNotFoundException, InvitationExistsException, StudentNotFoundException {
 
         // Get team prior to addition of student
         Team thisTeam = CommonDatabaseUtils.getTeamByID(tID);

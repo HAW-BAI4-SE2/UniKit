@@ -9,6 +9,8 @@ import models.commonUtils.Exceptions.*;
 import models.commonUtils.ID.CourseID;
 import models.commonUtils.ID.StudentNumber;
 import models.commonUtils.ID.TeamID;
+import net.unikit.database.exceptions.ConstraintViolationException;
+import net.unikit.database.exceptions.EntityNotFoundException;
 import net.unikit.database.interfaces.entities.*;
 import net.unikit.database.interfaces.managers.*;
 
@@ -42,9 +44,9 @@ public class CommonDatabaseUtils {
      * @param createdByStudentNumber
      * @throws TeamNotFoundException
      * @throws StudentNotFoundException
-     * @throws InvitationAlreadyExistsException
+     * @throws InvitationExistsException
      */
-    public static void storeInvitation(StudentNumber invitedStudentNumber, TeamID invitingTeamID, StudentNumber createdByStudentNumber) throws TeamNotFoundException, StudentNotFoundException, InvitationAlreadyExistsException {
+    public static void storeInvitation(StudentNumber invitedStudentNumber, TeamID invitingTeamID, StudentNumber createdByStudentNumber) throws TeamNotFoundException, StudentNotFoundException, InvitationExistsException {
         // Get object for invited student
         Student invitedStudent = getStudent(invitedStudentNumber);
 
@@ -55,15 +57,23 @@ public class CommonDatabaseUtils {
         Team invitingTeam = getTeam(invitingTeamID);
 
         // If invitation already exists, inform the system
-        if(Global.getTeamInvitationManager().getInvitation(invitedStudent,invitingTeam) == null){
-            throw new InvitationAlreadyExistsException(invitedStudentNumber,invitingTeamID);
-        } else {
-            TeamInvitation newInvitation = invitationManager.createEntity();
+
+        TeamInvitation newInvitation = invitationManager.createEntity();
+        try {
+            invitationManager.getInvitation(invitedStudent,invitingTeam);
+            throw new InvitationExistsException(invitedStudentNumber,invitingTeamID);
+
+        } catch (EntityNotFoundException e) {
             newInvitation.setCreatedBy(createdByStudent);
             newInvitation.setInvitee(invitedStudent);
             newInvitation.setTeam(invitingTeam);
+        }
 
+        try {
             invitationManager.addEntity(newInvitation);
+
+        } catch (ConstraintViolationException e) {
+            throw new InvitationExistsException(invitedStudentNumber,invitingTeamID);
         }
     }
 
@@ -81,12 +91,19 @@ public class CommonDatabaseUtils {
 
         // Get the invitation to be deleted
         TeamInvitation invitationToBeDeleted = null;
-        invitationToBeDeleted = invitationManager.getInvitation(invitedStudent,invitingTeam);
-        if(invitationToBeDeleted == null){
+
+        try {
+            invitationToBeDeleted = invitationManager.getInvitation(invitedStudent,invitingTeam);
+        } catch (EntityNotFoundException e) {
             throw new InvitationNotFoundException(tID);
-        } else {
-            invitationManager.deleteEntity(invitationToBeDeleted);
         }
+
+        try {
+            invitationManager.deleteEntity(invitationToBeDeleted);
+        } catch (EntityNotFoundException e) {
+            throw new InvitationNotFoundException(tID);
+        }
+
     }
 
     /**
@@ -95,7 +112,7 @@ public class CommonDatabaseUtils {
      * @param tID
      * @throws TeamNotFoundException
      */
-    public static void addStudentToTeam(StudentNumber sNummber, TeamID tID) throws TeamNotFoundException, StudentNotFoundException {
+    public static void addStudentToTeam(StudentNumber sNummber, TeamID tID) throws TeamNotFoundException, StudentNotFoundException, CourseNotFoundException, StudentInTeamException {
         // Init
         String studentNumber = sNummber.value();
 
@@ -106,13 +123,23 @@ public class CommonDatabaseUtils {
         Team teamByID = getTeam(tID);
 
         // Get course of the Team
-        Course courseForTeam = teamByID.getCourse();
+        Course courseForTeam = null;
+        try {
+            courseForTeam = teamByID.getCourse();
+        } catch (EntityNotFoundException e) {
+            throw new CourseNotFoundException();
+        }
 
         // Add student to team
         TeamRegistration newTeamRegistration = registrationManager.createEntity();
         newTeamRegistration.setStudent(studentToBeAdded);
         newTeamRegistration.setTeam(teamByID);
-        registrationManager.addEntity(newTeamRegistration);
+
+        try {
+            registrationManager.addEntity(newTeamRegistration);
+        } catch (ConstraintViolationException e) {
+            throw new StudentInTeamException(sNummber);
+        }
 
         // Delete all pending invitations
         deleteAllInvitations(sNummber,CourseID.get(courseForTeam.getId()));
@@ -136,11 +163,16 @@ public class CommonDatabaseUtils {
         // Get team from which the student is to be removed
         Team associatedTeam = getTeam(tID);
 
-        for(TeamRegistration currentRegistration: registrationManager.getAllEntities()){
-            if(currentRegistration.getTeam().equals(associatedTeam) && currentRegistration.getStudent().equals(studentToBeRemoved)){
-                registrationManager.deleteEntity(currentRegistration);
-                break;
+        try{
+            for(TeamRegistration currentRegistration: registrationManager.getAllEntities()){
+                if(currentRegistration.getTeam().equals(associatedTeam) && currentRegistration.getStudent().equals(studentToBeRemoved)){
+                    registrationManager.deleteEntity(currentRegistration);
+                    break;
+                }
             }
+        } catch (Exception e){
+            // TODO: Error handling
+            e.printStackTrace();
         }
     }
 
@@ -154,12 +186,17 @@ public class CommonDatabaseUtils {
         Course.ID courseID = courseManager.createID(cID.value());
         Student.StudentNumber studentNumber = studentManager.createID(sNumber.value());
 
-        for(CourseRegistration courseRegistration : courseRegistrationManager.getAllEntities()){
-            if(courseRegistration.getCourse().getId().equals(courseID) &&
-                    courseRegistration.getStudent().getStudentNumber().equals(studentNumber)){
-                courseRegistration.setCurrentlyAssignedToTeam(status);
-                break;
+        try{
+            for(CourseRegistration courseRegistration : courseRegistrationManager.getAllEntities()){
+                if(courseRegistration.getCourse().getId().equals(courseID) &&
+                        courseRegistration.getStudent().getStudentNumber().equals(studentNumber)){
+                    courseRegistration.setCurrentlyAssignedToTeam(status);
+                    break;
+                }
             }
+        } catch (Exception e){
+            // TODO: Error handling
+            e.printStackTrace();
         }
     }
 
@@ -185,11 +222,16 @@ public class CommonDatabaseUtils {
 
         // Get the team
         Team queriedTeam = null;
-        for(TeamRegistration currentTeamRegistration : registrationManager.getAllEntities()) {
-            if (currentTeamRegistration.getTeam().getCourse().getId().equals(courseID) &&
-                    currentTeamRegistration.getStudent().getStudentNumber().equals(studentNumber)) {
-                return currentTeamRegistration.getTeam();
+        try{
+            for(TeamRegistration currentTeamRegistration : registrationManager.getAllEntities()) {
+                if (currentTeamRegistration.getTeam().getCourse().getId().equals(courseID) &&
+                        currentTeamRegistration.getStudent().getStudentNumber().equals(studentNumber)) {
+                    return currentTeamRegistration.getTeam();
+                }
             }
+        } catch (Exception e){
+            // TODO: Error handling
+            e.printStackTrace();
         }
 
         throw new TeamNotFoundException();
@@ -201,7 +243,7 @@ public class CommonDatabaseUtils {
      *  @param cID the course ID for which the team will be created
      *  @return returns the ID for the new team
      */
-    public static TeamID createTeam(StudentNumber sNumber, CourseID cID) throws CourseNotFoundException, StudentNotFoundException, FatalErrorException {
+    public static TeamID createTeam(StudentNumber sNumber, CourseID cID) throws CourseNotFoundException, StudentNotFoundException, FatalErrorException, TeamExistsException {
         // Get course object
         Course course = getCourse(cID);
 
@@ -212,13 +254,21 @@ public class CommonDatabaseUtils {
         Team newTeam = teamManager.createEntity();
         newTeam.setCourse(course);
         newTeam.setCreatedBy(student);
-        teamManager.addEntity(newTeam);
+        try {
+            teamManager.addEntity(newTeam);
+        } catch (ConstraintViolationException e) {
+            throw new TeamExistsException(sNumber, cID);
+        }
 
         // Register student with team
         TeamRegistration newTeamRegistration = registrationManager.createEntity();
         newTeamRegistration.setTeam(newTeam);
         newTeamRegistration.setStudent(student);
-        registrationManager.addEntity(newTeamRegistration);
+        try {
+            registrationManager.addEntity(newTeamRegistration);
+        } catch (ConstraintViolationException e) {
+            new StudentInTeamException(sNumber);
+        }
 
         // Update registration status of student
         changeTeamRegistrationStatus(sNumber,cID,true);
@@ -239,23 +289,38 @@ public class CommonDatabaseUtils {
      * @return the ID for the associated course
      * @throws TeamNotFoundException
      */
-    public static CourseID deleteTeam(TeamID tID) throws TeamNotFoundException {
+    public static CourseID deleteTeam(TeamID tID) throws TeamNotFoundException, TeamDeletedException {
         Team teamToBeDeleted = getTeam(tID);
-        CourseID courseIDForTeam = CourseID.get(teamToBeDeleted.getCourse().getId());
+        CourseID courseIDForTeam = null;
+        try {
+            courseIDForTeam = CourseID.get(teamToBeDeleted.getCourse().getId());
+        } catch (EntityNotFoundException e) {
+            //TODO: Error handling
+            e.printStackTrace();
+        }
 
         // Update students to single registration
-        for(TeamRegistration currentRegistration: teamToBeDeleted.getTeamRegistrations()){
-            changeTeamRegistrationStatus(
-                    StudentNumber.get(currentRegistration.getStudent().getStudentNumber()),
-                    CourseID.get(currentRegistration.getTeam().getCourse().getId()),
-                    false);
+        try{
+            for(TeamRegistration currentRegistration: teamToBeDeleted.getTeamRegistrations()){
+                changeTeamRegistrationStatus(
+                        StudentNumber.get(currentRegistration.getStudent().getStudentNumber()),
+                        CourseID.get(currentRegistration.getTeam().getCourse().getId()),
+                        false);
+            }
+        } catch (Exception e){
+            // TODO: Error handling
+            e.printStackTrace();
         }
 
         //TODO: delete all membership requests
         //TODO: delete all invites
         
         //Delete team
-        teamManager.deleteEntity(teamToBeDeleted);
+        try {
+            teamManager.deleteEntity(teamToBeDeleted);
+        } catch (EntityNotFoundException e) {
+            throw new TeamDeletedException(tID);
+        }
 
         return courseIDForTeam;
     }
@@ -266,7 +331,7 @@ public class CommonDatabaseUtils {
      * @param tID the ID of the team that received the membership request
      * @throws TeamNotFoundException
      * */
-    public static void storeMembershipRequest(StudentNumber sNumber, TeamID tID) throws TeamNotFoundException, StudentNotFoundException {
+    public static void storeMembershipRequest(StudentNumber sNumber, TeamID tID) throws TeamNotFoundException, StudentNotFoundException, MembershipRequestExistsException {
         // Get team for the membership request
         Team team = getTeam(tID);
 
@@ -277,7 +342,11 @@ public class CommonDatabaseUtils {
         MembershipRequest newMembershipRequest = membershipRequestManager.createEntity();
         newMembershipRequest.setApplicant(student);
         newMembershipRequest.setTeam(team);
-        membershipRequestManager.addEntity(newMembershipRequest);
+        try {
+            membershipRequestManager.addEntity(newMembershipRequest);
+        } catch (ConstraintViolationException e) {
+            throw new MembershipRequestExistsException(sNumber,tID);
+        }
     }
 
     /**
@@ -295,11 +364,12 @@ public class CommonDatabaseUtils {
         Team teamForMembershipRequest = getTeamByID(tID);
 
         // Get membershiprequest to be deleted, throw error if not found
-        MembershipRequest membershipRequestToBeDeleted = membershipRequestManager.getMembershipRequest(requestingStudent,teamForMembershipRequest);
-        if(membershipRequestToBeDeleted == null){
-            throw new MembershipRequestNotFoundException(sNumber,tID);
-        } else {
+        MembershipRequest membershipRequestToBeDeleted = null;
+        try {
+            membershipRequestToBeDeleted = membershipRequestManager.getMembershipRequest(requestingStudent,teamForMembershipRequest);
             membershipRequestManager.deleteEntity(membershipRequestToBeDeleted);
+        } catch (EntityNotFoundException e) {
+            throw new MembershipRequestNotFoundException(sNumber, tID);
         }
     }
 
@@ -308,7 +378,13 @@ public class CommonDatabaseUtils {
         //Get all registered students
         List<Student> allStudentsInTeam = new ArrayList<>();
         for(TeamRegistration currentRegistration : team.getTeamRegistrations()){
-            allStudentsInTeam.add(currentRegistration.getStudent());
+            try {
+                Student s = currentRegistration.getStudent();
+                allStudentsInTeam.add(s);
+            } catch (EntityNotFoundException e) {
+                //TODO Error handling
+                e.printStackTrace();
+            }
         }
 
         return allStudentsInTeam;
@@ -317,8 +393,13 @@ public class CommonDatabaseUtils {
     public static List<Student> getAllStudents(Course associatedCourse) {
         List<Student> allStudentsInCourse = new ArrayList<>();
         for(CourseRegistration currentCourseRegistration : courseRegistrationManager.getAllEntities()){
-            if(currentCourseRegistration.getCourse().equals(associatedCourse)){
-                allStudentsInCourse.add(currentCourseRegistration.getStudent());
+            try {
+                if(currentCourseRegistration.getCourse().equals(associatedCourse)){
+                    allStudentsInCourse.add(currentCourseRegistration.getStudent());
+                }
+            } catch (EntityNotFoundException e) {
+                //TODO Error handling
+                e.printStackTrace();
             }
         }
 
@@ -333,13 +414,14 @@ public class CommonDatabaseUtils {
      * @throws StudentNotFoundException
      */
     private static Student getStudent(StudentNumber studentNumber) throws StudentNotFoundException{
-        Student student = studentManager.getEntity(studentManager.createID(studentNumber.value()));
-
-        if(student == null){
+        Student student = null;
+        try {
+            student = studentManager.getEntity(studentManager.createID(studentNumber.value()));
+        } catch (EntityNotFoundException e) {
             throw new StudentNotFoundException(studentNumber);
-        } else {
-            return student;
         }
+
+        return student;
     }
 
     /**
@@ -349,13 +431,14 @@ public class CommonDatabaseUtils {
      * @throws TeamNotFoundException
      */
     private static Team getTeam(TeamID teamID) throws TeamNotFoundException {
-        Team team = teamManager.getEntity(teamManager.createID(teamID.value()));
-
-        if(team == null){
+        Team team = null;
+        try {
+            team = teamManager.getEntity(teamManager.createID(teamID.value()));
+        } catch (EntityNotFoundException e) {
             throw new TeamNotFoundException(teamID);
-        } else {
-            return team;
         }
+
+        return team;
     }
 
     /**
@@ -365,13 +448,14 @@ public class CommonDatabaseUtils {
      * @throws CourseNotFoundException
      */
     private static Course getCourse(CourseID courseID) throws CourseNotFoundException{
-        Course course = courseManager.getEntity(courseManager.createID(courseID.value()));
-
-        if(course == null){
+        Course course = null;
+        try {
+            course = courseManager.getEntity(courseManager.createID(courseID.value()));
+        } catch (EntityNotFoundException e) {
             throw new CourseNotFoundException(courseID);
-        } else {
-            return course;
         }
+
+        return course;
     }
 
     /**
@@ -392,15 +476,20 @@ public class CommonDatabaseUtils {
         Course.ID courseID = courseManager.createID(cID.value());
         Student.StudentNumber studentNumber = studentManager.createID(sNumber.value());
 
-        for(TeamInvitation teamInvitation : invitationManager.getAllEntities()){
-            if(teamInvitation.getTeam().getCourse().getId().equals(courseID) &&
-                    teamInvitation.getInvitee().getStudentNumber().equals(studentNumber)){
-                try {
-                    deleteInvitation(sNumber, TeamID.get(teamInvitation.getTeam().getId()));
-                } catch (Exception e) {
-                    // Depending of the context of the call, it's expected that no invitations exist
+        try{
+            for(TeamInvitation teamInvitation : invitationManager.getAllEntities()){
+                if(teamInvitation.getTeam().getCourse().getId().equals(courseID) &&
+                        teamInvitation.getInvitee().getStudentNumber().equals(studentNumber)){
+                    try {
+                        deleteInvitation(sNumber, TeamID.get(teamInvitation.getTeam().getId()));
+                    } catch (InvitationNotFoundException e) {
+                        // Depending of the context of the call, it's expected that no invitations exist
+                    }
                 }
             }
+        } catch (Exception e){
+            //TODO Error handling
+            e.printStackTrace();
         }
     }
 

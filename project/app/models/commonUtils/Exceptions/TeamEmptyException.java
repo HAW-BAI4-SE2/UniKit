@@ -5,7 +5,7 @@ import models.commonUtils.ID.TeamID;
 /**
  * @author Thomas Bednorz
  */
-public class TeamEmptyException extends Throwable {
+public class TeamEmptyException extends Exception {
     private final TeamID teamID;
 
     public TeamEmptyException(TeamID teamID) {
