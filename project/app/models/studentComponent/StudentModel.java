@@ -21,7 +21,7 @@ public class StudentModel {
      *  @param courseID the course ID for which the team is to be created
      *  @return showEditTeam-page
      */
-    public static TeamID createTeam(StudentNumber sNumber, CourseID courseID) throws CourseNotFoundException, StudentNotFoundException, StudentInTeamException, FatalErrorException {
+    public static TeamID createTeam(StudentNumber sNumber, CourseID courseID) throws CourseNotFoundException, StudentNotFoundException, StudentInTeamException, FatalErrorException, TeamExistsException {
 
         // is the student in an other team in this course?
         try {
@@ -37,7 +37,7 @@ public class StudentModel {
      *  @param tID the team ID that is to be deleted
      *  @return showCourseDetails-page for the course the team was associated with
      */
-    public static void deleteTeam(TeamID tID) throws TeamNotFoundException, StudentNotInTeamException {
+    public static void deleteTeam(TeamID tID) throws TeamNotFoundException, StudentNotInTeamException, TeamDeletedException {
         StudentNumber currentUser = StudentNumber.get(SessionUtils.getCurrentUser(session()).getStudentNumber());
         Team deletedTeam = CommonDatabaseUtils.getTeamByID(tID);
 
@@ -58,7 +58,7 @@ public class StudentModel {
      * @param tID the ID of the team that issued the invite
      * @return showTeamOverview-page
      */
-    public static void acceptInvitation(StudentNumber sNumber, TeamID tID) throws InvitationNotFoundException, TeamNotFoundException, StudentNotFoundException {
+    public static void acceptInvitation(StudentNumber sNumber, TeamID tID) throws InvitationNotFoundException, TeamNotFoundException, StudentNotFoundException, CourseNotFoundException, StudentInTeamException {
         CommonDatabaseUtils.addStudentToTeam(sNumber, tID);
         CommonDatabaseUtils.deleteInvitation(sNumber,tID);
 
@@ -84,7 +84,7 @@ public class StudentModel {
      *  @param tID the ID of the team the student requests membership with
      *  @return showCourseDetails-page
      **/
-    public static void requestMembership(StudentNumber sNumber, TeamID tID) throws TeamNotFoundException, CourseNotFoundException, TeamMaxSizeReachedException, StudentNotFoundException {
+    public static void requestMembership(StudentNumber sNumber, TeamID tID) throws TeamNotFoundException, CourseNotFoundException, TeamMaxSizeReachedException, StudentNotFoundException, MembershipRequestExistsException, StudentInTeamException {
         if(CommonDatabaseUtils.isStudentInvited(sNumber,tID)){
             CommonDatabaseUtils.addStudentToTeam(sNumber, tID);
 

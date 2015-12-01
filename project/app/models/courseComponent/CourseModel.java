@@ -2,6 +2,7 @@ package models.courseComponent;
 
 import models.commonUtils.CommonDatabaseUtils;
 import models.commonUtils.Exceptions.CourseNotFoundException;
+import models.commonUtils.Exceptions.CourseRegistrationNotFoundException;
 import models.commonUtils.Exceptions.StudentNotFoundException;
 import models.commonUtils.Exceptions.TeamNotFoundException;
 import models.commonUtils.ID.CourseID;
@@ -47,7 +48,7 @@ public class CourseModel {
         }
     }
 
-    public static void cancelCourseRegistrations(StudentNumber sNumber, List<String> courseIDs) throws CourseNotFoundException, StudentNotFoundException {
+    public static void cancelCourseRegistrations(StudentNumber sNumber, List<String> courseIDs) throws CourseNotFoundException, StudentNotFoundException, CourseRegistrationNotFoundException {
         for(String courseID : courseIDs){
             CommonDatabaseUtils.deleteCourseRegistration(sNumber,CourseID.get(Integer.parseInt(courseID)));
         }

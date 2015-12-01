@@ -6,6 +6,7 @@ import models.commonUtils.ID.CourseID;
 import models.commonUtils.ID.StudentNumber;
 import models.commonUtils.ID.TeamID;
 import models.commonUtils.NotificationModel;
+import net.unikit.database.exceptions.EntityNotFoundException;
 import net.unikit.database.interfaces.entities.Course;
 import net.unikit.database.interfaces.entities.Student;
 import net.unikit.database.interfaces.entities.Team;
@@ -26,7 +27,7 @@ public class TeamModel {
      * @param tID the ID of the team the student is to be added to
      * @throws TeamNotFoundException
      */
-    public static void addMember(StudentNumber sNumber, TeamID tID) throws TeamNotFoundException, StudentNotFoundException {
+    public static void addMember(StudentNumber sNumber, TeamID tID) throws TeamNotFoundException, StudentNotFoundException, CourseNotFoundException, StudentInTeamException {
         // Get team prior to addition of student
         Team originalTeam = CommonDatabaseUtils.getTeamByID(tID);
 
@@ -56,7 +57,12 @@ public class TeamModel {
         // Delete team if student was the last member, else remove student from team
         if(thisTeam.getTeamRegistrations().size() <=1){
             // Delete team
-            CommonDatabaseUtils.deleteTeam(tID);
+            try {
+                CommonDatabaseUtils.deleteTeam(tID);
+            } catch (TeamDeletedException e) {
+                //TODO error handling
+                e.printStackTrace();
+            }
 
             // Inform last member that team was deleted
             NotificationModel.informStudentTeamDeleted(thisTeam, sNumber);
@@ -86,13 +92,18 @@ public class TeamModel {
      * @throws TeamMaxSizeReachedException
      * @throws CourseNotFoundException
      */
-    public static Team inviteStudent(StudentNumber sNumber, TeamID tID, StudentNumber invitedBy) throws TeamMaxSizeReachedException, TeamNotFoundException, CourseNotFoundException, InvitationExistsException, StudentNotFoundException {
+    public static Team inviteStudent(StudentNumber sNumber, TeamID tID, StudentNumber invitedBy) throws TeamMaxSizeReachedException, TeamNotFoundException, CourseNotFoundException, InvitationExistsException, StudentNotFoundException, FatalErrorException {
 
         // Get team prior to addition of student
         Team thisTeam = CommonDatabaseUtils.getTeamByID(tID);
 
         //Get course for the team
-        Course associatedCourse = thisTeam.getCourse();
+        Course associatedCourse = null;
+        try {
+            associatedCourse = thisTeam.getCourse();
+        } catch (EntityNotFoundException e) {
+            throw new FatalErrorException("Course does not exist");
+        }
 
         // Invite student to team, error if (registrations + invitations) exceeds team size limit
         if((thisTeam.getTeamInvitations().size()
@@ -138,7 +149,7 @@ public class TeamModel {
      * @throws MembershipRequestNotFoundException
      * @throws TeamNotFoundException
      */
-    public static Team acceptMembershipRequest(StudentNumber sNumber, TeamID tID) throws MembershipRequestNotFoundException, TeamNotFoundException, StudentNotFoundException {
+    public static Team acceptMembershipRequest(StudentNumber sNumber, TeamID tID) throws MembershipRequestNotFoundException, TeamNotFoundException, StudentNotFoundException, CourseNotFoundException, StudentInTeamException {
         // Get team prior to accepting the membership request
         Team thisTeam = CommonDatabaseUtils.getTeamByID(tID);
 

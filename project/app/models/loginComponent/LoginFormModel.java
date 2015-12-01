@@ -2,6 +2,7 @@ package models.loginComponent;
 
 import assets.BCrypt;
 import assets.Global;
+import net.unikit.database.exceptions.EntityNotFoundException;
 import net.unikit.database.interfaces.entities.Student;
 import play.data.validation.ValidationError;
 
@@ -47,8 +48,13 @@ public class LoginFormModel {
 
 
         // Check if username is unknown
-        Student currentUser = Global.getStudentManager().getStudent(username);
-        boolean usernameUnknown = (currentUser == null);
+        boolean usernameUnknown;
+        try {
+            Global.getStudentManager().getStudent(username);
+            usernameUnknown = false;
+        } catch (EntityNotFoundException e) {
+            usernameUnknown = true;
+        }
 
         // Check if password is wrong
         String hashed = BCrypt.hashpw("test", BCrypt.gensalt()); // TODO: Load hashed password from DB!
