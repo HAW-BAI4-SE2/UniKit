@@ -49,9 +49,10 @@ public class CourseRegistrationController extends Controller {
         try {
             allRegisteredCourses = CourseModel.getRegisteredCourses(sNumber);
         } catch (StudentNotFoundException e) {
+            System.out.println("1");
             // WTF, student doesnt exist?
         }
-
+        System.out.println("7");
         return ok(showCourseOverview.render(allRegisteredCourses, currentUser, sessionTimeout));
     }
 
