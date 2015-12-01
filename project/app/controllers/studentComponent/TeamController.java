@@ -72,6 +72,7 @@ public class TeamController extends Controller {
             // TODO error message
             return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
         }
+        return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
     }
 
     /**

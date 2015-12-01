@@ -1,6 +1,7 @@
 package assets;
 
 
+import net.unikit.database.exceptions.EntityNotFoundException;
 import net.unikit.database.interfaces.entities.Student;
 import play.mvc.Http;
 
@@ -38,8 +39,14 @@ public final class SessionUtils {
         String username = session.get("username");
         checkNotNull(username, "username is null!");
 
-        Student currentUser = Global.getStudentManager().getEntity(
-                Global.getStudentManager().createID(username));
+        Student currentUser = null;
+        try {
+            currentUser = Global.getStudentManager().getEntity(
+                    Global.getStudentManager().createID(username));
+        } catch (EntityNotFoundException e) {
+            //TODO: Error handling
+            e.printStackTrace();
+        }
         checkNotNull(currentUser, "currentUser is null!");
 
         return currentUser;
