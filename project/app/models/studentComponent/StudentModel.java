@@ -2,6 +2,7 @@ package models.studentComponent;
 
 import assets.SessionUtils;
 import models.commonUtils.CommonDatabaseUtils;
+import models.commonUtils.Database.InvitationDatabaseUtils;
 import models.commonUtils.Exceptions.*;
 import models.commonUtils.ID.CourseID;
 import models.commonUtils.ID.StudentNumber;
@@ -60,7 +61,7 @@ public class StudentModel {
      */
     public static void acceptInvitation(StudentNumber sNumber, TeamID tID) throws InvitationNotFoundException, TeamNotFoundException, StudentNotFoundException, CourseNotFoundException, StudentInTeamException {
         CommonDatabaseUtils.addStudentToTeam(sNumber, tID);
-        CommonDatabaseUtils.deleteInvitation(sNumber,tID);
+        InvitationDatabaseUtils.deleteInvitation(sNumber,tID);
 
         try {
             CommonDatabaseUtils.deleteMembershipRequest(sNumber, tID);
@@ -75,7 +76,7 @@ public class StudentModel {
      *   Declines (deletes) the invitation for the student by the team. The relevant data is retrived using a TeamStateChangeForm-object
      **/
     public static void declineInvitation(StudentNumber sNumber, TeamID tID) throws InvitationNotFoundException, TeamNotFoundException, StudentNotFoundException {
-        CommonDatabaseUtils.deleteInvitation(sNumber, tID);
+        InvitationDatabaseUtils.deleteInvitation(sNumber, tID);
         NotificationModel.informTeamInviteCancelled(tID, sNumber);
     }
 
@@ -89,7 +90,7 @@ public class StudentModel {
             CommonDatabaseUtils.addStudentToTeam(sNumber, tID);
 
             try {
-                CommonDatabaseUtils.deleteInvitation(sNumber, tID);
+                InvitationDatabaseUtils.deleteInvitation(sNumber, tID);
             } catch (InvitationNotFoundException e) {
                 // Do nothing, if the invitation gets deleted after the membership gets requested, all is well
             }

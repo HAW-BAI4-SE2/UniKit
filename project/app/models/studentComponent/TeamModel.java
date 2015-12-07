@@ -1,6 +1,7 @@
 package models.studentComponent;
 
 import models.commonUtils.CommonDatabaseUtils;
+import models.commonUtils.Database.InvitationDatabaseUtils;
 import models.commonUtils.Exceptions.*;
 import models.commonUtils.ID.CourseID;
 import models.commonUtils.ID.StudentNumber;
@@ -109,7 +110,7 @@ public class TeamModel {
         if((thisTeam.getTeamInvitations().size()
                 + thisTeam.getTeamRegistrations().size())
                 <= associatedCourse.getMaxTeamSize()){
-            CommonDatabaseUtils.storeInvitation(sNumber, tID, invitedBy);
+            InvitationDatabaseUtils.storeInvitation(sNumber, tID, invitedBy);
 
             // Inform student of invite
             NotificationModel.informStudentInvited(thisTeam, sNumber);
@@ -134,7 +135,7 @@ public class TeamModel {
         Team thisTeam = CommonDatabaseUtils.getTeamByID(tID);
 
         // Delete invitation
-        CommonDatabaseUtils.deleteInvitation(sNumber, tID);
+        InvitationDatabaseUtils.deleteInvitation(sNumber, tID);
 
         // Inform student that his invitation was canceled
         NotificationModel.informStudentInviteCancelled(thisTeam, sNumber);
@@ -159,7 +160,7 @@ public class TeamModel {
 
         // If invitation exists for the student, delete it.
         try{
-            CommonDatabaseUtils.deleteInvitation(sNumber, tID);
+            InvitationDatabaseUtils.deleteInvitation(sNumber, tID);
         } catch (InvitationNotFoundException e){
             // Do nothing if no invitations exist
         }
