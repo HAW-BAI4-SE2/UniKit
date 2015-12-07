@@ -18,7 +18,7 @@ import net.unikit.database.interfaces.managers.TeamInvitationManager;
  * Handles the database interaction related to invitations.
  * @author Thomas Bednorz
  */
-public class InvitationDatabaseUtils {
+class InvitationDatabaseUtils {
 
     /**
      *
