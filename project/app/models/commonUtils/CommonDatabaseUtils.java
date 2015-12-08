@@ -37,52 +37,6 @@ public class CommonDatabaseUtils {
         courseRegistrationManager = Global.getCourseRegistrationManager();
     }
 
-
-    /**
-     *
-     * @param sNummber
-     * @param tID
-     * @throws TeamNotFoundException
-     */
-    public static void addStudentToTeam(StudentNumber sNummber, TeamID tID) throws TeamNotFoundException, StudentNotFoundException, CourseNotFoundException, StudentInTeamException {
-        // Init
-        String studentNumber = sNummber.value();
-
-        // Get the student to be added to the team
-        Student studentToBeAdded = getStudent(sNummber);
-
-        // Get team to which the student is to be added
-        Team teamByID = getTeam(tID);
-
-        // Get course of the Team
-        Course courseForTeam = null;
-        try {
-            courseForTeam = teamByID.getCourse();
-        } catch (EntityNotFoundException e) {
-            throw new CourseNotFoundException();
-        }
-
-        // Add student to team
-        TeamRegistration newTeamRegistration = registrationManager.createEntity();
-        newTeamRegistration.setStudent(studentToBeAdded);
-        newTeamRegistration.setTeam(teamByID);
-
-        try {
-            registrationManager.addEntity(newTeamRegistration);
-        } catch (ConstraintViolationException e) {
-            throw new StudentInTeamException(sNummber);
-        }
-
-        // Delete all pending invitations
-        deleteAllInvitations(sNummber,CourseID.get(courseForTeam.getId()));
-
-        // Delete all pending membership requests
-        deleteAllMembershipRequests(sNummber, CourseID.get(courseForTeam.getId()));
-
-        //change registration Status of the student
-        changeTeamRegistrationStatus(sNummber,CourseID.get(courseForTeam.getId()) , true);
-    }
-
     /**
      *
      * @param sNumber
@@ -108,66 +62,6 @@ public class CommonDatabaseUtils {
         }
     }
 
-    /**
-     * Changes the registration status of a student for a specified course
-     * @param sNumber the student number of the student
-     * @param cID the ID of the course
-     * @param status true if the student is in a team for the course, else false
-     */
-    public static void changeTeamRegistrationStatus(StudentNumber sNumber, CourseID cID, boolean status){
-        Course.ID courseID = courseManager.createID(cID.value());
-        Student.StudentNumber studentNumber = studentManager.createID(sNumber.value());
-
-        try{
-            for(CourseRegistration courseRegistration : courseRegistrationManager.getAllEntities()){
-                if(courseRegistration.getCourse().getId().equals(courseID) &&
-                        courseRegistration.getStudent().getStudentNumber().equals(studentNumber)){
-                    courseRegistration.setCurrentlyAssignedToTeam(status);
-                    break;
-                }
-            }
-        } catch (Exception e){
-            // TODO: Error handling
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Returns the Team-object associated with the teamID
-     * @param tID the ID of the queried team
-     * @return the Team-object for the given ID
-     * @throws TeamNotFoundException
-     */
-    public static Team getTeamByID(TeamID tID) throws TeamNotFoundException{
-       return getTeam(tID);
-    }
-
-    /**
-     * Returns the team for the student number and the course ID
-     * @param sNumber the student number of the student
-     * @param cID the course ID for the team
-     * @return the Team-object for the student number and course ID
-     */
-    public static Team getTeamByStudentAndCourse(StudentNumber sNumber, CourseID cID) throws TeamNotFoundException {
-        Course.ID courseID = courseManager.createID(cID.value());
-        Student.StudentNumber studentNumber = studentManager.createID(sNumber.value());
-
-        // Get the team
-        Team queriedTeam = null;
-        try{
-            for(TeamRegistration currentTeamRegistration : registrationManager.getAllEntities()) {
-                if (currentTeamRegistration.getTeam().getCourse().getId().equals(courseID) &&
-                        currentTeamRegistration.getStudent().getStudentNumber().equals(studentNumber)) {
-                    return currentTeamRegistration.getTeam();
-                }
-            }
-        } catch (Exception e){
-            // TODO: Error handling
-            e.printStackTrace();
-        }
-
-        throw new TeamNotFoundException();
-    }
 
     /**
      *  Creates a team associated with the studentNumber and courseID,updates the registration status and returns the teamID
@@ -280,30 +174,7 @@ public class CommonDatabaseUtils {
             throw new MembershipRequestExistsException(sNumber,tID);
         }
     }
-
-    /**
-     * Deletes a membership request for the student and the team
-     * @param sNumber the student number of the student who requested membership with the team
-     * @param tID the ID of the team that received the membership request
-     * @throws MembershipRequestNotFoundException
-     * @throws TeamNotFoundException
-     */
-    public static void deleteMembershipRequest(StudentNumber sNumber, TeamID tID) throws MembershipRequestNotFoundException, TeamNotFoundException, StudentNotFoundException {
-        // Get requesting student
-        Student requestingStudent = getStudent(sNumber);
-
-        // Get team for membership request
-        Team teamForMembershipRequest = getTeamByID(tID);
-
-        // Get membershiprequest to be deleted, throw error if not found
-        MembershipRequest membershipRequestToBeDeleted = null;
-        try {
-            membershipRequestToBeDeleted = membershipRequestManager.getMembershipRequest(requestingStudent,teamForMembershipRequest);
-            membershipRequestManager.deleteEntity(membershipRequestToBeDeleted);
-        } catch (EntityNotFoundException e) {
-            throw new MembershipRequestNotFoundException(sNumber, tID);
-        }
-    }
+    
 
     public static List<Student> getAllStudents(Team team) {
 
@@ -339,117 +210,7 @@ public class CommonDatabaseUtils {
 
     }
 
-    /**
-     *
-     * @param studentNumber
-     * @return
-     * @throws StudentNotFoundException
-     */
-    private static Student getStudent(StudentNumber studentNumber) throws StudentNotFoundException{
-        Student student = null;
-        try {
-            student = studentManager.getEntity(studentManager.createID(studentNumber.value()));
-        } catch (EntityNotFoundException e) {
-            throw new StudentNotFoundException(studentNumber);
-        }
 
-        return student;
-    }
-
-    /**
-     *
-     * @param teamID
-     * @return
-     * @throws TeamNotFoundException
-     */
-    private static Team getTeam(TeamID teamID) throws TeamNotFoundException {
-        Team team = null;
-        try {
-            team = teamManager.getEntity(teamManager.createID(teamID.value()));
-        } catch (EntityNotFoundException e) {
-            throw new TeamNotFoundException(teamID);
-        }
-
-        return team;
-    }
-
-    /**
-     *
-     * @param courseID
-     * @return
-     * @throws CourseNotFoundException
-     */
-    private static Course getCourse(CourseID courseID) throws CourseNotFoundException{
-        Course course = null;
-        try {
-            course = courseManager.getEntity(courseManager.createID(courseID.value()));
-        } catch (EntityNotFoundException e) {
-            throw new CourseNotFoundException(courseID);
-        }
-
-        return course;
-    }
-
-    /**
-     * Returns a Course-object associated with the courseID
-     * @param cID the ID of the course for which the course-object is queried
-     * @return the Course-object for the given ID
-     */
-    public static Course getCourseByID(CourseID cID) throws CourseNotFoundException{
-        return getCourse(cID);
-    }
-
-    /**
-     *
-     * @param sNumber
-     * @param cID
-     */
-    private static void deleteAllInvitations(StudentNumber sNumber, CourseID cID){
-        Course.ID courseID = courseManager.createID(cID.value());
-        Student.StudentNumber studentNumber = studentManager.createID(sNumber.value());
-
-        try{
-            for(TeamInvitation teamInvitation : invitationManager.getAllEntities()){
-                if(teamInvitation.getTeam().getCourse().getId().equals(courseID) &&
-                        teamInvitation.getInvitee().getStudentNumber().equals(studentNumber)){
-                    try {
-                        deleteInvitation(sNumber, TeamID.get(teamInvitation.getTeam().getId()));
-                    } catch (InvitationNotFoundException e) {
-                        // Depending of the context of the call, it's expected that no invitations exist
-                    }
-                }
-            }
-        } catch (Exception e){
-            //TODO Error handling
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     *
-     * @param sNumber
-     * @param cID
-     */
-    private static void deleteAllMembershipRequests(StudentNumber sNumber, CourseID cID) {
-        Course.ID courseID = courseManager.createID(cID.value());
-        Student.StudentNumber studentNumber = studentManager.createID(sNumber.value());
-
-        for(MembershipRequest membershipRequest : membershipRequestManager.getAllEntities()){
-            try {
-                if(membershipRequest.getTeam().getCourse().getId().equals(courseID) &&
-                        membershipRequest.getApplicant().getStudentNumber().equals(studentNumber)){
-                    try {
-                        deleteMembershipRequest(sNumber, TeamID.get(membershipRequest.getTeam().getId()));
-                    } catch (Exception e) {
-                        // Depending of the context of the call, it's expected that no membership requests exist
-                    }
-                }
-            } catch (EntityNotFoundException e) {
-                // TODO: Handle this internal database error (erroneous foreign keys)
-                e.printStackTrace();
-            }
-        }
-    }
 
     public static List<Student> getAllMembershipRequests(Team team) {
         List<Student> allRequestingStudents = new ArrayList<>();

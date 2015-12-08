@@ -9,6 +9,7 @@ import models.commonUtils.ID.StudentNumber;
 import models.commonUtils.ID.TeamID;
 import net.unikit.database.exceptions.ConstraintViolationException;
 import net.unikit.database.exceptions.EntityNotFoundException;
+import net.unikit.database.interfaces.entities.Course;
 import net.unikit.database.interfaces.entities.Student;
 import net.unikit.database.interfaces.entities.Team;
 import net.unikit.database.interfaces.entities.TeamInvitation;
@@ -22,75 +23,71 @@ class InvitationDatabaseUtils {
 
     /**
      *
-     * @param invitedStudentNumber
-     * @param invitingTeamID
-     * @param createdByStudentNumber
+     * @param student
+     * @param team
+     * @param createdBy
      * @throws TeamNotFoundException
      * @throws StudentNotFoundException
      * @throws InvitationExistsException
      */
-    public static void storeInvitation(StudentNumber invitedStudentNumber, TeamID invitingTeamID, StudentNumber createdByStudentNumber) throws TeamNotFoundException, StudentNotFoundException, InvitationExistsException {
+    public static void storeInvitation(Student student, Team team, Student createdBy) throws InvitationExistsException {
         TeamInvitationManager invitationManager = Global.getTeamInvitationManager();
 
-        // Get object for invited student
-        Student invitedStudent = StudentDatabaseUtils.getStudent(invitedStudentNumber);
-
-        // Get object for inviting student
-        Student createdByStudent = StudentDatabaseUtils.getStudent(createdByStudentNumber);
-
-        // Get object for inviting team
-        Team invitingTeam = TeamDatabaseUtils.getTeam(invitingTeamID);
-
-        // If invitation already exists, inform the system
-
         TeamInvitation newInvitation = invitationManager.createEntity();
-        try {
-            invitationManager.getInvitation(invitedStudent,invitingTeam);
-            throw new InvitationExistsException(invitedStudentNumber,invitingTeamID);
-
-        } catch (EntityNotFoundException e) {
-            newInvitation.setCreatedBy(createdByStudent);
-            newInvitation.setInvitee(invitedStudent);
-            newInvitation.setTeam(invitingTeam);
-        }
+        newInvitation.setCreatedBy(createdBy);
+        newInvitation.setInvitee(student);
+        newInvitation.setTeam(team);
 
         try {
             invitationManager.addEntity(newInvitation);
 
         } catch (ConstraintViolationException e) {
-            throw new InvitationExistsException(invitedStudentNumber,invitingTeamID);
+            throw new InvitationExistsException(StudentNumber.get(student.getStudentNumber()), TeamID.get(team.getId()));
         }
     }
 
     /**
      *
-     * @param sNumber
-     * @param tID
+     * @param student
+     * @param team
+     * @throws InvitationNotFoundException
      */
-    public static void deleteInvitation(StudentNumber sNumber, TeamID tID) throws InvitationNotFoundException, StudentNotFoundException, TeamNotFoundException {
+    public static void deleteInvitation(Student student, Team team) throws InvitationNotFoundException {
         TeamInvitationManager invitationManager = Global.getTeamInvitationManager();
-
-        // Get student object
-        Student invitedStudent = StudentDatabaseUtils.getStudent(sNumber);
-
-        // Get team object
-        Team invitingTeam = TeamDatabaseUtils.getTeam(tID);
 
         // Get the invitation to be deleted
         TeamInvitation invitationToBeDeleted = null;
 
         try {
-            invitationToBeDeleted = invitationManager.getInvitation(invitedStudent,invitingTeam);
-        } catch (EntityNotFoundException e) {
-            throw new InvitationNotFoundException(tID);
-        }
-
-        try {
+            invitationToBeDeleted = invitationManager.getInvitation(student,team);
             invitationManager.deleteEntity(invitationToBeDeleted);
         } catch (EntityNotFoundException e) {
-            throw new InvitationNotFoundException(tID);
+            throw new InvitationNotFoundException(TeamID.get(team.getId()));
         }
-
     }
 
+    /**
+     *
+     * @param student
+     * @param course
+     */
+    public static void deleteAllInvitations(Student student, Course course) {
+        TeamInvitationManager invitationManager = Global.getTeamInvitationManager();
+        try {
+            for (TeamInvitation currentInvitation : invitationManager.getAllEntities()) {
+                if (currentInvitation.getTeam().getCourse().getId().equals(course.getId()) &&
+                        currentInvitation.getInvitee().getStudentNumber().equals(student.getStudentNumber())) {
+                    try {
+                        deleteInvitation(student, currentInvitation.getTeam());
+                    } catch (InvitationNotFoundException e) {
+                        // Depending of the context of the call, it's expected that no invitations exist
+                    }
+                }
+            }
+
+        } catch (EntityNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 }
+
