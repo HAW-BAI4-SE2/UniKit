@@ -1,10 +1,7 @@
 package models.commonUtils.Database;
 
 import assets.Global;
-import models.commonUtils.Exceptions.InvitationExistsException;
-import models.commonUtils.Exceptions.InvitationNotFoundException;
-import models.commonUtils.Exceptions.StudentNotFoundException;
-import models.commonUtils.Exceptions.TeamNotFoundException;
+import models.commonUtils.Exceptions.*;
 import models.commonUtils.ID.StudentNumber;
 import models.commonUtils.ID.TeamID;
 import net.unikit.database.exceptions.ConstraintViolationException;
@@ -15,12 +12,18 @@ import net.unikit.database.interfaces.entities.Team;
 import net.unikit.database.interfaces.entities.TeamInvitation;
 import net.unikit.database.interfaces.managers.TeamInvitationManager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Handles the database interaction related to invitations.
  * @author Thomas Bednorz
  */
 class InvitationDatabaseUtils {
-
+    private static TeamInvitationManager invitationManager = Global.getTeamInvitationManager();
+    static{
+        invitationManager = Global.getTeamInvitationManager();
+    }
     /**
      *
      * @param student
@@ -31,8 +34,6 @@ class InvitationDatabaseUtils {
      * @throws InvitationExistsException
      */
     public static void storeInvitation(Student student, Team team, Student createdBy) throws InvitationExistsException {
-        TeamInvitationManager invitationManager = Global.getTeamInvitationManager();
-
         TeamInvitation newInvitation = invitationManager.createEntity();
         newInvitation.setCreatedBy(createdBy);
         newInvitation.setInvitee(student);
@@ -53,8 +54,6 @@ class InvitationDatabaseUtils {
      * @throws InvitationNotFoundException
      */
     public static void deleteInvitation(Student student, Team team) throws InvitationNotFoundException {
-        TeamInvitationManager invitationManager = Global.getTeamInvitationManager();
-
         // Get the invitation to be deleted
         TeamInvitation invitationToBeDeleted = null;
 
@@ -72,7 +71,6 @@ class InvitationDatabaseUtils {
      * @param course
      */
     public static void deleteAllInvitations(Student student, Course course) {
-        TeamInvitationManager invitationManager = Global.getTeamInvitationManager();
         try {
             for (TeamInvitation currentInvitation : invitationManager.getAllEntities()) {
                 if (currentInvitation.getTeam().getCourse().getId().equals(course.getId()) &&
@@ -88,6 +86,68 @@ class InvitationDatabaseUtils {
         } catch (EntityNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void deleteAllInvitations(Team team) {
+        for(TeamInvitation currentInvitation : invitationManager.getAllEntities()){
+            if(currentInvitation.getTeam().equals(team)){
+                try {
+                    deleteInvitation(currentInvitation.getInvitee(),team);
+                } catch (InvitationNotFoundException e) {
+                    // Invitation may have already been deleted, do nothin
+                } catch (EntityNotFoundException e) {
+                    // Student for invitation not found
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public static List<Student> getAllInvites(Team team) {
+        List<Student> allInvitedStudents = new ArrayList<>();
+        for(TeamInvitation currentInvitation : invitationManager.getAllEntities()){
+            if(currentInvitation.getTeam().equals(team)){
+                try {
+                    allInvitedStudents.add(currentInvitation.getInvitee());
+                } catch (EntityNotFoundException e) {
+                    // TODO: Handle this internal database error (erroneous foreign keys)
+                    e.printStackTrace();
+                }
+            }
+        }
+        return allInvitedStudents;
+    }
+
+    public static List<TeamInvitation> getAllInvitations(Student student, Course course) throws StudentNotFoundException, CourseNotFoundException {
+        List<TeamInvitation> allInvitations = new ArrayList<>();
+        for(TeamInvitation currentInvitation : invitationManager.getAllEntities()){
+            try {
+                if(currentInvitation.getInvitee().equals(student) &&
+                        currentInvitation.getTeam().getCourse().equals(course)){
+                    allInvitations.add(currentInvitation);
+                }
+            } catch (EntityNotFoundException e) {
+                // TODO: Handle this internal database error (erroneous foreign keys)
+                e.printStackTrace();
+            }
+
+        }
+        return allInvitations;
+    }
+
+    public static boolean isStudentInvited(Student student, Team team){
+        for(TeamInvitation currentInvitation : invitationManager.getAllEntities()){
+            try {
+                if(currentInvitation.getInvitee().equals(student) && currentInvitation.getTeam().equals(team)){
+                    return true;
+                }
+            } catch (EntityNotFoundException e) {
+                // Any student couldn't be found, don't handle (sideeffects)
+                // Any team couldn't be found, don't handle
+                e.printStackTrace();
+            }
+        }
+        return false;
     }
 }
 

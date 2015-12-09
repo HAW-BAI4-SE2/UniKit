@@ -6,14 +6,19 @@ package controllers.studentComponent;
 
 import assets.SessionUtils;
 import controllers.courseComponent.CourseController;
-import models.commonUtils.CommonDatabaseUtils;
+import models.commonUtils.Database.DatabaseUtils;
 import models.commonUtils.Exceptions.*;
 import models.commonUtils.ID.CourseID;
 import models.commonUtils.ID.StudentNumber;
 import models.commonUtils.ID.TeamID;
+import models.courseComponent.CourseModel;
 import models.studentComponent.StudentModel;
+import models.studentComponent.TeamModel;
 import net.unikit.database.exceptions.EntityNotFoundException;
+import net.unikit.database.interfaces.entities.Course;
 import net.unikit.database.interfaces.entities.Student;
+import net.unikit.database.interfaces.entities.Team;
+import net.unikit.database.interfaces.managers.CourseManager;
 import play.mvc.Controller;
 import play.mvc.Result;
 
@@ -39,19 +44,24 @@ public class StudentController extends Controller {
         try{
             teamID = StudentModel.createTeam(sNumber, cID);
             return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID.value()));
+
         } catch (StudentNotFoundException e) {
             //TODO error message
             return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+
         } catch (StudentInTeamException e) {
             //TODO error message
             return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+
         } catch (CourseNotFoundException e) {
             //TODO error message
             return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+
         } catch (FatalErrorException e) {
-            // This code gets executed in case the team couldn't be created for some reason
+            // If team couldn't be created or registration status couldn't be updated
             //TODO error message
             return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+
         } catch (TeamExistsException e) {
             //TODO error message
             return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
@@ -66,18 +76,34 @@ public class StudentController extends Controller {
      */
     public static Result deleteTeam(int teamID){
         TeamID tID = TeamID.get(teamID);
+        StudentNumber deletedBy = StudentNumber.get(currentUser.getStudentNumber());
 
         try{
-            StudentModel.deleteTeam(tID);
+            TeamModel.deleteTeam(tID,deletedBy);
             return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
         }
         catch(TeamNotFoundException e){
             //TODO error message
             return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+
         } catch (StudentNotInTeamException e) {
             //TODO error message
             return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+
         } catch (TeamDeletedException e) {
+            //TODO error message
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+
+        } catch (FatalErrorException e) {
+            // This code gets executed in case the team couldn't be created for some reason
+            //TODO error message
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+
+        } catch (CourseNotFoundException e) {
+            //TODO error message
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+
+        } catch (StudentNotFoundException e) {
             //TODO error message
             return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
         }
@@ -96,18 +122,23 @@ public class StudentController extends Controller {
             //Add the student to the team and updates registration status
             StudentModel.acceptInvitation(sNumber, tID);
                 return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
-            }catch(InvitationNotFoundException e){
+
+            } catch(InvitationNotFoundException e){
                 //TODO error message
                 return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+
             } catch (TeamNotFoundException e) {
                 //TODO error message
                 return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+
             } catch (StudentNotFoundException e) {
                 //TODO error message
                 return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+
             } catch (StudentInTeamException e) {
                 //TODO error message
                 return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+
             } catch (CourseNotFoundException e) {
                 //TODO error message
                 return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
@@ -184,10 +215,11 @@ public class StudentController extends Controller {
         TeamID tID = TeamID.get(teamID);
         StudentNumber sNumber = StudentNumber.get(currentUser.getStudentNumber());
 
-        CourseID courseToDisplay = null;
+        Course courseToDisplay = null;
+        Team team = null;
         try {
             StudentModel.cancelMembershipRequest(sNumber, tID);
-
+            team = DatabaseUtils.getTeam(tID);
         } catch (MembershipRequestNotFoundException e) {
             //TODO error message
             return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
@@ -201,16 +233,17 @@ public class StudentController extends Controller {
             return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
         }
 
-        int courseToDispay = -1;
         try {
-            courseToDispay = CommonDatabaseUtils.getTeamByID(tID).getCourse().getId().getValue();
-        } catch (TeamNotFoundException e) {
-            //TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            courseToDisplay = CourseModel.getCourse(CourseID.get(team.getCourse().getId()));
+
         } catch (EntityNotFoundException e) {
             //TODO error handling
             return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+
+        } catch (CourseNotFoundException e) {
+            //TODO error handling
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
         }
-        return CourseController.showCourseDetails(courseToDispay);
+        return CourseController.showCourseDetails(courseToDisplay.getId().getValue());
     }
 }

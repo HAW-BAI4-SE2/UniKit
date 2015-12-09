@@ -1,14 +1,16 @@
 package models.studentComponent;
 
 import assets.SessionUtils;
-import models.commonUtils.CommonDatabaseUtils;
-import models.commonUtils.Database.InvitationDatabaseUtils;
+import models.commonUtils.Database.DatabaseUtils;
 import models.commonUtils.Exceptions.*;
 import models.commonUtils.ID.CourseID;
 import models.commonUtils.ID.StudentNumber;
 import models.commonUtils.ID.TeamID;
 import models.commonUtils.NotificationModel;
+import net.unikit.database.interfaces.entities.Student;
 import net.unikit.database.interfaces.entities.Team;
+
+import java.util.List;
 
 import static models.commonUtils.NotificationModel.*;
 import static play.mvc.Controller.session;
@@ -18,105 +20,144 @@ import static play.mvc.Controller.session;
  */
 public class StudentModel {
     /**
-     *  Creates a team associated with the studentNumber and courseID from the CreateTeamForm-object
-     *  @param courseID the course ID for which the team is to be created
-     *  @return showEditTeam-page
+     *
+     * @param sNumber
+     * @param courseID
+     * @return
+     * @throws CourseNotFoundException
+     * @throws StudentNotFoundException
+     * @throws StudentInTeamException
+     * @throws FatalErrorException
+     * @throws TeamExistsException
      */
     public static TeamID createTeam(StudentNumber sNumber, CourseID courseID) throws CourseNotFoundException, StudentNotFoundException, StudentInTeamException, FatalErrorException, TeamExistsException {
 
         // is the student in an other team in this course?
         try {
-            CommonDatabaseUtils.getTeamByStudentAndCourse(sNumber,courseID);
+            DatabaseUtils.getTeam(sNumber,courseID);
             throw new StudentInTeamException(sNumber);
         } catch (TeamNotFoundException e) {
-            return CommonDatabaseUtils.createTeam(sNumber, courseID);
+            return DatabaseUtils.createTeam(sNumber, courseID);
         }
     }
 
     /**
-     *  Deletes the team associated with the teamID and updates the registration status of all involved students
-     *  @param tID the team ID that is to be deleted
-     *  @return showCourseDetails-page for the course the team was associated with
+     *
+     * @param tID
+     * @throws FatalErrorException
+     * @throws CourseNotFoundException
+     * @throws TeamNotFoundException
      */
-    public static void deleteTeam(TeamID tID) throws TeamNotFoundException, StudentNotInTeamException, TeamDeletedException {
+    public static void deleteTeam(TeamID tID) throws FatalErrorException, CourseNotFoundException, TeamNotFoundException {
         StudentNumber currentUser = StudentNumber.get(SessionUtils.getCurrentUser(session()).getStudentNumber());
-        Team deletedTeam = CommonDatabaseUtils.getTeamByID(tID);
 
-        try {
-            if(CommonDatabaseUtils.isStudentMember(currentUser, tID)){
-                CommonDatabaseUtils.deleteTeam(tID);
-                NotificationModel.informStudentTeamDeleted(deletedTeam, currentUser);
-            } else {
-                throw new StudentNotInTeamException(currentUser,tID);
-            }
-        } catch (StudentNotFoundException e) {
-            // Do nothing if student doesnt exist
+        Team thisTeam = DatabaseUtils.getTeam(tID);
+        try{
+            DatabaseUtils.deleteTeam(tID);
+            NotificationModel.informTeamTeamDeletedBy(thisTeam,currentUser);
+        } catch (TeamDeletedException e){
+            throw new TeamNotFoundException(TeamID.get(thisTeam.getId()));
         }
     }
 
     /**
-     * Accepts a pending invitation by a team
-     * @param tID the ID of the team that issued the invite
-     * @return showTeamOverview-page
+     *
+     * @param sNumber
+     * @param tID
+     * @throws StudentNotFoundException
+     * @throws StudentInTeamException
+     * @throws TeamNotFoundException
      */
-    public static void acceptInvitation(StudentNumber sNumber, TeamID tID) throws InvitationNotFoundException, TeamNotFoundException, StudentNotFoundException, CourseNotFoundException, StudentInTeamException {
-        CommonDatabaseUtils.addStudentToTeam(sNumber, tID);
-        InvitationDatabaseUtils.deleteInvitation(sNumber,tID);
+    public static void acceptInvitation(StudentNumber sNumber, TeamID tID) throws StudentNotFoundException, StudentInTeamException, TeamNotFoundException {
+        try {
+            DatabaseUtils.addStudent(sNumber, tID);
+            DatabaseUtils.deleteInvitation(sNumber,tID);
+        } catch (FatalErrorException e) {
+            e.printStackTrace();
+        } catch (CourseNotFoundException e) {
+            e.printStackTrace();
+        } catch (InvitationNotFoundException e) {
+            // If student could be added to team, it's of no consequence that the invitation couldn't be found
+        }
 
         try {
-            CommonDatabaseUtils.deleteMembershipRequest(sNumber, tID);
+            DatabaseUtils.deleteMembershipRequest(sNumber, tID);
         } catch (MembershipRequestNotFoundException e) {
             // It's possible the student had no membership request for the team, do nothing
         }
-
         informStudentTeamJoined(tID, sNumber);
     }
 
     /**
-     *   Declines (deletes) the invitation for the student by the team. The relevant data is retrived using a TeamStateChangeForm-object
-     **/
+     *
+     * @param sNumber
+     * @param tID
+     * @throws InvitationNotFoundException
+     * @throws TeamNotFoundException
+     * @throws StudentNotFoundException
+     */
     public static void declineInvitation(StudentNumber sNumber, TeamID tID) throws InvitationNotFoundException, TeamNotFoundException, StudentNotFoundException {
-        InvitationDatabaseUtils.deleteInvitation(sNumber, tID);
+        DatabaseUtils.deleteInvitation(sNumber, tID);
+        NotificationModel.informTeamInviteCancelled(tID, sNumber);
         NotificationModel.informTeamInviteCancelled(tID, sNumber);
     }
 
     /**
-     *  The student requests the membership with the team. The relevant data is retrived using a TeamStateChangeForm-object
-     *  @param tID the ID of the team the student requests membership with
-     *  @return showCourseDetails-page
-     **/
-    public static void requestMembership(StudentNumber sNumber, TeamID tID) throws TeamNotFoundException, CourseNotFoundException, TeamMaxSizeReachedException, StudentNotFoundException, MembershipRequestExistsException, StudentInTeamException {
-        if(CommonDatabaseUtils.isStudentInvited(sNumber,tID)){
-            CommonDatabaseUtils.addStudentToTeam(sNumber, tID);
+     * Stores the membership request for a student and a team. If the team already invited the student, he gets added to the team and the invitation gets deleted
+     * @param sNumber the student number of the requesting student
+     * @param tID the ID of the team that receives the request
+     * @throws TeamNotFoundException if the team couldn't be found
+     * @throws StudentNotFoundException if the student couldn't be found
+     * @throws CourseNotFoundException if the associated course couldn't be found
+     * @throws FatalErrorException if an error occurs while changing the registration status of the student
+     * @throws StudentInTeamException if the student already is in the team
+     * throws MembershipRequestExistsException if membership request already exists
+     */
+    public static void requestMembership(StudentNumber sNumber, TeamID tID) throws TeamNotFoundException, StudentNotFoundException, CourseNotFoundException, StudentInTeamException, MembershipRequestExistsException {
+            if(DatabaseUtils.isStudentInvited(sNumber,tID)){
+                try {
+                    DatabaseUtils.addStudent(sNumber, tID);
+                } catch (FatalErrorException e) {
+                    // Gets thrown when a error occurs while updating registration status
+                    e.printStackTrace();
+                }
 
-            try {
-                InvitationDatabaseUtils.deleteInvitation(sNumber, tID);
+                try {
+                DatabaseUtils.deleteInvitation(sNumber, tID);
             } catch (InvitationNotFoundException e) {
                 // Do nothing, if the invitation gets deleted after the membership gets requested, all is well
             }
-
             informStudentTeamJoined(tID, sNumber);
             informTeamStudentJoined(tID, sNumber);
+
         } else {
-            if(!CommonDatabaseUtils.isMaxSizeReached(tID)){
-                CommonDatabaseUtils.storeMembershipRequest(sNumber, tID);
-                informStudentMembershipRequested(tID, sNumber);
-                informTeamMembershipRequested(tID, sNumber);
-            } else {
-                throw new TeamMaxSizeReachedException(tID);
-            }
+            DatabaseUtils.storeMembershipRequest(sNumber, tID);
+            informStudentMembershipRequested(tID, sNumber);
+            informTeamMembershipRequested(tID, sNumber);
         }
     }
 
     /**
-     *  The student cancels his membership request with the team. The relevant data is retrived using a TeamStateChangeForm-object
-     *  @return showCourseDetails-page
-     **/
+     * Deletes a membership request by a student and informs the team that the student cancelled his request
+     * @param sNumber the student number of the requesting student
+     * @param tID the ID of the team that receives the request
+     * @throws MembershipRequestNotFoundException if the membership request couldn't be found
+     * @throws TeamNotFoundException if the team couldn't be found
+     * @throws StudentNotFoundException if the student couldn't be found
+     */
     public static void cancelMembershipRequest(StudentNumber sNumber, TeamID tID) throws MembershipRequestNotFoundException, TeamNotFoundException, StudentNotFoundException {
         // delete membership request
-        CommonDatabaseUtils.deleteMembershipRequest(sNumber, tID);
+        DatabaseUtils.deleteMembershipRequest(sNumber, tID);
 
         // Inform team of membership request was deleted
         NotificationModel.informTeamStudentDeletedMembershipRequest(tID, sNumber);
+    }
+
+    public static List<Student> getAllStudents(TeamID tID) throws TeamNotFoundException {
+        return DatabaseUtils.getAllStudents(tID);
+    }
+
+    public static List<Student> getAllStudents(CourseID cID) throws CourseNotFoundException {
+        return DatabaseUtils.getAllStudents(cID);
     }
 }

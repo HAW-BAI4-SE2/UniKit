@@ -60,4 +60,8 @@ public class NotificationModel {
     public static void informStudentMembershipRequested(TeamID tID, StudentNumber sNumber) {
 
     }
+
+    public static void informTeamTeamDeletedBy(Team thisTeam, StudentNumber currentUser) {
+
+    }
 }

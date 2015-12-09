@@ -1,6 +1,6 @@
 package models.courseComponent;
 
-import models.commonUtils.CommonDatabaseUtils;
+import models.commonUtils.Database.DatabaseUtils;
 import models.commonUtils.Exceptions.CourseNotFoundException;
 import models.commonUtils.Exceptions.CourseRegistrationNotFoundException;
 import models.commonUtils.Exceptions.StudentNotFoundException;
@@ -15,42 +15,31 @@ import net.unikit.database.interfaces.entities.TeamInvitation;
 import java.util.List;
 
 /**
- * Created by tbu on 11/30/2015.
+ * Receives calls by the controllers and delegates to the respective models
+ * @author Thomas Bednorz
  */
 public class CourseModel {
-    public static Course getCourseByID(CourseID cID) throws CourseNotFoundException {
-        return CommonDatabaseUtils.getCourseByID(cID);
-    }
-
-    public static Team getTeam(StudentNumber sNumber, CourseID cID) throws TeamNotFoundException {
-        return CommonDatabaseUtils.getTeamByStudentAndCourse(sNumber,cID);
-    }
-
-    public static List<MembershipRequest> getMembershipRequests(StudentNumber sNumber, CourseID cID) throws CourseNotFoundException, StudentNotFoundException {
-        return CommonDatabaseUtils.getAllMembershipRequests(sNumber, cID);
-    }
-
-    public static List<TeamInvitation> getInvitations(StudentNumber sNumber, CourseID cID) throws CourseNotFoundException, StudentNotFoundException {
-        return CommonDatabaseUtils.getAllInvitations(sNumber, cID);
+    public static Course getCourse(CourseID cID) throws CourseNotFoundException {
+        return DatabaseUtils.getCourse(cID);
     }
 
     public static List<Course> getRegisteredCourses(StudentNumber sNumber) throws StudentNotFoundException {
-        return CommonDatabaseUtils.getRegisteredCourses(sNumber);
+        return DatabaseUtils.getRegisteredCourses(sNumber);
     }
 
     public static List<Course> getAvailableCourses(StudentNumber sNumber) throws StudentNotFoundException {
-        return CommonDatabaseUtils.getAvailableCourses(sNumber);
+        return DatabaseUtils.getAvailableCourses(sNumber);
     }
 
     public static void storeCourseRegistrations(StudentNumber sNumber, List<String> courseIDs) throws CourseNotFoundException, StudentNotFoundException {
         for(String courseID : courseIDs){
-            CommonDatabaseUtils.storeCourseRegistration(sNumber,CourseID.get(Integer.parseInt(courseID)));
+            DatabaseUtils.storeCourseRegistration(sNumber,CourseID.get(Integer.parseInt(courseID)));
         }
     }
 
-    public static void cancelCourseRegistrations(StudentNumber sNumber, List<String> courseIDs) throws CourseNotFoundException, StudentNotFoundException, CourseRegistrationNotFoundException {
+    public static void cancelCourseRegistrations(StudentNumber sNumber, List<String> courseIDs) throws CourseNotFoundException, CourseRegistrationNotFoundException, StudentNotFoundException {
         for(String courseID : courseIDs){
-            CommonDatabaseUtils.deleteCourseRegistration(sNumber,CourseID.get(Integer.parseInt(courseID)));
+            DatabaseUtils.deleteCourseRegistration(sNumber,CourseID.get(Integer.parseInt(courseID)));
         }
     }
 }

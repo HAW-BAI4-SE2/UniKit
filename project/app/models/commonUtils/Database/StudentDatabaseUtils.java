@@ -6,17 +6,24 @@ import models.commonUtils.Exceptions.StudentNotFoundException;
 import models.commonUtils.ID.CourseID;
 import models.commonUtils.ID.StudentNumber;
 import net.unikit.database.exceptions.EntityNotFoundException;
-import net.unikit.database.interfaces.entities.Course;
-import net.unikit.database.interfaces.entities.CourseRegistration;
-import net.unikit.database.interfaces.entities.Student;
+import net.unikit.database.interfaces.entities.*;
 import net.unikit.database.interfaces.managers.CourseRegistrationManager;
 import net.unikit.database.interfaces.managers.StudentManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Handles the database interaction related to students.
  * @author Thomas Bednorz
  */
 class StudentDatabaseUtils {
+    /**
+     *
+     * @param sNumber
+     * @return
+     * @throws StudentNotFoundException
+     */
     public static Student getStudent(StudentNumber sNumber) throws StudentNotFoundException {
         StudentManager studentManager = Global.getStudentManager();
         Student student = null;
@@ -27,6 +34,52 @@ class StudentDatabaseUtils {
         }
 
         return student;
+    }
+
+    /**
+     *
+     * @param team
+     * @return
+     */
+    public static List<Student> getAllStudents(Team team) {
+
+        //Get all registered students
+        List<Student> allStudentsInTeam = new ArrayList<>();
+        for(TeamRegistration currentRegistration : team.getTeamRegistrations()){
+            try {
+                allStudentsInTeam.add(currentRegistration.getStudent());
+            } catch (EntityNotFoundException e) {
+                // Student for registration not found
+                e.printStackTrace();
+            }
+        }
+
+        return allStudentsInTeam;
+    }
+
+    /**
+     *
+     * @param associatedCourse
+     * @return
+     */
+    public static List<Student> getAllStudents(Course associatedCourse) {
+        CourseRegistrationManager courseRegistrationManager = Global.getCourseRegistrationManager();
+
+        List<Student> allStudentsInCourse = new ArrayList<>();
+        for(CourseRegistration currentCourseRegistration : courseRegistrationManager.getAllEntities()){
+            try {
+                if(currentCourseRegistration.getCourse().equals(associatedCourse)){
+                    allStudentsInCourse.add(currentCourseRegistration.getStudent());
+                }
+            } catch (EntityNotFoundException e) {
+                //TODO Error handling
+                // Course for registration not found
+                e.printStackTrace();
+            }
+        }
+
+        return allStudentsInCourse;
+
     }
 
     /**
