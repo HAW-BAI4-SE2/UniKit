@@ -65,10 +65,12 @@ public class TeamController extends Controller {
 
         } catch (FatalErrorException e) {
             // Gets thrown when an error occurs while updating the registration status of the student
-            //TODO error message
+            // TODO error message
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
 
         } catch (CourseNotFoundException e) {
-            e.printStackTrace();
+            // TODO error message
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
         }
 
         // If team is empty, display course details, else team overview
@@ -131,6 +133,12 @@ public class TeamController extends Controller {
         }
     }
 
+    /**
+     * Cancels the invitation from a team to a student
+     * @param studentNumber the student number of the student who's invitation gets cancelled
+     * @param teamID the ID of the team for which the invitation gets cancelled
+     * @return a result page either displaying the team overview page (success) or a page with the error message
+     */
     public static Result cancelInvitation(String studentNumber, int teamID){
         // Init
         StudentNumber sNumber = StudentNumber.get(studentNumber);
@@ -154,6 +162,12 @@ public class TeamController extends Controller {
         }
     }
 
+    /**
+     * Accepts the membership request a student issued to a team
+     * @param studentNumber the student number of the student who issued the membership request
+     * @param teamID the ID of the team that accepts the request
+     * @return a result page either displaying the team overview page (success) or a page with the error message
+     */
     public static Result acceptMembershipRequest(String studentNumber, int teamID){
         // Init
         StudentNumber sNumber = StudentNumber.get(studentNumber);
@@ -190,6 +204,12 @@ public class TeamController extends Controller {
         }
     }
 
+    /**
+     * Declines the membership request issued by a student to a team
+     * @param studentNumber the student number of the student who issued the membership request
+     * @param teamID the ID of the team that declines the membership request
+     * @return a result page either displaying the team overview page (success) or a page with the error message
+     */
     public static Result declineMembershipRequest(String studentNumber, int teamID){
         // Init
         StudentNumber sNumber = StudentNumber.get(studentNumber);
@@ -214,8 +234,10 @@ public class TeamController extends Controller {
     }
 
     /**
-     *   Displays the details for a team
-     **/
+     * Displays the details of a team. Includes current members, pending invitations and pending membership requests
+     * @param teamID the ID of the team for which the details should be displayed
+     * @return a result page containing all relevant team details
+     */
     public static Result showTeamOverview(int teamID){
         Date sessionTimeout = SessionUtils.getSessionTimeout(session());
 
@@ -245,7 +267,8 @@ public class TeamController extends Controller {
             availableStudents = StudentModel.getAllStudents(CourseID.get(associatedCourse.getId()));
             availableStudents.removeAll(allStudentsInTeam);
         } catch (CourseNotFoundException e) {
-            // No Students found
+            // TODO error message
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
         }
 
         return ok(showTeamOverview.render(teamToDisplay, allStudentsInTeam, allMembershipRequests, allInvites, associatedCourse, availableStudents, currentUser, sessionTimeout));
@@ -253,27 +276,24 @@ public class TeamController extends Controller {
 
 
     /**
-     *  Displays the teams for this course for which the student can request membership
-     *  @return
-     **/ 
+     * Displays all teams for which the student can request membership with
+     * @param courseID the ID of the course for which all available teams should be displayed
+     * @return a result page containing all teams for which the student can request membership,
+     * or redirects to the course overview page with an appropirate error code
+     */
     public static Result showAvailableTeams(int courseID){
         Student currentUser = SessionUtils.getCurrentUser(session());
         Date sessionTimeout = SessionUtils.getSessionTimeout(session());
 
         Course course = null;
-        try {
-            course = CourseModel.getCourse(CourseID.get(courseID));
-        } catch (CourseNotFoundException e) {
-            e.printStackTrace();
-        }
-
         List<Team> availableTeams = null;
         try {
+            course = CourseModel.getCourse(CourseID.get(courseID));
             TeamModel.getAllAvailableTeams(CourseID.get(courseID));
         } catch (CourseNotFoundException e) {
-            // Course doesn't exist
+            // TODO error message
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
         }
-
 
         return ok(showAvailableTeams.render(availableTeams, course, currentUser, sessionTimeout));
     }

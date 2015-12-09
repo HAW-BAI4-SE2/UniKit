@@ -189,10 +189,10 @@ public class TeamModel {
     }
 
     public static void deleteTeam(TeamID tID, StudentNumber deletedBy) throws FatalErrorException, CourseNotFoundException, TeamDeletedException, TeamNotFoundException, StudentNotFoundException, StudentNotInTeamException {
-        if(DatabaseUtils.isStudentMember(deletedBy,tID)){
+        if (DatabaseUtils.isStudentMember(deletedBy, tID)) {
             DatabaseUtils.deleteTeam(tID);
         } else {
-            throw new StudentNotInTeamException(deletedBy,tID);
+            throw new StudentNotInTeamException(deletedBy, tID);
         }
     }
 }
