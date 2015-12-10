@@ -8,6 +8,7 @@ import models.commonUtils.ID.TeamID;
 import models.commonUtils.NotificationModel;
 import net.unikit.database.exceptions.EntityNotFoundException;
 import net.unikit.database.interfaces.entities.Course;
+import net.unikit.database.interfaces.entities.MembershipRequest;
 import net.unikit.database.interfaces.entities.Student;
 import net.unikit.database.interfaces.entities.Team;
 
@@ -194,5 +195,9 @@ public class TeamModel {
         } else {
             throw new StudentNotInTeamException(deletedBy, tID);
         }
+    }
+
+    public static Team getTeam(StudentNumber sNumber, CourseID cID) throws TeamNotFoundException, CourseNotFoundException, StudentNotFoundException {
+        return DatabaseUtils.getTeam(sNumber, cID);
     }
 }

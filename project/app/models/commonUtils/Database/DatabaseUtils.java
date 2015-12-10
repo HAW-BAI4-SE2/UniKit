@@ -4,10 +4,9 @@ import models.commonUtils.Exceptions.*;
 import models.commonUtils.ID.CourseID;
 import models.commonUtils.ID.StudentNumber;
 import models.commonUtils.ID.TeamID;
-import net.unikit.database.interfaces.entities.Course;
-import net.unikit.database.interfaces.entities.Student;
-import net.unikit.database.interfaces.entities.Team;
+import net.unikit.database.interfaces.entities.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -155,5 +154,19 @@ public class DatabaseUtils {
         }
 
         return false;
+    }
+
+    public static List<MembershipRequest> getAllMembershipRequests(StudentNumber sNumber, CourseID cID) throws StudentNotFoundException, CourseNotFoundException {
+        Student student = StudentDatabaseUtils.getStudent(sNumber);
+        Course course = CourseDatabaseUtils.getCourse(cID);
+
+        return MembershipRequestDatabaseUtils.getAllMembershipRequests(student,course);
+    }
+
+    public static List<TeamInvitation> getAllInvitations(StudentNumber sNumber, CourseID cID) throws CourseNotFoundException, StudentNotFoundException {
+        Student student = StudentDatabaseUtils.getStudent(sNumber);
+        Course course = CourseDatabaseUtils.getCourse(cID);
+
+        return InvitationDatabaseUtils.getAllInvitations(student,course);
     }
 }

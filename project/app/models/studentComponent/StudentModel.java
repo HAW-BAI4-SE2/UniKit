@@ -7,8 +7,10 @@ import models.commonUtils.ID.CourseID;
 import models.commonUtils.ID.StudentNumber;
 import models.commonUtils.ID.TeamID;
 import models.commonUtils.NotificationModel;
+import net.unikit.database.interfaces.entities.MembershipRequest;
 import net.unikit.database.interfaces.entities.Student;
 import net.unikit.database.interfaces.entities.Team;
+import net.unikit.database.interfaces.entities.TeamInvitation;
 
 import java.util.List;
 
@@ -159,5 +161,13 @@ public class StudentModel {
 
     public static List<Student> getAllStudents(CourseID cID) throws CourseNotFoundException {
         return DatabaseUtils.getAllStudents(cID);
+    }
+
+    public static List<MembershipRequest> getMembershipRequests(StudentNumber sNumber, CourseID cID) throws CourseNotFoundException, StudentNotFoundException {
+        return DatabaseUtils.getAllMembershipRequests(sNumber, cID);
+    }
+
+    public static List<TeamInvitation> getInvitations(StudentNumber sNumber, CourseID cID) throws CourseNotFoundException, StudentNotFoundException {
+        return DatabaseUtils.getAllInvitations(sNumber,cID);
     }
 }

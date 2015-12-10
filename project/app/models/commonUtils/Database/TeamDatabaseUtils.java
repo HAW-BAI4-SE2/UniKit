@@ -194,8 +194,6 @@ class TeamDatabaseUtils {
      * @return the Team-object for the student number and course ID
      */
     public static Team getTeam(Student student, Course course) throws TeamNotFoundException {
-        // Get the team
-        Team queriedTeam = null;
         try{
             for(TeamRegistration currentTeamRegistration : teamRegistrationManager.getAllEntities()) {
                 if (currentTeamRegistration.getTeam().getCourse().getId().equals(course.getId()) &&

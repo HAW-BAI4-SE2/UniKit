@@ -167,6 +167,7 @@ class MembershipRequestDatabaseUtils {
                 e.printStackTrace();
             }
         }
+
         return allMembershipRequests;
     }
 }

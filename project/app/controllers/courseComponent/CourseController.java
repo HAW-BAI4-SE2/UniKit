@@ -11,6 +11,8 @@ import models.commonUtils.Exceptions.TeamNotFoundException;
 import models.commonUtils.ID.CourseID;
 import models.commonUtils.ID.StudentNumber;
 import models.courseComponent.CourseModel;
+import models.studentComponent.StudentModel;
+import models.studentComponent.TeamModel;
 import net.unikit.database.interfaces.entities.*;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -29,7 +31,7 @@ public class CourseController extends Controller {
 
         Course courseToDisplay = null;
         try {
-            courseToDisplay = CourseModel.getCourseByID(cID);
+            courseToDisplay = CourseModel.getCourse(cID);
 
         } catch (CourseNotFoundException e) {
             //TODO error message
@@ -38,9 +40,18 @@ public class CourseController extends Controller {
 
         Team team = null;
         try {
-            team = CourseModel.getTeam(sNumber, cID);
+            team = TeamModel.getTeam(sNumber, cID);
         } catch (TeamNotFoundException e) {
-            // Student is not in Team
+            //TODO error message
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+
+        } catch (CourseNotFoundException e) {
+            //TODO error message
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+
+        } catch (StudentNotFoundException e) {
+            //TODO error message
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
         }
 
         // Get all membership request the student has issued for the course
@@ -49,14 +60,17 @@ public class CourseController extends Controller {
         // Get all invitations the student has received for the course
         List<TeamInvitation> teamInvitations = null;
         try {
-            membershipRequests = CourseModel.getMembershipRequests(sNumber, cID);
-            teamInvitations = CourseModel.getInvitations(sNumber,cID);
-        } catch (StudentNotFoundException e) {
-            //TODO: WTF, student doesn't exist?!
-        } catch (CourseNotFoundException e) {
-            //TODO: WTF, course doesn't exist?!
-        }
+            membershipRequests = StudentModel.getMembershipRequests(sNumber, cID);
+            teamInvitations = StudentModel.getInvitations(sNumber,cID);
+            return ok(showCourseDetails.render(team, teamInvitations, membershipRequests, courseToDisplay, currentUser, sessionTimeout));
 
-        return ok(showCourseDetails.render(team, teamInvitations, membershipRequests, courseToDisplay, currentUser, sessionTimeout));
+        } catch (StudentNotFoundException e) {
+            //TODO error message
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+
+        } catch (CourseNotFoundException e) {
+            //TODO error message
+            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+        }
     }
 }
