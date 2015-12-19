@@ -13,12 +13,14 @@ CREATE TABLE `internal_database`.`COURSE_REGISTRATION` (
 
 CREATE TABLE `internal_database`.`TEAM` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
+  `name` VARCHAR(63) NOT NULL COMMENT '',
   `course_id` INT NOT NULL COMMENT '',
   `created_by_student_number` VARCHAR(31) NOT NULL COMMENT '',
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '',
   `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '',
   UNIQUE INDEX `id_UNIQUE` (`id` ASC)  COMMENT '',
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC)  COMMENT '',
   INDEX `course_id_idx` (`course_id` ASC)  COMMENT '',
   INDEX `created_by_student_number_idx` (`created_by_student_number` ASC)  COMMENT '');
 
