@@ -6,6 +6,7 @@ package controllers.studentComponent;
 
 import assets.SessionUtils;
 import controllers.courseComponent.CourseController;
+import controllers.courseComponent.CourseRegistrationController;
 import models.commonUtils.Database.DatabaseUtils;
 import models.commonUtils.Exceptions.*;
 import models.commonUtils.ID.CourseID;
@@ -43,28 +44,28 @@ public class StudentController extends Controller {
         TeamID teamID = null;
         try{
             teamID = StudentModel.createTeam(sNumber, cID);
-            return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID.value()));
+            return TeamController.showTeamOverview(teamID.value());
 
         } catch (StudentNotFoundException e) {
             //TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            return CourseRegistrationController.showCourseOverview();
 
         } catch (StudentInTeamException e) {
             //TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            return CourseRegistrationController.showCourseOverview();
 
         } catch (CourseNotFoundException e) {
             //TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            return CourseRegistrationController.showCourseOverview();
 
         } catch (FatalErrorException e) {
             // If team couldn't be created or registration status couldn't be updated
             //TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            return CourseRegistrationController.showCourseOverview();
 
         } catch (TeamExistsException e) {
             //TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            return CourseRegistrationController.showCourseOverview();
         }
 
     }
@@ -80,32 +81,32 @@ public class StudentController extends Controller {
 
         try{
             TeamModel.deleteTeam(tID,deletedBy);
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            return CourseRegistrationController.showCourseOverview();
         }
         catch(TeamNotFoundException e){
             //TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            return CourseRegistrationController.showCourseOverview();
 
         } catch (StudentNotInTeamException e) {
             //TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            return CourseRegistrationController.showCourseOverview();
 
         } catch (TeamDeletedException e) {
             //TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            return CourseRegistrationController.showCourseOverview();
 
         } catch (FatalErrorException e) {
             // This code gets executed in case the team couldn't be created for some reason
             //TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            return CourseRegistrationController.showCourseOverview();
 
         } catch (CourseNotFoundException e) {
             //TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            return CourseRegistrationController.showCourseOverview();
 
         } catch (StudentNotFoundException e) {
             //TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            return CourseRegistrationController.showCourseOverview();
         }
     }
 
@@ -119,29 +120,22 @@ public class StudentController extends Controller {
             StudentNumber sNumber = StudentNumber.get(currentUser.getStudentNumber());
 
             try{
-            //Add the student to the team and updates registration status
-            StudentModel.acceptInvitation(sNumber, tID);
-                return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
-
-            } catch(InvitationNotFoundException e){
-                //TODO error message
-                return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+                //Add the student to the team and updates registration status
+                StudentModel.acceptInvitation(sNumber, tID);
+                return TeamController.showTeamOverview(teamID);
 
             } catch (TeamNotFoundException e) {
                 //TODO error message
-                return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+                return CourseRegistrationController.showCourseOverview();
 
             } catch (StudentNotFoundException e) {
                 //TODO error message
-                return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+                return CourseRegistrationController.showCourseOverview();
 
             } catch (StudentInTeamException e) {
                 //TODO error message
-                return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+                return CourseRegistrationController.showCourseOverview();
 
-            } catch (CourseNotFoundException e) {
-                //TODO error message
-                return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
             }
     }
 
@@ -154,19 +148,19 @@ public class StudentController extends Controller {
 
         try{
             StudentModel.declineInvitation(sNumber, tID);
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            return CourseRegistrationController.showCourseOverview();
 
         } catch (InvitationNotFoundException e) {
             //TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            return CourseRegistrationController.showCourseOverview();
 
         } catch (TeamNotFoundException e) {
             //TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            return CourseRegistrationController.showCourseOverview();
 
         } catch (StudentNotFoundException e) {
             //TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            return CourseRegistrationController.showCourseOverview();
         }
     }
     /**
@@ -180,30 +174,27 @@ public class StudentController extends Controller {
 
         try {
             StudentModel.requestMembership(sNumber, tID);
-            return redirect(controllers.studentComponent.routes.TeamController.showTeamOverview(teamID));
+            return TeamController.showTeamOverview(teamID);
+
         } catch (CourseNotFoundException e) {
             //TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
-
-        } catch (TeamMaxSizeReachedException e) {
-            //TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            return CourseRegistrationController.showCourseOverview();
 
         } catch (TeamNotFoundException e) {
             //TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            return CourseRegistrationController.showCourseOverview();
 
         } catch (StudentNotFoundException e) {
             //TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            return CourseRegistrationController.showCourseOverview();
 
         } catch (StudentInTeamException e) {
             //TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            return CourseRegistrationController.showCourseOverview();
 
         } catch (MembershipRequestExistsException e) {
             //TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            return CourseRegistrationController.showCourseOverview();
         }
     }
 
@@ -222,15 +213,15 @@ public class StudentController extends Controller {
             team = DatabaseUtils.getTeam(tID);
         } catch (MembershipRequestNotFoundException e) {
             //TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            return CourseRegistrationController.showCourseOverview();
 
         } catch (TeamNotFoundException e) {
             //TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            return CourseRegistrationController.showCourseOverview();
 
         } catch (StudentNotFoundException e) {
             //TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            return CourseRegistrationController.showCourseOverview();
         }
 
         try {
@@ -238,11 +229,11 @@ public class StudentController extends Controller {
 
         } catch (EntityNotFoundException e) {
             //TODO error handling
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            return CourseRegistrationController.showCourseOverview();
 
         } catch (CourseNotFoundException e) {
             //TODO error handling
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            return CourseRegistrationController.showCourseOverview();
         }
         return CourseController.showCourseDetails(courseToDisplay.getId().getValue());
     }
