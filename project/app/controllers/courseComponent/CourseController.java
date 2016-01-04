@@ -61,9 +61,8 @@ public class CourseController extends Controller {
         try {
             team = TeamModel.getTeam(sNumber, cID);
         } catch (TeamNotFoundException e) {
-            //TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
-
+            // NOTE: Student is not in a team
+            //return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
         } catch (CourseNotFoundException e) {
             //TODO error message
             return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());

@@ -28,13 +28,6 @@ import java.util.List;
 
 
 public class TeamController extends Controller {
-
-    private static Student currentUser;
-
-    static {
-        currentUser = SessionUtils.getCurrentUser(session());
-    }
-
     /**
      * Removes a student from the team and returns a resultpage. If student was the last member, the associated team gets deleted.
      * @param studentNumber the student number of the student who is to be removed from the team
@@ -98,6 +91,7 @@ public class TeamController extends Controller {
      */
     public static Result inviteStudent(String studentNumber, int teamID) {
         // Init
+        Student currentUser = SessionUtils.getCurrentUser(session());
         StudentNumber sNumber = StudentNumber.get(studentNumber);
         StudentNumber createdBySNumber = StudentNumber.get(currentUser.getStudentNumber());
         TeamID tID = TeamID.get(teamID);
@@ -235,6 +229,7 @@ public class TeamController extends Controller {
      * @return a result page containing all relevant team details
      */
     public static Result showTeamOverview(int teamID) {
+        Student currentUser = SessionUtils.getCurrentUser(session());
         Date sessionTimeout = SessionUtils.getSessionTimeout(session());
 
         Team teamToDisplay = null;

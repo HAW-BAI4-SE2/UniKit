@@ -97,6 +97,7 @@ class TeamDatabaseUtils {
         Team newTeam = teamManager.createEntity();
         newTeam.setCourse(course);
         newTeam.setCreatedBy(student);
+        
         try {
             teamManager.addEntity(newTeam);
         } catch (ConstraintViolationException e) {

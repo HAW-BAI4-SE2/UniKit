@@ -25,18 +25,13 @@ import play.mvc.Result;
 
 
 public class StudentController extends Controller {
-    private static Student currentUser;
-
-    static{
-        currentUser = SessionUtils.getCurrentUser(session());
-    }
-
     /**
      *  Creates a team associated with the studentNumber and courseID from the CreateTeamForm-object
      *  @param courseID the course ID for which the team is to be created
      *  @return showEditTeam-page
      */
     public static Result createTeam(int courseID){
+        Student currentUser = SessionUtils.getCurrentUser(session());
         CourseID cID = CourseID.get(courseID);
         StudentNumber sNumber = StudentNumber.get(currentUser.getStudentNumber());
 
@@ -48,23 +43,28 @@ public class StudentController extends Controller {
 
         } catch (StudentNotFoundException e) {
             //TODO error message
+            e.printStackTrace();
             return CourseRegistrationController.showCourseOverview();
 
         } catch (StudentInTeamException e) {
             //TODO error message
+            e.printStackTrace();
             return CourseRegistrationController.showCourseOverview();
 
         } catch (CourseNotFoundException e) {
             //TODO error message
+            e.printStackTrace();
             return CourseRegistrationController.showCourseOverview();
 
         } catch (FatalErrorException e) {
             // If team couldn't be created or registration status couldn't be updated
             //TODO error message
+            e.printStackTrace();
             return CourseRegistrationController.showCourseOverview();
 
         } catch (TeamExistsException e) {
             //TODO error message
+            e.printStackTrace();
             return CourseRegistrationController.showCourseOverview();
         }
 
@@ -76,6 +76,7 @@ public class StudentController extends Controller {
      *  @return showCourseDetails-page for the course the team was associated with
      */
     public static Result deleteTeam(int teamID){
+        Student currentUser = SessionUtils.getCurrentUser(session());
         TeamID tID = TeamID.get(teamID);
         StudentNumber deletedBy = StudentNumber.get(currentUser.getStudentNumber());
 
@@ -116,33 +117,35 @@ public class StudentController extends Controller {
      * @return showTeamOverview-page
      */
     public static Result acceptInvitation(int teamID) {
-            TeamID tID = TeamID.get(teamID);
-            StudentNumber sNumber = StudentNumber.get(currentUser.getStudentNumber());
+        Student currentUser = SessionUtils.getCurrentUser(session());
+        TeamID tID = TeamID.get(teamID);
+        StudentNumber sNumber = StudentNumber.get(currentUser.getStudentNumber());
 
-            try{
-                //Add the student to the team and updates registration status
-                StudentModel.acceptInvitation(sNumber, tID);
-                return TeamController.showTeamOverview(teamID);
+        try{
+            //Add the student to the team and updates registration status
+            StudentModel.acceptInvitation(sNumber, tID);
+            return TeamController.showTeamOverview(teamID);
 
-            } catch (TeamNotFoundException e) {
-                //TODO error message
-                return CourseRegistrationController.showCourseOverview();
+        } catch (TeamNotFoundException e) {
+            //TODO error message
+            return CourseRegistrationController.showCourseOverview();
 
-            } catch (StudentNotFoundException e) {
-                //TODO error message
-                return CourseRegistrationController.showCourseOverview();
+        } catch (StudentNotFoundException e) {
+            //TODO error message
+            return CourseRegistrationController.showCourseOverview();
 
-            } catch (StudentInTeamException e) {
-                //TODO error message
-                return CourseRegistrationController.showCourseOverview();
+        } catch (StudentInTeamException e) {
+            //TODO error message
+            return CourseRegistrationController.showCourseOverview();
 
-            }
+        }
     }
 
     /**
      *   Declines (deletes) the invitation for the student by the team. The relevant data is retrived using a TeamStateChangeForm-object
      **/
     public static Result declineInvitation(int teamID){
+        Student currentUser = SessionUtils.getCurrentUser(session());
         TeamID tID = TeamID.get(teamID);
         StudentNumber sNumber = StudentNumber.get(currentUser.getStudentNumber());
 
@@ -169,6 +172,7 @@ public class StudentController extends Controller {
      *  @return showCourseDetails-page
     **/
     public static Result requestMembership(int teamID){
+        Student currentUser = SessionUtils.getCurrentUser(session());
         TeamID tID = TeamID.get(teamID);
         StudentNumber sNumber = StudentNumber.get(currentUser.getStudentNumber());
 
@@ -203,6 +207,7 @@ public class StudentController extends Controller {
      *  @return showCourseDetails-page
     **/
     public static Result cancelMembershipRequest(int teamID) {
+        Student currentUser = SessionUtils.getCurrentUser(session());
         TeamID tID = TeamID.get(teamID);
         StudentNumber sNumber = StudentNumber.get(currentUser.getStudentNumber());
 
