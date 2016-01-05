@@ -152,12 +152,15 @@ public class CourseRegistrationController extends Controller {
 
         try {
             CourseModel.cancelCourseRegistrations(sNumber, crfm.registeredCourses);
+
         } catch (CourseNotFoundException e) {
             //TODO Error handling
             e.printStackTrace();
+
         } catch (StudentNotFoundException e) {
             //TODO Error handling
             e.printStackTrace();
+
         } catch (CourseRegistrationNotFoundException e) {
             //TODO Error handling
             e.printStackTrace();

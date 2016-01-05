@@ -54,7 +54,8 @@ public class CourseController extends Controller {
 
         } catch (CourseNotFoundException e) {
             //TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            e.printStackTrace();
+            return CourseRegistrationController.showCourseOverview();
         }
 
         Team team = null;
@@ -65,11 +66,13 @@ public class CourseController extends Controller {
             //return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
         } catch (CourseNotFoundException e) {
             //TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            e.printStackTrace();
+            return CourseRegistrationController.showCourseOverview();
 
         } catch (StudentNotFoundException e) {
             //TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            e.printStackTrace();
+            return CourseRegistrationController.showCourseOverview();
         }
 
         // Get all membership request the student has issued for the course
@@ -84,11 +87,13 @@ public class CourseController extends Controller {
 
         } catch (StudentNotFoundException e) {
             //TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            e.printStackTrace();
+            return CourseRegistrationController.showCourseOverview();
 
         } catch (CourseNotFoundException e) {
             //TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            e.printStackTrace();
+            return CourseRegistrationController.showCourseOverview();
         }
     }
 
@@ -109,7 +114,8 @@ public class CourseController extends Controller {
 
         } catch (StudentNotFoundException e) {
             //TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            e.printStackTrace();
+            return CourseRegistrationController.showCourseOverview();
         }
     }
 
@@ -129,7 +135,8 @@ public class CourseController extends Controller {
             availableCourses = CourseModel.getAvailableCourses(sNumber);
         } catch (StudentNotFoundException e) {
             //TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            e.printStackTrace();
+            return CourseRegistrationController.showCourseOverview();
         }
 
         Form<CourseRegistrationFormModel> courseRegistration =
@@ -182,15 +189,17 @@ public class CourseController extends Controller {
 
         try {
             CourseModel.storeCourseRegistrations(sNumber, courseRegistrationForm.get().registeredCourses);
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            return CourseRegistrationController.showCourseOverview();
 
         } catch (CourseNotFoundException e) {
             //TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            e.printStackTrace();
+            return showCourseOverview();
 
         } catch (StudentNotFoundException e) {
             //TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            e.printStackTrace();
+            return showCourseOverview();
 
         }
     }
@@ -214,20 +223,22 @@ public class CourseController extends Controller {
 
         try {
             CourseModel.cancelCourseRegistrations(sNumber, crfm.registeredCourses);
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            return CourseRegistrationController.showCourseOverview();
 
         } catch (CourseNotFoundException e) {
             //TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            e.printStackTrace();
+            return showCourseOverview();
 
         } catch (StudentNotFoundException e) {
             //TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
+            e.printStackTrace();
+            return showCourseOverview();
 
         } catch (CourseRegistrationNotFoundException e) {
             //TODO error message
-            return redirect(controllers.courseComponent.routes.CourseRegistrationController.showCourseOverview());
-
+            e.printStackTrace();
+            return showCourseOverview();
         }
     }
 }

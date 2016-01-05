@@ -44,39 +44,45 @@ public class TeamController extends Controller {
         Team modifiedTeam = null;
         try {
             modifiedTeam = TeamModel.removeMember(sNumber, tID);
+
         } catch (TeamNotFoundException e) {
-            // TODO error message
+            //TODO error message
+            e.printStackTrace();
             return CourseRegistrationController.showCourseOverview();
 
         } catch (StudentNotInTeamException e) {
-            // TODO error message
+            //TODO error message
+            e.printStackTrace();
             return TeamController.showTeamOverview(teamID);
 
         } catch (StudentNotFoundException e) {
-            // TODO error message
+            //TODO error message
+            e.printStackTrace();
             return TeamController.showTeamOverview(teamID);
 
         } catch (FatalErrorException e) {
             // Gets thrown when an error occurs while updating the registration status of the student
-            // TODO error message
+            //TODO error message
+            e.printStackTrace();
             return CourseRegistrationController.showCourseOverview();
 
         } catch (CourseNotFoundException e) {
-            // TODO error message
+            //TODO error message
+            e.printStackTrace();
             return CourseRegistrationController.showCourseOverview();
         }
 
         // If team is empty, display course details, else team overview
         if(modifiedTeam.getTeamRegistrations().isEmpty()){
-            // TODO error message
+
             try {
                 return CourseController.showCourseDetails(CourseID.get(modifiedTeam.getCourse().getId()).value());
 
             } catch (EntityNotFoundException e) {
+                //TODO error message
                 e.printStackTrace();
             }
-        }else{
-            // TODO error message
+        } else {
             return TeamController.showTeamOverview(teamID);
         }
         return CourseRegistrationController.showCourseOverview();
@@ -101,24 +107,29 @@ public class TeamController extends Controller {
             return TeamController.showTeamOverview(teamID);
 
         } catch (TeamMaxSizeReachedException e) {
-            // TODO error message
+            //TODO error message
+            e.printStackTrace();
             return TeamController.showTeamOverview(teamID);
 
         } catch (TeamNotFoundException e) {
-            // TODO error message
+            //TODO error message
+            e.printStackTrace();
             return CourseRegistrationController.showCourseOverview();
 
         } catch (InvitationExistsException e) {
-            // TODO error message
+            //TODO error message
+            e.printStackTrace();
             return CourseRegistrationController.showCourseOverview();
 
         } catch (StudentNotFoundException e) {
-            // TODO error message
+            //TODO error message
+            e.printStackTrace();
             return CourseRegistrationController.showCourseOverview();
 
         } catch (FatalErrorException e) {
             // Gets thrown when an error occurs while updating the registration status of the student
             //TODO error message
+            e.printStackTrace();
             return CourseRegistrationController.showCourseOverview();
         }
     }
@@ -139,15 +150,18 @@ public class TeamController extends Controller {
             return TeamController.showTeamOverview(teamID);
 
         } catch (InvitationNotFoundException e) {
-            // TODO error message
+            //TODO error message
+            e.printStackTrace();
             return TeamController.showTeamOverview(teamID);
 
         } catch (TeamNotFoundException e) {
-            // TODO error message
+            //TODO error message
+            e.printStackTrace();
             return CourseRegistrationController.showCourseOverview();
 
         } catch (StudentNotFoundException e) {
-            // TODO error message
+            //TODO error message
+            e.printStackTrace();
             return TeamController.showTeamOverview(teamID);
         }
     }
@@ -168,27 +182,33 @@ public class TeamController extends Controller {
             return TeamController.showTeamOverview(teamID);
 
         } catch (MembershipRequestNotFoundException e) {
-            // TODO error message
+            //TODO error message
+            e.printStackTrace();
             return TeamController.showTeamOverview(teamID);
 
         } catch (TeamNotFoundException e) {
-            // TODO error message
+            //TODO error message
+            e.printStackTrace();
             return CourseRegistrationController.showCourseOverview();
 
         } catch (StudentNotFoundException e) {
-            // TODO error message
+            //TODO error message
+            e.printStackTrace();
             return TeamController.showTeamOverview(teamID);
 
         } catch (StudentInTeamException e) {
-            // TODO error message
+            //TODO error message
+            e.printStackTrace();
             return CourseRegistrationController.showCourseOverview();
 
         } catch (CourseNotFoundException e) {
-            // TODO error message
+            //TODO error message
+            e.printStackTrace();
             return CourseRegistrationController.showCourseOverview();
 
         } catch (FatalErrorException e) {
-            // TODO error message
+            //TODO error message
+            e.printStackTrace();
             // Gets thrown when an error occurs while updating the registration status of the student
             return CourseRegistrationController.showCourseOverview();
         }
@@ -210,15 +230,18 @@ public class TeamController extends Controller {
             return TeamController.showTeamOverview(teamID);
 
         } catch (MembershipRequestNotFoundException e) {
-            // TODO error message
+            //TODO error message
+            e.printStackTrace();
             return TeamController.showTeamOverview(teamID);
 
         } catch (TeamNotFoundException e) {
-            // TODO error message
+            //TODO error message
+            e.printStackTrace();
             return CourseRegistrationController.showCourseOverview();
 
         } catch (StudentNotFoundException e) {
-            // TODO error message
+            //TODO error message
+            e.printStackTrace();
             return TeamController.showTeamOverview(teamID);
         }
     }
@@ -243,7 +266,8 @@ public class TeamController extends Controller {
             allInvites = TeamModel.getAllInvites(TeamID.get(teamID));
 
         } catch (TeamNotFoundException e) {
-            // TODO error message
+            //TODO error message
+            e.printStackTrace();
             return CourseRegistrationController.showCourseOverview();
         }
 
@@ -251,15 +275,21 @@ public class TeamController extends Controller {
         Course associatedCourse = null;
         try {
             associatedCourse = teamToDisplay.getCourse();
+
         } catch (EntityNotFoundException e) {
+            //TODO error message
+            e.printStackTrace();
             return CourseRegistrationController.showCourseOverview();
         }
+
         List<Student> availableStudents = null;
         try {
             availableStudents = StudentModel.getAllStudents(CourseID.get(associatedCourse.getId()));
             availableStudents.removeAll(allStudentsInTeam);
+
         } catch (CourseNotFoundException e) {
-            // TODO error message
+            //TODO error message
+            e.printStackTrace();
             return CourseRegistrationController.showCourseOverview();
         }
 
@@ -281,9 +311,11 @@ public class TeamController extends Controller {
         List<Team> availableTeams = null;
         try {
             course = CourseModel.getCourse(CourseID.get(courseID));
-            TeamModel.getAllAvailableTeams(CourseID.get(courseID));
+            availableTeams = TeamModel.getAllAvailableTeams(CourseID.get(courseID));
+
         } catch (CourseNotFoundException e) {
-            // TODO error message
+            //TODO error message
+            e.printStackTrace();
             return CourseRegistrationController.showCourseOverview();
         }
 
