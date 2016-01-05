@@ -62,6 +62,9 @@ class MembershipRequestDatabaseUtils {
         MembershipRequest membershipRequestToBeDeleted = null;
         try {
             membershipRequestToBeDeleted = membershipRequestManager.getMembershipRequest(student,team);
+            if(membershipRequestToBeDeleted == null){
+                throw new MembershipRequestNotFoundException(StudentNumber.get(student.getStudentNumber()), TeamID.get(team.getId()));
+            }
             membershipRequestManager.deleteEntity(membershipRequestToBeDeleted);
         } catch (EntityNotFoundException e) {
             throw new MembershipRequestNotFoundException(StudentNumber.get(student.getStudentNumber()), TeamID.get(team.getId()));
