@@ -85,6 +85,25 @@ public class TeamModel {
             throw new FatalErrorException("Course does not exist");
         }
 
+
+        if(DatabaseUtils.isMembershipRequested(sNumber,tID)){
+            try {
+                DatabaseUtils.addStudent(sNumber, tID);
+            } catch (StudentInTeamException e) {
+                //If student already in team, do nothing
+                e.printStackTrace();
+
+            } catch (CourseNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                DatabaseUtils.deleteMembershipRequest(sNumber, tID);
+            } catch (MembershipRequestNotFoundException e) {
+                // Do nothing if membership request couldn't be found
+                e.printStackTrace();
+            }
+        }
         // Invite student to team, error if (registrations + invitations) exceeds team size limit
         if((thisTeam.getTeamInvitations().size()
                 + thisTeam.getTeamRegistrations().size())

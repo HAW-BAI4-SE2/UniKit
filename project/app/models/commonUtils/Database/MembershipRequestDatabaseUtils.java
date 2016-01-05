@@ -170,4 +170,18 @@ class MembershipRequestDatabaseUtils {
 
         return allMembershipRequests;
     }
+
+    public static boolean isMembershipRequested(Student student, Team team) {
+        for(MembershipRequest currentMembershipRequest : membershipRequestManager.getAllEntities()){
+            try {
+                if(currentMembershipRequest.getApplicant().equals(student) && currentMembershipRequest.getTeam().equals(team)){
+                    return true;
+                }
+            } catch (EntityNotFoundException e) {
+                // Some student couldn't be found
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
 }

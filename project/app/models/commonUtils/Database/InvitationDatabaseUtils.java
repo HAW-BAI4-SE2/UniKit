@@ -59,9 +59,18 @@ class InvitationDatabaseUtils {
 
         try {
             invitationToBeDeleted = invitationManager.getInvitation(student,team);
-            invitationManager.deleteEntity(invitationToBeDeleted);
         } catch (EntityNotFoundException e) {
             throw new InvitationNotFoundException(TeamID.get(team.getId()));
+        }
+
+        if(invitationToBeDeleted == null){
+            throw new InvitationNotFoundException(TeamID.get(team.getId()));
+        } else {
+            try {
+                invitationManager.deleteEntity(invitationToBeDeleted);
+            } catch (EntityNotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 

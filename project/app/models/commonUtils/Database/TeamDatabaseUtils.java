@@ -97,6 +97,8 @@ class TeamDatabaseUtils {
         Team newTeam = teamManager.createEntity();
         newTeam.setCourse(course);
         newTeam.setCreatedBy(student);
+        String teamName = student.getStudentNumber().getValue()+course.getId();
+        newTeam.setName(teamName);
         
         try {
             teamManager.addEntity(newTeam);
@@ -153,6 +155,15 @@ class TeamDatabaseUtils {
             // Any student couldn't be found
             // Any course couldn't be found
             e.printStackTrace();
+        }
+
+        // Remove all students from team
+        for (TeamRegistration currentRegistration : team.getTeamRegistrations()) {
+            try {
+                removeStudent(currentRegistration.getStudent(),team);
+            } catch (EntityNotFoundException e) {
+                e.printStackTrace();
+            }
         }
 
         MembershipRequestDatabaseUtils.deleteAllMembershipRequests(team);

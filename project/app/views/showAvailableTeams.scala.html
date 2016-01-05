@@ -26,7 +26,7 @@
                     }
                 } else {
                     @listItemLight() {
-                        Team T@(String.format("%03d", team.getId()))
+                        Team T@(String.format("%03d", team.getId().getValue()))
                     } {
                         @buttonRight("Team betrachten") {
                             @controllers.studentComponent.routes.TeamController.showTeamOverview(team.getId().getValue())

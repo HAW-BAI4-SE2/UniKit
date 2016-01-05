@@ -169,4 +169,10 @@ public class DatabaseUtils {
 
         return InvitationDatabaseUtils.getAllInvitations(student,course);
     }
+
+    public static boolean isMembershipRequested(StudentNumber sNumber, TeamID tID) throws StudentNotFoundException, TeamNotFoundException {
+        Student student = StudentDatabaseUtils.getStudent(sNumber);
+        Team team = TeamDatabaseUtils.getTeam(tID);
+        return MembershipRequestDatabaseUtils.isMembershipRequested(student,team);
+    }
 }

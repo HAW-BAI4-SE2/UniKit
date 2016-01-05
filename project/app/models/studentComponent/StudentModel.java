@@ -125,12 +125,12 @@ public class StudentModel {
                 }
 
                 try {
-                DatabaseUtils.deleteInvitation(sNumber, tID);
-            } catch (InvitationNotFoundException e) {
+                    DatabaseUtils.deleteInvitation(sNumber, tID);
+                } catch (InvitationNotFoundException e) {
                 // Do nothing, if the invitation gets deleted after the membership gets requested, all is well
-            }
-            informStudentTeamJoined(tID, sNumber);
-            informTeamStudentJoined(tID, sNumber);
+                }
+                informStudentTeamJoined(tID, sNumber);
+                informTeamStudentJoined(tID, sNumber);
 
         } else {
             DatabaseUtils.storeMembershipRequest(sNumber, tID);
