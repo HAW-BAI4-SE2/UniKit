@@ -151,8 +151,10 @@ public class StudentController extends Controller {
     }
 
     /**
-     *   Declines (deletes) the invitation for the student by the team. The relevant data is retrived using a TeamStateChangeForm-object
-     **/
+     *
+     * @param teamID
+     * @return
+     */
     public static Result declineInvitation(int teamID){
         Student currentUser = SessionUtils.getCurrentUser(session());
         TeamID tID = TeamID.get(teamID);

@@ -21,9 +21,11 @@ import java.util.List;
  */
 class InvitationDatabaseUtils {
     private static TeamInvitationManager invitationManager = Global.getTeamInvitationManager();
+
     static{
         invitationManager = Global.getTeamInvitationManager();
     }
+
     /**
      *
      * @param student
@@ -97,6 +99,10 @@ class InvitationDatabaseUtils {
         }
     }
 
+    /**
+     *
+     * @param team
+     */
     public static void deleteAllInvitations(Team team) {
         for(TeamInvitation currentInvitation : invitationManager.getAllEntities()){
             if(currentInvitation.getTeam().equals(team)){
@@ -112,6 +118,11 @@ class InvitationDatabaseUtils {
         }
     }
 
+    /**
+     *
+     * @param team
+     * @return
+     */
     public static List<Student> getAllInvites(Team team) {
         List<Student> allInvitedStudents = new ArrayList<>();
         for(TeamInvitation currentInvitation : invitationManager.getAllEntities()){
@@ -127,6 +138,14 @@ class InvitationDatabaseUtils {
         return allInvitedStudents;
     }
 
+    /**
+     *
+     * @param student
+     * @param course
+     * @return
+     * @throws StudentNotFoundException
+     * @throws CourseNotFoundException
+     */
     public static List<TeamInvitation> getAllInvitations(Student student, Course course) throws StudentNotFoundException, CourseNotFoundException {
         List<TeamInvitation> allInvitations = new ArrayList<>();
         for(TeamInvitation currentInvitation : invitationManager.getAllEntities()){
@@ -144,6 +163,12 @@ class InvitationDatabaseUtils {
         return allInvitations;
     }
 
+    /**
+     *
+     * @param student
+     * @param team
+     * @return
+     */
     public static boolean isStudentInvited(Student student, Team team){
         for(TeamInvitation currentInvitation : invitationManager.getAllEntities()){
             try {

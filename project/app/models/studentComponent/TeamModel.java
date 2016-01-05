@@ -192,22 +192,57 @@ public class TeamModel {
 
     }
 
+    /**
+     *
+     * @param courseID
+     * @return
+     * @throws CourseNotFoundException
+     */
     public static List<Team> getAllAvailableTeams(CourseID courseID) throws CourseNotFoundException {
         return DatabaseUtils.getAvailableTeams(courseID);
     }
 
+    /**
+     *
+     * @param tID
+     * @return
+     * @throws TeamNotFoundException
+     */
     public static Team getTeam(TeamID tID) throws TeamNotFoundException {
         return DatabaseUtils.getTeam(tID);
     }
 
+    /**
+     *
+     * @param tID
+     * @return
+     * @throws TeamNotFoundException
+     */
     public static List<Student> getAllMembershipRequests(TeamID tID) throws TeamNotFoundException {
         return DatabaseUtils.getAllMembershipRequests(tID);
     }
 
+    /**
+     *
+     * @param tID
+     * @return
+     * @throws TeamNotFoundException
+     */
     public static List<Student> getAllInvites(TeamID tID) throws TeamNotFoundException {
         return DatabaseUtils.getAllInvites(tID);
     }
 
+    /**
+     *
+     * @param tID
+     * @param deletedBy
+     * @throws FatalErrorException
+     * @throws CourseNotFoundException
+     * @throws TeamDeletedException
+     * @throws TeamNotFoundException
+     * @throws StudentNotFoundException
+     * @throws StudentNotInTeamException
+     */
     public static void deleteTeam(TeamID tID, StudentNumber deletedBy) throws FatalErrorException, CourseNotFoundException, TeamDeletedException, TeamNotFoundException, StudentNotFoundException, StudentNotInTeamException {
         if (DatabaseUtils.isStudentMember(deletedBy, tID)) {
             DatabaseUtils.deleteTeam(tID);
@@ -216,6 +251,15 @@ public class TeamModel {
         }
     }
 
+    /**
+     *
+     * @param sNumber
+     * @param cID
+     * @return
+     * @throws TeamNotFoundException
+     * @throws CourseNotFoundException
+     * @throws StudentNotFoundException
+     */
     public static Team getTeam(StudentNumber sNumber, CourseID cID) throws TeamNotFoundException, CourseNotFoundException, StudentNotFoundException {
         return DatabaseUtils.getTeam(sNumber, cID);
     }
